@@ -191,10 +191,21 @@
     }
     
     .qr-image {
-      width: 95px;
-      height: 95px;
+      width: 2.5cm;
+      height: 2.5cm;
       margin: 0 auto 3px;
       background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .qr-image img,
+    .qr-image canvas {
+      width: 100% !important;
+      height: 100% !important;
+      max-width: 2.5cm;
+      max-height: 2.5cm;
     }
     
     .qr-image img {
@@ -408,8 +419,8 @@
       
       new QRCode(document.getElementById(`qr-san-${index}`), {
         text: qrData,
-        width: 95,
-        height: 95,
+        width: 94,
+        height: 94,
         colorDark: "#1a472a",
         colorLight: "#ffffff",
         correctLevel: QRCode.CorrectLevel.M
@@ -469,8 +480,8 @@
       
       new QRCode(document.getElementById(`qr-man-${index}`), {
         text: qrData,
-        width: 95,
-        height: 95,
+        width: 94,
+        height: 94,
         colorDark: "#1a472a",
         colorLight: "#ffffff",
         correctLevel: QRCode.CorrectLevel.M
