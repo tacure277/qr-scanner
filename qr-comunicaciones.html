@@ -496,7 +496,7 @@
     const ordenado = [...sanidad].sort((a, b) => a.apellido.localeCompare(b.apellido));
     
     ordenado.forEach((s, index) => {
-      const qrData = `${s.apellido}|${s.grado}|${s.dni}|${s.armamento}|${s.numArm}`;
+      const qrData = s.dni;
       
       const card = document.createElement('div');
       card.className = 'qr-card';
@@ -597,7 +597,7 @@
       let enviados = 0;
       
       for (const s of ordenado) {
-        const qrData = `${s.apellido}|${s.grado}|${s.dni}|${s.armamento}|${s.numArm}`;
+        const qrData = s.dni;
         await fetch(url, { method: 'POST', body: JSON.stringify({ qrData }) });
         enviados++;
       }
