@@ -170,7 +170,7 @@
     .qr-card {
       background: white;
       border: 1px solid #ddd;
-      padding: 6px;
+      padding: 4px;
       border-radius: 4px;
       text-align: center;
       page-break-inside: avoid;
@@ -178,21 +178,22 @@
     
     .qr-card h3 {
       color: #1a472a;
-      font-size: 9px;
+      font-size: 8px;
       margin-bottom: 2px;
       font-weight: 700;
       text-transform: uppercase;
       word-break: break-word;
-      line-height: 1.1;
-      min-height: 16px;
-      max-height: 16px;
+      line-height: 1;
+      min-height: 14px;
+      max-height: 14px;
       overflow: hidden;
+      text-overflow: ellipsis;
     }
     
     .qr-card .dni {
       color: #5a7a6d;
-      font-size: 7px;
-      margin-bottom: 4px;
+      font-size: 6px;
+      margin-bottom: 3px;
       font-weight: 600;
     }
     
@@ -204,13 +205,16 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      overflow: hidden;
+      border-radius: 2px;
     }
     
     .qr-image canvas {
       width: 100% !important;
       height: 100% !important;
-      max-width: 2.5cm;
-      max-height: 2.5cm;
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
     }
     
     .status {
@@ -353,6 +357,8 @@
       <button class="btn-generate" onclick="generarSanidad()">🎯 Generar QR</button>
       <button class="btn-print" id="btnPrint" onclick="window.print()">🖨️ Imprimir</button>
       <button class="btn-enviar" id="btnEnviarSan" onclick="enviarAGoogleSheets()">📤 Enviar a Sheets</button>
+      <button class="btn-generate" onclick="window.location.href='scanner-profesional.html'" style="background: linear-gradient(135deg, #6c757d 0%, #545b62 100%);">📱 Ir a Scanner</button>
+      <button class="btn-generate" onclick="window.location.href='index.html'" style="background: linear-gradient(135deg, #17a2b8 0%, #117a8b 100%);">🏠 Volver al Inicio</button>
     </div>
   </div>
 
@@ -408,6 +414,8 @@
       <button class="btn-add" onclick="agregarManual()">➕ Agregar Soldado</button>
       <button class="btn-print" id="btnPrintManual" onclick="window.print()">🖨️ Imprimir</button>
       <button class="btn-enviar" id="btnEnviarMan" onclick="enviarManualAGoogleSheets()">📤 Enviar a Sheets</button>
+      <button class="btn-generate" onclick="window.location.href='scanner-profesional.html'" style="background: linear-gradient(135deg, #6c757d 0%, #545b62 100%);">📱 Ir a Scanner</button>
+      <button class="btn-generate" onclick="window.location.href='index.html'" style="background: linear-gradient(135deg, #17a2b8 0%, #117a8b 100%);">🏠 Volver al Inicio</button>
     </div>
   </div>
 
@@ -430,7 +438,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
-  const sanidad = [
+  const comunicaciones = [
     { apellido: "POMA ORE KEVIN", dni: "10380231", grado: "SO 1 EP", armamento: "GALIL", numArm: "12528" },
     { apellido: "RETO NUÑES FABRICIO", dni: "6102156", grado: "SGTO 2", armamento: "FAL", numArm: "021325" },
     { apellido: "TAMAYO ROSALES JULIO", dni: "6191408", grado: "SGTO 2", armamento: "FAL", numArm: "021431" },
@@ -479,7 +487,7 @@
     const grid = document.getElementById('qrGrid');
     grid.innerHTML = '';
     
-    const ordenado = [...sanidad].sort((a, b) => a.apellido.localeCompare(b.apellido));
+    const ordenado = [...comunicaciones].sort((a, b) => a.apellido.localeCompare(b.apellido));
     
     ordenado.forEach((s, index) => {
       const qrData = `${s.apellido}|${s.grado}|${s.dni}|${s.armamento}|${s.numArm}`;
@@ -579,7 +587,7 @@
     btn.textContent = '📤 Enviando...';
     
     try {
-      const ordenado = [...sanidad].sort((a, b) => a.apellido.localeCompare(b.apellido));
+      const ordenado = [...comunicaciones].sort((a, b) => a.apellido.localeCompare(b.apellido));
       let enviados = 0;
       
       for (const s of ordenado) {
