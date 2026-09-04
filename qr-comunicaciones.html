@@ -4,16 +4,32 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BATLLOG 112 - Comunicaciones QR</title>
+
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body { width: 100%; height: 100%; }
-    body { 
-      font-family: Arial, sans-serif; 
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
       background: #1a472a;
       padding: 8px;
-      margin: 0;
     }
-    .container { width: 100%; max-width: 210mm; margin: 0 auto; }
+
+    .container {
+      width: 100%;
+      max-width: 210mm;
+      margin: 0 auto;
+    }
+
     .header {
       background: #1a472a;
       padding: 8px;
@@ -21,16 +37,26 @@
       margin-bottom: 8px;
       border-bottom: 2px solid #d4af37;
     }
-    h1 { color: #d4af37; font-size: 16px; margin: 0; }
-    .subtitle { color: #a8d5ba; font-size: 9px; margin: 0; }
-    
+
+    h1 {
+      color: #d4af37;
+      font-size: 16px;
+      margin: 0;
+    }
+
+    .subtitle {
+      color: #a8d5ba;
+      font-size: 9px;
+      margin-top: 3px;
+    }
+
     .controls {
       display: flex;
       gap: 6px;
       margin-bottom: 8px;
       flex-wrap: wrap;
     }
-    
+
     button {
       padding: 6px 12px;
       border: none;
@@ -39,22 +65,26 @@
       cursor: pointer;
       font-size: 10px;
     }
-    
+
+    button:hover {
+      opacity: 0.9;
+    }
+
     .btn-generate {
       background: #28a745;
       color: white;
     }
-    
+
     .btn-print {
       background: #007bff;
       color: white;
     }
-    
+
     .btn-back {
       background: #17a2b8;
       color: white;
     }
-    
+
     .qr-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -63,60 +93,59 @@
       background: white;
       border-radius: 4px;
     }
-    
+
     .qr-card {
       background: white;
       border: 1px solid #ccc;
-      padding: 2px;
+      padding: 3px;
       border-radius: 2px;
       text-align: center;
       page-break-inside: avoid;
     }
-    
+
     .qr-card h3 {
       color: #1a472a;
-      font-size: 5px;
-      margin: 0 0 1px 0;
+      font-size: 7px;
+      margin-bottom: 2px;
       font-weight: 700;
       text-transform: uppercase;
       word-break: break-word;
-      line-height: 1;
-      height: 8px;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      line-height: 1.1;
+      min-height: 9px;
     }
-    
+
     .qr-card .dni {
       color: #5a7a6d;
-      font-size: 3px;
-      margin-bottom: 1px;
+      font-size: 5px;
+      margin-bottom: 2px;
       font-weight: 600;
     }
-    
+
     .qr-card .grado {
       color: #5a7a6d;
-      font-size: 3px;
+      font-size: 5px;
+      margin-bottom: 2px;
       font-weight: 600;
     }
-    
+
     .qr-image {
       width: 2.50cm;
       height: 2.50cm;
-      margin: 0 auto;
+      margin: 2px auto 0;
       background: white;
       display: flex;
       align-items: center;
       justify-content: center;
       overflow: hidden;
     }
-    
-    .qr-image canvas {
-      width: 100% !important;
-      height: 100% !important;
-      max-width: 2.50cm;
-      max-height: 2.50cm;
+
+    .qr-image canvas,
+    .qr-image img {
+      width: 2.50cm !important;
+      height: 2.50cm !important;
+      display: block;
     }
-    
+
     .footer {
       text-align: center;
       color: #a8d5ba;
@@ -124,92 +153,294 @@
       font-size: 8px;
       margin-top: 10px;
     }
-    
+
+    /* Pantallas pequeñas */
+    @media screen and (max-width: 600px) {
+      .qr-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    /* Impresión */
     @media print {
-      body { background: white; padding: 0; margin: 0; }
-      .header { display: none; }
-      .controls { display: none; }
-      .footer { display: none; }
-      .container { max-width: 210mm; }
-      .qr-grid { 
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 2px;
+      @page {
+        size: A4 portrait;
+        margin: 5mm;
+      }
+
+      body {
+        background: white;
         padding: 0;
         margin: 0;
+      }
+
+      .header,
+      .controls,
+      .footer {
+        display: none;
+      }
+
+      .container {
+        width: 100%;
+        max-width: none;
+        margin: 0;
+      }
+
+      .qr-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 3mm;
+        padding: 0;
+        margin: 0;
+        background: white;
+      }
+
+      .qr-card {
+        width: 100%;
+        min-height: 35mm;
+        border: 1px solid #999;
+        padding: 2mm;
+        page-break-inside: avoid;
+      }
+
+      .qr-card h3 {
+        font-size: 7px;
+      }
+
+      .qr-card .dni,
+      .qr-card .grado {
+        font-size: 6px;
+      }
+
+      .qr-image {
+        width: 2.50cm;
+        height: 2.50cm;
+      }
+
+      .qr-image canvas,
+      .qr-image img {
+        width: 2.50cm !important;
+        height: 2.50cm !important;
       }
     }
   </style>
 </head>
+
 <body>
 
-<div class="container">
-  <div class="header">
-    <h1>BATLLOG 112 - Comunicaciones</h1>
-    <p class="subtitle">12 Códigos QR (2.50cm x 2.50cm)</p>
+  <div class="container">
+
+    <div class="header">
+      <h1>BATLLOG 112 - COMUNICACIONES</h1>
+      <p class="subtitle">14 CÓDIGOS QR — 2.50 cm × 2.50 cm</p>
+    </div>
+
+    <div class="controls">
+      <button class="btn-generate" onclick="generarQR()">
+        Generar QR
+      </button>
+
+      <button class="btn-print" onclick="window.print()">
+        Imprimir / Guardar PDF
+      </button>
+
+      <button class="btn-back" onclick="window.location.href='index.html'">
+        Volver
+      </button>
+    </div>
+
+    <div class="qr-grid" id="qrGrid"></div>
+
+    <div class="footer">
+      BATLLOG 112 © 2026 | Perú
+    </div>
+
   </div>
 
-  <div class="controls">
-    <button class="btn-generate" onclick="generarQR()">Generar QR</button>
-    <button class="btn-print" onclick="window.print()">Imprimir PDF</button>
-    <button class="btn-back" onclick="window.location.href='index.html'">Volver</button>
-  </div>
+  <!-- Librería QR -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
-  <div class="qr-grid" id="qrGrid"></div>
+  <script>
+    /*
+     * PERSONAL DE COMUNICACIONES
+     * 14 registros
+     */
+    const comunicaciones = [
 
-  <div class="footer">BATLLOG 112 © 2026 | Perú</div>
-</div>
+      {
+        num: "01",
+        apellido: "POMA ORE KEVIN RONALD",
+        grado: "SO 1 EP",
+        dni: "10380231",
+        armamento: "GALIL",
+        numArm: "12528"
+      },
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script>
-  const comunicaciones = [
-    { num: "01", apellido: "POMA ORE KEVIN", grado: "SO 1 EP", dni: "10380231", armamento: "GALIL", numArm: "12528" },
-    { num: "02", apellido: "RETO NUÑES FABRICIO", grado: "SGTO 2", dni: "6102156", armamento: "FAL", numArm: "021325" },
-    { num: "03", apellido: "TAMAYO ROSALES JULIO", grado: "SGTO 2", dni: "6191408", armamento: "FAL", numArm: "021431" },
-    { num: "04", apellido: "CHUQUILLAURI TOLEDO", grado: "SGTO 2", dni: "73656600", armamento: "FAL", numArm: "021676" },
-    { num: "05", apellido: "HUAMAN ROSALES JUSUE", grado: "CABO", dni: "7104571", armamento: "FAL", numArm: "022187" },
-    { num: "06", apellido: "SANTIAGO OJEDA ELOY", grado: "CABO", dni: "7218249", armamento: "FAL", numArm: "022421" },
-    { num: "07", apellido: "TINA PACAYA JUAN", grado: "CABO", dni: "6936689", armamento: "FAL", numArm: "022554" },
-    { num: "08", apellido: "ACHATA CASTRO AARON", grado: "CABO", dni: "11226186", armamento: "FAL", numArm: "022893" },
-    { num: "09", apellido: "REBATTA AVALOS HERLIN", grado: "CABO", dni: "6108051", armamento: "FAL", numArm: "022897" },
-    { num: "10", apellido: "CASTILLO CCANTO SMITH", grado: "CABO", dni: "7386143", armamento: "FAL", numArm: "023231" },
-    { num: "11", apellido: "VARGAS FLORES AXEL", grado: "CABO", dni: "1910086", armamento: "FAL", numArm: "023334" },
-    { num: "12", apellido: "LAPA SAAVEDRA JEAN", grado: "CABO", dni: "7064184", armamento: "FAL", numArm: "023406" }
+      {
+        num: "02",
+        apellido: "RETO NUÑES FABRICIO RAUL",
+        grado: "SGTO 2 SAA",
+        dni: "61021564",
+        armamento: "FAL",
+        numArm: "021325"
+      },
 
-      { num: "13", apellido: "PEBE ANACLETO MOISES ", grado: "TCO 2° EP", dni: "10382331", armamento: "UZI", numArm: "12526" },
-    { num: "14", apellido: "LUSTRE RODRIGUEZ", grado: "SGTO 1°", dni: "74602356", armamento: "FAL", numArm: "021259" }
-  ];
+      {
+        num: "03",
+        apellido: "TAMAYO ROSALES JULIO",
+        grado: "SGTO 2 SAA",
+        dni: "61717408",
+        armamento: "FAL",
+        numArm: "021631"
+      },
 
-  function generarQR() {
-    const grid = document.getElementById('qrGrid');
-    grid.innerHTML = '';
-    
-    comunicaciones.forEach((s, index) => {
-      const qrData = `${s.apellido}|${s.grado}|${s.dni}|${s.armamento}|${s.numArm}`;
-      
-      const card = document.createElement('div');
-      card.className = 'qr-card';
-      card.innerHTML = `
-        <h3>${s.apellido}</h3>
-        <div class="grado">${s.grado}</div>
-        <div class="dni">${s.dni}</div>
-        <div id="qr-${index}" class="qr-image"></div>
-      `;
-      grid.appendChild(card);
-      
-      new QRCode(document.getElementById(`qr-${index}`), {
-        text: s.dni,
-        width: 120,
-        height: 120,
-        colorDark: "#1a472a",
-        colorLight: "#ffffff",
-        correctLevel: QRCode.CorrectLevel.L
+      {
+        num: "04",
+        apellido: "CHUQUILLAURI TOLEDO SHUGAR",
+        grado: "CABO SAA",
+        dni: "73656600",
+        armamento: "FAL",
+        numArm: "021676"
+      },
+
+      {
+        num: "05",
+        apellido: "HUAMAN ROSALES JUSUE",
+        grado: "CABO SAA",
+        dni: "71045744",
+        armamento: "FAL",
+        numArm: "022187"
+      },
+
+      {
+        num: "06",
+        apellido: "SANTIAGO OJEDA ELOY",
+        grado: "CABO SAA",
+        dni: "72182749",
+        armamento: "FAL",
+        numArm: "022421"
+      },
+
+      {
+        num: "07",
+        apellido: "TINA PACAYA JUAN CARLOS",
+        grado: "CABO SAA",
+        dni: "62986689",
+        armamento: "FAL",
+        numArm: "022554"
+      },
+
+      {
+        num: "08",
+        apellido: "ACHATA CASTRO AARON SAUL",
+        grado: "CABO SAA",
+        dni: "74226186",
+        armamento: "FAL",
+        numArm: "022893"
+      },
+
+      {
+        num: "09",
+        apellido: "REBATTA AVALOS HERLIN DELVIT",
+        grado: "CABO SAA",
+        dni: "61060543",
+        armamento: "FAL",
+        numArm: "022897"
+      },
+
+      {
+        num: "10",
+        apellido: "CASTILLO CCANTO SMITH LUIS",
+        grado: "CABO SAA",
+        dni: "77851493",
+        armamento: "FAL",
+        numArm: "023231"
+      },
+
+      {
+        num: "11",
+        apellido: "VARGAS FLORES AXEL ANTONIO",
+        grado: "CABO SAA",
+        dni: "70700986",
+        armamento: "FAL",
+        numArm: "023334"
+      },
+
+      {
+        num: "12",
+        apellido: "LAPA SAAVEDRA JEAN CLAUDE",
+        grado: "CABO SAA",
+        dni: "70649882",
+        armamento: "FAL",
+        numArm: "023406"
+      },
+
+      {
+        num: "13",
+        apellido: "PEBE ANACLETO MOISES",
+        grado: "TCO 2° EP",
+        dni: "10382331",
+        armamento: "UZI",
+        numArm: "12526"
+      },
+
+      {
+        num: "14",
+        apellido: "LUSTRE RODRIGUEZ LUIS",
+        grado: "SGTO 1°",
+        dni: "74602356",
+        armamento: "FAL",
+        numArm: "021259"
+      }
+
+    ];
+
+    function generarQR() {
+
+      const grid = document.getElementById("qrGrid");
+
+      // Limpiar  anterior
+      grid.innerHTML = "";
+
+      comunicaciones.forEach((s, index) => {
+
+        // Datos que se mostrarán en el QR
+        const qrData =
+          `N°: ${s.num}\n` +
+          `Nombre: ${s.apellido}\n` +
+          `Grado: ${s.grado}\n` +
+          `DNI: ${s.dni}\n` +
+          `Armamento: ${s.armamento}\n` +
+          `N° Armamento: ${s.numArm}`;
+
+        // Crear tarjeta
+        const card = document.createElement("div");
+        card.className = "qr-card";
+
+        card.innerHTML = `
+          <h3>${s.apellido}</h3>
+          <div class="grado">${s.grado}</div>
+          <div class="dni">DNI: ${s.dni}</div>
+          <div id="qr-${index}" class="qr-image"></div>
+        `;
+
+        grid.appendChild(card);
+
+        new QRCode(document.getElementById(`qr-${index}`), {
+          text: qrData,
+          width: 120,
+          height: 120,
+          colorDark: "#1a472a",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.M
+        });
+
       });
-    });
-  }
+    }
 
-  window.addEventListener('load', generarQR);
-</script>
+    window.addEventListener("load", generarQR);
+
+  </script>
 
 </body>
 </html>
