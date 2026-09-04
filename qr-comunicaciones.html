@@ -174,18 +174,18 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
   const comunicaciones = [
-    { apellido: "ACHATA CASTRO AARON", dni: "11226186", grado: "CABO", armamento: "FAL", numArm: "022893" },
-    { apellido: "CASTILLO CCANTO SMITH", dni: "7386143", grado: "CABO", armamento: "FAL", numArm: "023231" },
-    { apellido: "CHUQUILLAURI TOLEDO", dni: "73656600", grado: "SGTO 2", armamento: "FAL", numArm: "021676" },
-    { apellido: "HUAMAN ROSALES JUSUE", dni: "7104571", grado: "CABO", armamento: "FAL", numArm: "022187" },
-    { apellido: "LAPA SAAVEDRA JEAN", dni: "7064184", grado: "CABO", armamento: "FAL", numArm: "023406" },
-    { apellido: "POMA ORE KEVIN", dni: "10380231", grado: "SO 1 EP", armamento: "GALIL", numArm: "12528" },
-    { apellido: "REBATTA AVALOS HERLIN", dni: "6108051", grado: "CABO", armamento: "FAL", numArm: "022897" },
-    { apellido: "RETO NUÑES FABRICIO", dni: "6102156", grado: "SGTO 2", armamento: "FAL", numArm: "021325" },
-    { apellido: "SANTIAGO OJEDA ELOY", dni: "7218249", grado: "CABO", armamento: "FAL", numArm: "022421" },
-    { apellido: "TAMAYO ROSALES JULIO", dni: "6191408", grado: "SGTO 2", armamento: "FAL", numArm: "021431" },
-    { apellido: "TINA PACAYA JUAN", dni: "6936689", grado: "CABO", armamento: "FAL", numArm: "022554" },
-    { apellido: "VARGAS FLORES AXEL", dni: "1910086", grado: "CABO", armamento: "FAL", numArm: "023334" }
+    { apellido: "ACHATA CASTRO AARON", dni: "11226186" },
+    { apellido: "CASTILLO CCANTO SMITH", dni: "7386143" },
+    { apellido: "CHUQUILLAURI TOLEDO", dni: "73656600" },
+    { apellido: "HUAMAN ROSALES JUSUE", dni: "7104571" },
+    { apellido: "LAPA SAAVEDRA JEAN", dni: "7064184" },
+    { apellido: "POMA ORE KEVIN", dni: "10380231" },
+    { apellido: "REBATTA AVALOS HERLIN", dni: "6108051" },
+    { apellido: "RETO NUÑES FABRICIO", dni: "6102156" },
+    { apellido: "SANTIAGO OJEDA ELOY", dni: "7218249" },
+    { apellido: "TAMAYO ROSALES JULIO", dni: "6191408" },
+    { apellido: "TINA PACAYA JUAN", dni: "6936689" },
+    { apellido: "VARGAS FLORES AXEL", dni: "1910086" }
   ];
 
   function generarQR() {
@@ -195,7 +195,7 @@
     const ordenado = [...comunicaciones].sort((a, b) => a.apellido.localeCompare(b.apellido));
     
     ordenado.forEach((s, index) => {
-      const qrData = `${s.apellido}|${s.grado}|${s.dni}|${s.armamento}|${s.numArm}`;
+      const qrData = s.dni;
       
       const card = document.createElement('div');
       card.className = 'qr-card';
@@ -208,8 +208,8 @@
       
       new QRCode(document.getElementById(`qr-${index}`), {
         text: qrData,
-        width: 100,
-        height: 100,
+        width: 120,
+        height: 120,
         colorDark: "#1a472a",
         colorLight: "#ffffff",
         correctLevel: QRCode.CorrectLevel.L
