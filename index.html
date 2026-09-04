@@ -3,642 +3,330 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BATLLOG 112 - Registro de Soldados</title>
+  <title>BATLLOG 112 - Centro de Control</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body { height: 100%; }
     body { 
       font-family: 'Segoe UI', 'Roboto', Arial, sans-serif; 
       background: linear-gradient(135deg, #1a472a 0%, #2d5f40 50%, #0d2818 100%);
-      color: #1a1a1a; 
-      padding: 0;
+      padding: 20px;
       min-height: 100vh;
     }
-    .container { 
-      max-width: 700px; 
-      margin: 0 auto; 
-      display: flex; 
-      flex-direction: column; 
-      min-height: 100vh;
-    }
+    .container { max-width: 1100px; margin: 0 auto; }
     .header {
       background: linear-gradient(135deg, #2d5f40 0%, #1a472a 100%);
-      padding: 25px 20px;
+      padding: 40px 30px;
       text-align: center;
-      border-bottom: 3px solid #d4af37;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      border-radius: 12px;
+      border-bottom: 4px solid #d4af37;
+      margin-bottom: 40px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
     }
     .logo-container { 
       display: flex; 
       align-items: center; 
       justify-content: center; 
-      gap: 20px;
-      margin-bottom: 15px;
+      gap: 25px;
+      margin-bottom: 20px;
     }
     .logo { 
-      width: 90px; 
-      height: 90px; 
+      width: 100px; 
+      height: 100px; 
       background: linear-gradient(135deg, #1a472a 0%, #0d2818 100%);
-      border: 2px solid #d4af37;
+      border: 3px solid #d4af37;
       border-radius: 50%; 
       display: flex; 
       align-items: center; 
       justify-content: center; 
       color: #d4af37; 
       font-weight: bold; 
-      font-size: 11px; 
-      text-align: center;
-      box-shadow: 0 4px 10px rgba(212, 175, 55, 0.3);
-    }
-    .header-text h1 { 
-      color: #d4af37; 
-      font-size: 28px; 
-      margin-bottom: 5px;
-      font-weight: 700;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-    }
-    .header-text .subtitle { 
-      color: #a8d5ba; 
-      font-size: 13px;
-      font-weight: 500;
-    }
-    .banner { 
-      background: linear-gradient(90deg, #1a472a 0%, #2d5f40 100%);
-      color: #d4af37; 
-      padding: 12px; 
-      text-align: center; 
-      font-weight: 600; 
-      font-size: 13px;
-      border-top: 1px solid #d4af37;
-      border-bottom: 1px solid #d4af37;
-      letter-spacing: 0.5px;
-    }
-    .content { 
-      background: #f8f9f7; 
-      padding: 25px; 
-      margin: 20px; 
-      border-radius: 10px; 
-      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-    .config-section { 
-      background: linear-gradient(135deg, #e8f3ee 0%, #dff0e8 100%);
-      padding: 18px; 
-      border-radius: 8px; 
-      margin-bottom: 20px; 
-      border-left: 4px solid #2d5f40;
-      border: 1px solid #d4f0e0;
-      box-shadow: 0 2px 8px rgba(45, 95, 64, 0.1);
-    }
-    .config-section label { 
-      display: block; 
       font-size: 12px; 
-      color: #1a472a; 
-      margin-bottom: 8px; 
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.3px;
+      text-align: center;
+      box-shadow: 0 6px 15px rgba(212, 175, 55, 0.4);
     }
-    .config-section input { 
-      width: 100%; 
-      padding: 12px; 
-      border: 1px solid #a8d5ba; 
-      border-radius: 6px; 
-      font-size: 14px;
-      background: white;
-      color: #1a1a1a;
-      transition: all 0.3s;
-    }
-    .config-section input:focus { 
-      outline: none;
-      border-color: #2d5f40;
-      box-shadow: 0 0 0 3px rgba(45, 95, 64, 0.1);
-    }
-    .config-section button { 
-      width: 100%; 
-      padding: 12px; 
-      background: linear-gradient(135deg, #2d5f40 0%, #1a472a 100%);
+    .header h1 { 
       color: #d4af37; 
-      border: none; 
-      border-radius: 6px; 
-      font-weight: 600; 
-      cursor: pointer; 
-      margin-top: 12px;
-      transition: all 0.3s;
-      box-shadow: 0 4px 10px rgba(45, 95, 64, 0.2);
-    }
-    .config-section button:hover { 
-      transform: translateY(-2px);
-      box-shadow: 0 6px 15px rgba(45, 95, 64, 0.3);
-    }
-    .config-section button:active { 
-      transform: translateY(0);
-    }
-    .status { 
-      padding: 15px; 
-      border-radius: 8px; 
-      text-align: center; 
-      font-weight: 600; 
-      margin: 15px 0; 
-      font-size: 14px; 
-      border: 2px solid transparent;
-      animation: slideIn 0.3s ease-out;
-    }
-    @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-    .status.ready { 
-      background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
-      color: #155724; 
-      border-color: #b1dab6;
-    }
-    .status.scanning { 
-      background: linear-gradient(135deg, #cfe2ff 0%, #b6d4fe 100%);
-      color: #084298; 
-      border-color: #a2c9ff;
-      animation: pulse 1s infinite;
-    }
-    .status.success { 
-      background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
-      color: #155724; 
-      border-color: #b1dab6;
-    }
-    .status.error { 
-      background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
-      color: #842029; 
-      border-color: #f1b0b7;
-    }
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.8; } }
-    #reader { 
-      width: 100%; 
-      height: 360px; 
-      border: 3px solid #2d5f40; 
-      border-radius: 8px; 
-      background: #000; 
-      margin: 18px 0;
-      box-shadow: 0 4px 12px rgba(45, 95, 64, 0.2);
-    }
-    .controls { 
-      display: flex; 
-      gap: 12px; 
-      margin: 18px 0;
-    }
-    .controls button { 
-      flex: 1; 
-      padding: 13px; 
-      border: none; 
-      border-radius: 6px; 
-      font-weight: 600; 
-      cursor: pointer; 
-      font-size: 14px;
-      transition: all 0.3s;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-    }
-    .btn-start { 
-      background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
-      color: white; 
-    }
-    .btn-start:hover { 
-      transform: translateY(-2px);
-      box-shadow: 0 6px 15px rgba(40, 167, 69, 0.3);
-    }
-    .btn-stop { 
-      background: linear-gradient(135deg, #dc3545 0%, #bd2130 100%);
-      color: white; 
-      display: none;
-    }
-    .btn-stop:hover { 
-      transform: translateY(-2px);
-      box-shadow: 0 6px 15px rgba(220, 53, 69, 0.3);
-    }
-    .results-section { 
-      background: linear-gradient(135deg, #e8f3ee 0%, #dff0e8 100%);
-      padding: 18px; 
-      border-radius: 8px; 
-      border-left: 4px solid #2d5f40;
-      border: 1px solid #d4f0e0;
-      box-shadow: 0 2px 8px rgba(45, 95, 64, 0.1);
-    }
-    .results-section h3 { 
-      color: #1a472a; 
-      margin-bottom: 12px; 
-      font-size: 14px;
-      text-transform: uppercase;
-      letter-spacing: 0.3px;
-      font-weight: 600;
-    }
-    .result-item { 
-      background: white; 
-      padding: 13px; 
-      margin: 8px 0; 
-      border-radius: 6px; 
-      border-left: 4px solid #2d5f40; 
-      display: flex; 
-      justify-content: space-between; 
-      align-items: center; 
-      font-size: 13px;
-      box-shadow: 0 2px 6px rgba(45, 95, 64, 0.1);
-      transition: all 0.2s;
-    }
-    .result-item:hover { 
-      transform: translateX(2px);
-      box-shadow: 0 3px 8px rgba(45, 95, 64, 0.15);
-    }
-    .result-info { flex: 1; }
-    .result-name { 
-      color: #1a472a; 
+      font-size: 36px; 
+      margin-bottom: 10px;
       font-weight: 700;
-      margin-bottom: 3px;
+      text-shadow: 0 3px 6px rgba(0,0,0,0.4);
     }
-    .result-meta { 
-      color: #5a7a6d; 
-      font-size: 11px;
-      line-height: 1.4;
-    }
-    .delete-btn { 
-      background: #dc3545; 
-      color: white; 
-      border: none; 
-      padding: 6px 11px; 
-      border-radius: 4px; 
-      cursor: pointer; 
-      font-size: 12px;
-      font-weight: 600;
-      transition: all 0.2s;
-      margin-left: 10px;
-    }
-    .delete-btn:hover { 
-      background: #bd2130;
-      transform: scale(1.05);
-    }
-    .empty { 
-      text-align: center; 
-      color: #7a9d8f; 
-      padding: 25px; 
-      font-size: 14px;
-    }
-    .footer { 
-      text-align: center; 
+    .header p { 
       color: #a8d5ba; 
-      padding: 15px; 
-      font-size: 11px;
-      border-top: 1px solid rgba(212, 175, 55, 0.2);
-      background: rgba(0,0,0,0.1);
+      font-size: 15px;
+      font-weight: 500;
+      margin-bottom: 5px;
+    }
+    .header .subtitle { 
+      color: #7db3a0;
+      font-size: 13px;
     }
     
-    /* Modal */
-    .modal { 
-      display: none; 
-      position: fixed; 
-      top: 0; 
-      left: 0; 
-      width: 100%; 
-      height: 100%; 
-      background: rgba(0,0,0,0.8); 
-      z-index: 1000; 
-      align-items: center; 
-      justify-content: center;
-      animation: fadeIn 0.3s ease-out;
-    }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    .modal.active { display: flex; }
-    .modal-content { 
-      background: linear-gradient(135deg, #f8f9f7 0%, #f0f3ef 100%);
-      padding: 50px 40px; 
-      border-radius: 12px; 
-      text-align: center; 
-      max-width: 90%;
-      box-shadow: 0 15px 50px rgba(0,0,0,0.4);
-      border-top: 5px solid #2d5f40;
-      border-left: 3px solid #d4af37;
-      border-right: 3px solid #d4af37;
-      animation: slideUp 0.4s ease-out;
-    }
-    @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-    .modal-content h2 { 
-      color: #1a472a; 
-      font-size: 32px; 
-      margin-bottom: 15px;
+    .banner {
+      background: linear-gradient(90deg, #d4af37 0%, #c9a027 100%);
+      color: #1a472a;
+      padding: 15px;
+      text-align: center;
       font-weight: 700;
-      text-transform: uppercase;
+      font-size: 16px;
+      border-radius: 8px;
+      margin-bottom: 40px;
+      box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
       letter-spacing: 1px;
+      text-transform: uppercase;
     }
-    .modal-content .check-icon { 
-      font-size: 70px; 
+    
+    .content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+    
+    .section {
+      background: linear-gradient(135deg, #f8f9f7 0%, #f0f3ef 100%);
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+      border-top: 4px solid #2d5f40;
+    }
+    
+    .section h2 {
+      color: #1a472a;
+      font-size: 20px;
       margin-bottom: 20px;
-      animation: checkBounce 0.6s ease-out;
-    }
-    @keyframes checkBounce { 0% { transform: scale(0); } 70% { transform: scale(1.1); } 100% { transform: scale(1); } }
-    .modal-content p { 
-      color: #5a7a6d; 
-      font-size: 15px; 
-      margin-bottom: 25px;
-      font-weight: 500;
-    }
-    .modal-content .soldier-data { 
-      background: linear-gradient(135deg, #e8f3ee 0%, #dff0e8 100%);
-      padding: 20px; 
-      border-radius: 8px; 
-      margin: 25px 0;
-      text-align: left;
-      border-left: 4px solid #2d5f40;
-      box-shadow: 0 3px 10px rgba(45, 95, 64, 0.1);
-    }
-    .modal-content .soldier-data div { 
-      margin: 10px 0; 
-      font-size: 14px;
+      font-weight: 700;
       display: flex;
-      justify-content: space-between;
-      padding: 5px 0;
-      border-bottom: 1px solid rgba(45, 95, 64, 0.1);
+      align-items: center;
+      gap: 10px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #d4af37;
     }
-    .modal-content .soldier-data div:last-child {
-      border-bottom: none;
+    
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
-    .modal-content .soldier-data strong { 
+    
+    .menu-item {
+      padding: 16px 18px;
+      background: white;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      text-decoration: none;
       color: #1a472a;
       font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 2px 8px rgba(45, 95, 64, 0.08);
+      border-left: 4px solid #2d5f40;
     }
-    .modal-content button { 
-      padding: 13px 50px; 
+    
+    .menu-item:hover {
+      background: linear-gradient(135deg, #e8f3ee 0%, #dff0e8 100%);
+      border-color: #2d5f40;
+      border-left: 4px solid #d4af37;
+      transform: translateX(5px);
+      box-shadow: 0 4px 15px rgba(45, 95, 64, 0.15);
+    }
+    
+    .menu-item.active {
       background: linear-gradient(135deg, #2d5f40 0%, #1a472a 100%);
-      color: #d4af37; 
-      border: none; 
-      border-radius: 6px; 
-      font-weight: 600; 
-      cursor: pointer; 
-      font-size: 15px; 
-      margin-top: 25px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      transition: all 0.3s;
-      box-shadow: 0 4px 12px rgba(45, 95, 64, 0.3);
+      color: #d4af37;
+      border-color: #d4af37;
+      box-shadow: 0 4px 15px rgba(45, 95, 64, 0.25);
     }
-    .modal-content button:hover { 
-      transform: translateY(-2px);
-      box-shadow: 0 6px 18px rgba(45, 95, 64, 0.4);
+    
+    .menu-icon {
+      font-size: 20px;
+      min-width: 24px;
     }
-    .modal-content button:active { 
-      transform: translateY(0);
+    
+    .menu-text {
+      flex: 1;
     }
-    .clear-btn {
-      width: 100%; 
-      padding: 12px; 
-      background: linear-gradient(135deg, #dc3545 0%, #bd2130 100%);
-      color: white; 
-      border: none; 
-      border-radius: 6px; 
-      cursor: pointer; 
-      margin-top: 15px; 
-      font-weight: 600;
-      transition: all 0.3s;
-      box-shadow: 0 4px 10px rgba(220, 53, 69, 0.2);
+    
+    .menu-desc {
+      font-size: 12px;
+      opacity: 0.7;
+      margin-top: 2px;
     }
-    .clear-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 15px rgba(220, 53, 69, 0.3);
+    
+    @media (max-width: 768px) {
+      .content {
+        grid-template-columns: 1fr;
+      }
+      .header h1 {
+        font-size: 28px;
+      }
+      .logo-container {
+        flex-direction: column;
+        gap: 15px;
+      }
+    }
+    
+    .footer {
+      text-align: center;
+      color: #a8d5ba;
+      padding: 20px;
+      border-top: 1px solid rgba(212, 175, 55, 0.2);
+      font-size: 12px;
+      margin-top: 30px;
+    }
+    
+    .info-box {
+      background: linear-gradient(135deg, #cfe2ff 0%, #b6d4fe 100%);
+      border: 2px solid #084298;
+      border-radius: 8px;
+      padding: 15px;
+      margin-top: 20px;
+      color: #084298;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    
+    .info-box strong {
+      color: #042c53;
+      display: block;
+      margin-bottom: 5px;
     }
   </style>
 </head>
 <body>
 
 <div class="container">
+  
+  <!-- HEADER -->
   <div class="header">
     <div class="logo-container">
       <div class="logo">BTN<br>LOG<br>112</div>
-      <div class="header-text">
-        <h1>BATLLOG 112</h1>
-        <p class="subtitle">Batallón Logístico 112 - Perú</p>
+      <div>
+        <h1>🎖️ BATLLOG 112</h1>
+        <p>Batallón Logístico 112</p>
+        <p class="subtitle">Sistema Integral de QR - Perú</p>
       </div>
     </div>
   </div>
-
-  <div class="banner">🎖️ REGISTRO DE SOLDADOS - ESCANEO DE QR</div>
-
+  
+  <div class="banner">
+    🚀 CENTRO DE CONTROL - SELECCIONA UN MÓDULO
+  </div>
+  
+  <!-- CONTENIDO PRINCIPAL -->
   <div class="content">
-    <div class="config-section">
-      <label>🔗 URL de Google Sheets</label>
-      <input type="text" id="urlInput" placeholder="https://script.google.com/macros/s/...">
-      <button onclick="guardarUrl()">✓ Guardar Configuración</button>
-    </div>
-
-    <div class="status" id="status">Configurando...</div>
-
-    <div class="controls">
-      <button class="btn-start" id="btnStart" onclick="iniciar()">▶ Iniciar Escaneo</button>
-      <button class="btn-stop" id="btnStop" onclick="detener()">⏹ Detener</button>
-    </div>
-
-    <div id="reader"></div>
-
-    <div class="results-section">
-      <h3>📋 Registros (<span id="count">0</span>)</h3>
-      <div id="resultsList" class="empty">Sin registros aún</div>
-      <button class="clear-btn" onclick="limpiarResultados()">🗑️ Limpiar Todos</button>
-    </div>
-  </div>
-
-  <div class="footer">
-    <p>BATLLOG 112 © 2026 | Perú</p>
-    <p>Sistema de Registro de Soldados</p>
-  </div>
-</div>
-
-<!-- Modal de Éxito -->
-<div class="modal" id="modalExito">
-  <div class="modal-content">
-    <div class="check-icon">✅</div>
-    <h2>ESCANEO EXITOSO</h2>
-    <p>Soldado registrado correctamente</p>
-    <div class="soldier-data" id="modalData"></div>
-    <button onclick="cerrarModal()">Aceptar</button>
-  </div>
-</div>
-
-<script src="https://unpkg.com/html5-qrcode"></script>
-<script>
-  let appUrl = localStorage.getItem('appUrl') || '';
-  let qrScanner = null;
-  let registros = [];
-  let scanning = false;
-  let canScan = true;
-  let numeroRegistro = 0;
-
-  if (appUrl) {
-    document.getElementById('urlInput').value = appUrl;
-    document.getElementById('status').className = 'status ready';
-    document.getElementById('status').textContent = '✓ Configurado - Click en Iniciar';
-    document.getElementById('btnStart').style.display = 'block';
-  }
-
-  function guardarUrl() {
-    appUrl = document.getElementById('urlInput').value.trim();
-    if (!appUrl) {
-      mostrarError('Ingresa la URL de Google Sheets');
-      return;
-    }
-    localStorage.setItem('appUrl', appUrl);
-    document.getElementById('status').className = 'status ready';
-    document.getElementById('status').textContent = '✓ Configurado - Click en Iniciar';
-    document.getElementById('btnStart').style.display = 'block';
-  }
-
-  function iniciar() {
-    if (!appUrl) {
-      mostrarError('Primero configura la URL');
-      return;
-    }
-
-    document.getElementById('status').className = 'status scanning';
-    document.getElementById('status').textContent = '⏳ Iniciando cámara...';
-
-    qrScanner = new Html5Qrcode('reader');
-    const config = { fps: 10, qrbox: { width: 250, height: 250 } };
-
-    qrScanner.start(
-      { facingMode: 'environment' },
-      config,
-      onScanSuccess,
-      onScanFailure
-    ).then(() => {
-      document.getElementById('status').className = 'status scanning';
-      document.getElementById('status').textContent = '📹 Escaneando... apunta al QR';
-      document.getElementById('btnStart').style.display = 'none';
-      document.getElementById('btnStop').style.display = 'block';
-      scanning = true;
-      canScan = true;
-    }).catch(err => {
-      mostrarError('Error: ' + err.message);
-    });
-  }
-
-  function detener() {
-    if (qrScanner) {
-      qrScanner.stop();
-      document.getElementById('status').className = 'status ready';
-      document.getElementById('status').textContent = '⏹ Detenido';
-      document.getElementById('btnStart').style.display = 'block';
-      document.getElementById('btnStop').style.display = 'none';
-      scanning = false;
-    }
-  }
-
-  function onScanSuccess(decodedText) {
-    if (!canScan || !scanning) return;
-    canScan = false;
-    procesarQR(decodedText);
-  }
-
-  function onScanFailure(error) {
-    // Sin errores
-  }
-
-  async function procesarQR(qrData) {
-    document.getElementById('status').className = 'status scanning';
-    document.getElementById('status').textContent = '📤 Procesando...';
-
-    try {
-      const response = await fetch(appUrl, {
-        method: 'POST',
-        body: JSON.stringify({ qrData: qrData })
-      });
-
-      if (response.ok) {
-        numeroRegistro++;
-        
-        const partes = qrData.split('|');
-        const registro = {
-          numero: numeroRegistro.toString().padStart(2, '0'),
-          grado: partes[1] || 'N/A',
-          nombre: partes[0] || 'N/A',
-          dni: partes[2] || 'N/A',
-          armamento: partes[3] || 'N/A',
-          numArmamento: partes[4] || 'N/A',
-          hora: new Date().toLocaleString('es-PE')
-        };
-        
-        registros.unshift(registro);
-        mostrarResultados();
-        mostrarModalExito(registro);
-        
-        if (qrScanner) {
-          qrScanner.stop();
-          document.getElementById('btnStart').style.display = 'block';
-          document.getElementById('btnStop').style.display = 'none';
-          scanning = false;
-        }
-      } else {
-        mostrarError('Error al guardar');
-        canScan = true;
-      }
-    } catch(e) {
-      mostrarError('Error: ' + e.message);
-      canScan = true;
-    }
-  }
-
-  function mostrarModalExito(registro) {
-    const dataHtml = `
-      <div><strong>Número:</strong> <span>${registro.numero}</span></div>
-      <div><strong>Grado:</strong> <span>${registro.grado}</span></div>
-      <div><strong>Nombre:</strong> <span>${registro.nombre}</span></div>
-      <div><strong>DNI:</strong> <span>${registro.dni}</span></div>
-      <div><strong>Armamento:</strong> <span>${registro.armamento}</span></div>
-      <div><strong>N° Armamento:</strong> <span>${registro.numArmamento}</span></div>
-      <div><strong>Fecha/Hora:</strong> <span>${registro.hora}</span></div>
-    `;
     
-    document.getElementById('modalData').innerHTML = dataHtml;
-    document.getElementById('modalExito').classList.add('active');
-  }
-
-  function cerrarModal() {
-    document.getElementById('modalExito').classList.remove('active');
-    document.getElementById('status').className = 'status ready';
-    document.getElementById('status').textContent = '✓ Listo para siguiente escaneo - Click en Iniciar';
-  }
-
-  function mostrarResultados() {
-    const el = document.getElementById('resultsList');
-    document.getElementById('count').textContent = registros.length;
-
-    if (registros.length === 0) {
-      el.innerHTML = '<div class="empty">Sin registros aún</div>';
-      return;
-    }
-
-    el.innerHTML = registros.map((r, i) => `
-      <div class="result-item">
-        <div class="result-info">
-          <div class="result-name">${r.numero}. ${r.nombre}</div>
-          <div class="result-meta">${r.grado} | DNI: ${r.dni}<br>${r.armamento} (${r.numArmamento}) | ${r.hora}</div>
-        </div>
-        <button class="delete-btn" onclick="eliminar(${i})">✕</button>
+    <!-- GENERADORES DE QR -->
+    <div class="section">
+      <h2>📋 GENERAR QR POR SECCIÓN</h2>
+      
+      <div class="menu">
+        <a href="qr-sanidad.html" class="menu-item">
+          <span class="menu-icon">🏥</span>
+          <span class="menu-text">
+            <strong>Sanidad</strong>
+            <div class="menu-desc">13 soldados precargados</div>
+          </span>
+        </a>
+        
+        <a href="qr-comunicaciones.html" class="menu-item">
+          <span class="menu-icon">📡</span>
+          <span class="menu-text">
+            <strong>Comunicaciones</strong>
+            <div class="menu-desc">Sección de comunicaciones</div>
+          </span>
+        </a>
+        
+        <a href="qr-intendencia.html" class="menu-item">
+          <span class="menu-icon">📦</span>
+          <span class="menu-text">
+            <strong>Intendencia</strong>
+            <div class="menu-desc">Sección de intendencia</div>
+          </span>
+        </a>
+        
+        <a href="qr-material-guerra.html" class="menu-item">
+          <span class="menu-icon">⚔️</span>
+          <span class="menu-text">
+            <strong>Material de Guerra</strong>
+            <div class="menu-desc">Sección material de guerra</div>
+          </span>
+        </a>
+        
+        <a href="qr-ingenieria.html" class="menu-item">
+          <span class="menu-icon">🔧</span>
+          <span class="menu-text">
+            <strong>Ingeniería</strong>
+            <div class="menu-desc">Sección ingeniería</div>
+          </span>
+        </a>
+        
+        <a href="qr-comando-servicios.html" class="menu-item">
+          <span class="menu-icon">⚙️</span>
+          <span class="menu-text">
+            <strong>Comando Servicios</strong>
+            <div class="menu-desc">Sección comando servicios</div>
+          </span>
+        </a>
       </div>
-    `).join('');
-  }
+      
+      <div class="info-box">
+        <strong>ℹ️ Cómo funciona:</strong>
+        Cada sección permite generar QR de soldados precargados o agregar nuevos. Imprime o envía directamente a Google Sheets.
+      </div>
+    </div>
+    
+    <!-- HERRAMIENTAS -->
+    <div class="section">
+      <h2>🎯 HERRAMIENTAS</h2>
+      
+      <div class="menu">
+        <a href="scanner-profesional.html" class="menu-item">
+          <span class="menu-icon">📱</span>
+          <span class="menu-text">
+            <strong>Scanner de QR</strong>
+            <div class="menu-desc">Escanea y registra soldados</div>
+          </span>
+        </a>
+        
+        <a href="qr-generador-avanzado.html" class="menu-item">
+          <span class="menu-icon">🔄</span>
+          <span class="menu-text">
+            <strong>Generador Avanzado</strong>
+            <div class="menu-desc">Precargados + modo manual</div>
+          </span>
+        </a>
+        
+        <a href="registro-soldados.html" class="menu-item">
+          <span class="menu-icon">📊</span>
+          <span class="menu-text">
+            <strong>Registro de Soldados</strong>
+            <div class="menu-desc">Ver y gestionar registros</div>
+          </span>
+        </a>
+      </div>
+      
+      <div class="info-box">
+        <strong>📌 Flujo recomendado:</strong>
+        1. Genera QR en cualquier sección<br>
+        2. Imprime o distribuye<br>
+        3. Escanea con el Scanner<br>
+        4. Los datos se guardan en Sheets
+      </div>
+    </div>
+    
+  </div>
+  
+  <!-- FOOTER -->
+  <div class="footer">
+    <p>BATLLOG 112 © 2026 | Sistema Integral de Control de QR</p>
+    <p>Batallón Logístico 112 - Perú</p>
+  </div>
 
-  function eliminar(i) {
-    registros.splice(i, 1);
-    mostrarResultados();
-  }
-
-  function limpiarResultados() {
-    if (confirm('¿Limpiar todos los registros?')) {
-      registros = [];
-      numeroRegistro = 0;
-      mostrarResultados();
-    }
-  }
-
-  function mostrarError(msg) {
-    const el = document.getElementById('status');
-    el.className = 'status error';
-    el.textContent = '❌ ' + msg;
-  }
-</script>
+</div>
 
 </body>
 </html>
