@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BATLLOG 112 - Comunicaciones QR</title>
+  <title>BATLLOG 112 - Sanidad QR</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { 
@@ -324,8 +324,8 @@
 
 <div class="container">
   <div class="header">
-    <h1>🎖️ BATLLOG 112 - Comunicaciones</h1>
-    <p class="subtitle">Generador de QR - Compañía Comunicaciones</p>
+    <h1>🎖️ BATLLOG 112 - Sanidad</h1>
+    <p class="subtitle">Generador de QR - Compañía Sanidad</p>
   </div>
 
   <div class="tabs">
@@ -335,7 +335,7 @@
 
   <!-- TAB PRECARGADOS -->
   <div id="sanidad" class="tab-content active">
-    <div class="status">✓ 14 soldados de Comunicaciones precargados</div>
+    <div class="status">✓ 13 soldados de Sanidad precargados</div>
     
     <div class="options">
       <label>
@@ -356,10 +356,10 @@
     </div>
     
     <div class="controls">
-      <button class="btn-generate" onclick="generarComunicaciones()">🎯 Generar QR</button>
+      <button class="btn-generate" onclick="generarSanidad()">🎯 Generar QR</button>
       <button class="btn-print" id="btnPrint" onclick="window.print()">🖨️ Imprimir</button>
       <button class="btn-enviar" id="btnEnviarSan" onclick="enviarAGoogleSheets()">📤 Enviar a Sheets</button>
-      <button class="btn-generate" onclick="window.location.href='scanner-profesional.html?grupo=Comunicaciones'" style="background: linear-gradient(135deg, #6c757d 0%, #545b62 100%);">📱 Ir a Scanner</button>
+      <button class="btn-generate" onclick="window.location.href='scanner-profesional.html?grupo=Sanidad'" style="background: linear-gradient(135deg, #6c757d 0%, #545b62 100%);">📱 Ir a Scanner</button>
       <button class="btn-generate" onclick="window.location.href='index.html'" style="background: linear-gradient(135deg, #17a2b8 0%, #117a8b 100%);">🏠 Volver al Inicio</button>
     </div>
   </div>
@@ -417,7 +417,7 @@
       <button class="btn-add" onclick="agregarManual()">➕ Agregar Soldado</button>
       <button class="btn-print" id="btnPrintManual" onclick="window.print()">🖨️ Imprimir</button>
       <button class="btn-enviar" id="btnEnviarMan" onclick="enviarManualAGoogleSheets()">📤 Enviar a Sheets</button>
-      <button class="btn-generate" onclick="window.location.href='scanner-profesional.html?grupo=Comunicaciones'" style="background: linear-gradient(135deg, #6c757d 0%, #545b62 100%);">📱 Ir a Scanner</button>
+      <button class="btn-generate" onclick="window.location.href='scanner-profesional.html?grupo=Sanidad'" style="background: linear-gradient(135deg, #6c757d 0%, #545b62 100%);">📱 Ir a Scanner</button>
       <button class="btn-generate" onclick="window.location.href='index.html'" style="background: linear-gradient(135deg, #17a2b8 0%, #117a8b 100%);">🏠 Volver al Inicio</button>
     </div>
   </div>
@@ -443,20 +443,19 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
   const sanidad = [
-    { apellido: "PEBE ANACLETO MOISES", dni: "10382331", grado: "TCO 2° EP", armamento: "UZI", numArm: "12526" },
-    { apellido: "LUSTRE RODRIGUEZ LUIS", dni: "74602356", grado: "SGTO 1°", armamento: "FAL", numArm: "021259" },
-    { apellido: "POMA ORE KEVIN RONALD", dni: "10380231", grado: "SO 1 EP", armamento: "GALIL", numArm: "12528" },
-    { apellido: "RETO NUÑES FABRICIO RAUL", dni: "61021564", grado: "SGTO 2 SAA", armamento: "FAL", numArm: "021325" },
-    { apellido: "TAMAYO ROSALES JULIO", dni: "61717408", grado: "SGTO 2 SAA", armamento: "FAL", numArm: "021631" },
-    { apellido: "CHUQUILLAURI TOLEDO SHUGAR", dni: "73656600", grado: "CABO SAA", armamento: "FAL", numArm: "021676" },
-    { apellido: "HUAMAN ROSALES JUSUE", dni: "71045744", grado: "CABO SAA", armamento: "FAL", numArm: "022187" },
-    { apellido: "SANTIAGO OJEDA ELOY", dni: "72182749", grado: "CABO SAA", armamento: "FAL", numArm: "022421" },
-    { apellido: "TINA PACAYA JUAN CARLOS", dni: "62986689", grado: "CABO SAA", armamento: "FAL", numArm: "022554" },
-    { apellido: "ACHATA CASTRO AARON SAUL", dni: "74226186", grado: "CABO SAA", armamento: "FAL", numArm: "022893" },
-    { apellido: "REBATTA AVALOS HERLINS DELVIT", dni: "61060543", grado: "CABO SAA", armamento: "FAL", numArm: "022897" },
-    { apellido: "CASTILLO CCANTO SMITH LUIS", dni: "77851493", grado: "CABO SAA", armamento: "FAL", numArm: "023231" },
-    { apellido: "VARGAS FLORES AXEL ANTONIO", dni: "70700986", grado: "CABO SAA", armamento: "FAL", numArm: "023334" },
-    { apellido: "LAPA SAAVEDRA JEAN CLAUDE", dni: "70649882", grado: "CABO SAA", armamento: "FAL", numArm: "023406" }
+    { apellido: "HUAMAN FUENTES", dni: "757425877", grado: "SGTO1", armamento: "GALIL", numArm: "97134108" },
+    { apellido: "HERRERA SAUCEDO", dni: "76440794", grado: "SGTO2", armamento: "FAL", numArm: "1711788" },
+    { apellido: "ISUIZA HUAMAN", dni: "74630366", grado: "CABO", armamento: "FAL", numArm: "1711474" },
+    { apellido: "PASQUEL CHUQUIYAURI", dni: "60353322", grado: "CABO", armamento: "FAL", numArm: "1607007" },
+    { apellido: "ALVARADO BETETA", dni: "60978240", grado: "CABO", armamento: "FAL", numArm: "1606661" },
+    { apellido: "ROJAS LOMAS", dni: "81298002", grado: "CABO", armamento: "FAL", numArm: "1606561" },
+    { apellido: "ROJAS LOMAS", dni: "81298001", grado: "CABO", armamento: "FAL", numArm: "1605285" },
+    { apellido: "BORJAS CHAVARRIA", dni: "60671409", grado: "SLDO", armamento: "FAL", numArm: "1604844" },
+    { apellido: "CALISAYA LONG", dni: "74587643", grado: "SLDO", armamento: "FAL", numArm: "1604710" },
+    { apellido: "FERNANDEZ AREVALO", dni: "61265796", grado: "SLDO", armamento: "FAL", numArm: "1604645" },
+    { apellido: "TUANAMA QUILICHA", dni: "74395760", grado: "SLDO", armamento: "FAL", numArm: "1594622" },
+    { apellido: "YAHUARCANI PAREDES", dni: "61345749", grado: "SLDO", armamento: "FAL", numArm: "1593604" },
+    { apellido: "TITO COTIPA", dni: "76779812", grado: "SLDO", armamento: "FAL", numArm: "1593604" }
   ];
 
   let registrosManual = [];
@@ -489,14 +488,14 @@
     }
   }
 
-  function generarComunicaciones() {
+  function generarSanidad() {
     const grid = document.getElementById('qrGrid');
     grid.innerHTML = '';
     
     const ordenado = [...sanidad].sort((a, b) => a.apellido.localeCompare(b.apellido));
     
     ordenado.forEach((s, index) => {
-      const qrData = s.dni;
+      const qrData = `${s.apellido}|${s.grado}|${s.dni}|${s.armamento}|${s.numArm}`;
       
       const card = document.createElement('div');
       card.className = 'qr-card';
@@ -555,7 +554,7 @@
     const ordenado = [...registrosManual].sort((a, b) => a.apellido.localeCompare(b.apellido));
     
     ordenado.forEach((s, index) => {
-      const qrData = s.dni;
+      const qrData = `${s.apellido}|${s.grado}|${s.dni}|${s.armamento}|${s.numArmamento}`;
       
       const card = document.createElement('div');
       card.className = 'qr-card';
@@ -597,7 +596,7 @@
       let enviados = 0;
       
       for (const s of ordenado) {
-        const qrData = s.dni;
+        const qrData = `${s.apellido}|${s.grado}|${s.dni}|${s.armamento}|${s.numArm}`;
         await fetch(url, { method: 'POST', body: JSON.stringify({ qrData }) });
         enviados++;
       }
@@ -633,7 +632,7 @@
       let enviados = 0;
       
       for (const s of ordenado) {
-        const qrData = s.dni;
+        const qrData = `${s.apellido}|${s.grado}|${s.dni}|${s.armamento}|${s.numArmamento}`;
         await fetch(url, { method: 'POST', body: JSON.stringify({ qrData }) });
         enviados++;
       }
