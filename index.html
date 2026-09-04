@@ -3,243 +3,196 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Escáner QR Soldados</title>
+  <title>Escáner QR</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; padding: 20px; }
-    .container { max-width: 500px; margin: 0 auto; }
-    h1 { font-size: 28px; margin-bottom: 10px; color: #333; }
-    .subtitle { color: #666; margin-bottom: 30px; font-size: 14px; }
-    .section { background: white; border: 1px solid #ddd; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
-    .section-title { font-weight: 600; margin-bottom: 15px; font-size: 16px; color: #333; }
-    input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; margin-bottom: 10px; }
-    button { width: 100%; padding: 12px; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; margin-bottom: 10px; }
-    .btn-primary { background: #4CAF50; color: white; }
-    .btn-primary:active { transform: scale(0.98); }
-    .btn-secondary { background: #2196F3; color: white; }
-    .btn-danger { background: #f44336; color: white; }
-    video { width: 100%; border-radius: 8px; background: #000; margin: 15px 0; display: none; height: 400px; object-fit: cover; }
-    .status { padding: 15px; border-radius: 8px; margin: 15px 0; font-size: 14px; text-align: center; font-weight: 600; }
-    .status.ready { background: #d4edda; color: #155724; }
-    .status.scanning { background: #cfe2ff; color: #084298; }
-    .status.success { background: #d4edda; color: #155724; }
-    .status.error { background: #f8d7da; color: #842029; }
-    .result { background: #f9f9f9; border: 1px solid #ddd; border-radius: 8px; padding: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
-    .result-text { flex: 1; }
-    .result-id { font-weight: 600; font-size: 14px; }
-    .result-time { font-size: 12px; color: #666; margin-top: 4px; }
-    .remove-btn { background: #f44336; color: white; border: none; padding: 6px 12px; font-size: 12px; border-radius: 4px; cursor: pointer; }
-    .empty { text-align: center; color: #999; padding: 30px 0; font-size: 14px; }
-    .results-list { max-height: 400px; overflow-y: auto; }
+    body { font-family: Arial, sans-serif; background: #000; color: white; padding: 10px; }
+    .container { max-width: 100%; }
+    h1 { text-align: center; margin: 20px 0; font-size: 24px; }
+    .config { background: #222; padding: 15px; border-radius: 8px; margin-bottom: 15px; }
+    .config input { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #444; border-radius: 6px; background: #333; color: white; font-size: 14px; }
+    .config button { width: 100%; padding: 12px; background: #4CAF50; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
+    #reader { width: 100%; height: 400px; border: 2px solid #4CAF50; border-radius: 8px; margin: 15px 0; background: #000; }
+    .controls { display: flex; gap: 10px; margin: 15px 0; }
+    .controls button { flex: 1; padding: 12px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
+    .btn-start { background: #4CAF50; color: white; }
+    .btn-stop { background: #f44336; color: white; display: none; }
+    .status { background: #0d5f0d; color: #4CAF50; padding: 15px; border-radius: 6px; text-align: center; font-weight: bold; margin: 15px 0; }
+    .status.error { background: #5f0d0d; color: #ff6b6b; }
+    .result { background: #222; padding: 12px; margin: 8px 0; border-radius: 6px; border-left: 4px solid #4CAF50; display: flex; justify-content: space-between; }
+    .result-id { color: #4CAF50; font-weight: bold; }
+    .result-time { color: #aaa; font-size: 12px; }
+    .results { max-height: 250px; overflow-y: auto; }
+    .empty { text-align: center; color: #666; padding: 20px; }
   </style>
 </head>
 <body>
+
 <div class="container">
   <h1>📱 Escáner QR</h1>
-  <p class="subtitle">Escanea el QR del soldado para registrar</p>
   
-  <div class="section">
-    <div class="section-title">Configuración</div>
+  <div class="config">
     <input type="text" id="urlInput" placeholder="Pega la URL del Apps Script">
-    <button class="btn-primary" onclick="guardarUrl()">Guardar URL</button>
+    <button onclick="guardarUrl()">✓ Guardar URL</button>
+  </div>
+
+  <div class="status" id="status">Configurando...</div>
+
+  <div class="controls">
+    <button class="btn-start" id="btnStart" onclick="iniciar()">▶ Iniciar</button>
+    <button class="btn-stop" id="btnStop" onclick="detener()">⏹ Detener</button>
+  </div>
+
+  <div id="reader"></div>
+
+  <div class="results" id="resultsList">
+    <div class="empty">Sin escaneos aún</div>
   </div>
   
-  <div class="section">
-    <div class="section-title">Estado</div>
-    <div id="status" class="status ready">✓ Listo para escanear</div>
-  </div>
-  
-  <div class="section">
-    <div class="section-title">Cámara</div>
-    <video id="video" playsinline autoplay muted></video>
-    <div id="error" style="display: none; background: #f8d7da; color: #842029; padding: 12px; border-radius: 8px; margin-bottom: 10px; font-size: 13px;"></div>
-    <button id="btnStart" class="btn-primary" onclick="iniciarCamara()">Iniciar cámara</button>
-    <button id="btnStop" class="btn-danger" onclick="detenerCamara()" style="display: none;">Detener</button>
-  </div>
-  
-  <div class="section">
-    <div class="section-title">Escaneos: <span id="count">0</span></div>
-    <div class="results-list" id="results">
-      <div class="empty">Sin escaneos aún</div>
-    </div>
-    <button class="btn-secondary" onclick="limpiar()" style="margin-top: 15px;">Limpiar todo</button>
+  <div style="text-align: center; margin-top: 20px;">
+    <button onclick="limpiarResultados()" style="padding: 10px 20px; background: #f44336; color: white; border: none; border-radius: 6px; cursor: pointer;">Limpiar</button>
   </div>
 </div>
 
-<canvas id="canvas" style="display: none;"></canvas>
-<script async src="https://unpkg.com/@zxing/library@latest"></script>
+<script src="https://unpkg.com/html5-qrcode"></script>
 <script>
   let appUrl = localStorage.getItem('appUrl') || '';
-  let video, stream, scanning = false, scans = [];
-  let videoReady = false;
-  
-  if (appUrl) document.getElementById('urlInput').value = appUrl;
-  
+  let qrScanner = null;
+  let scans = [];
+
+  if (appUrl) {
+    document.getElementById('urlInput').value = appUrl;
+    document.getElementById('status').textContent = '✓ URL configurada - Click en Iniciar';
+    document.getElementById('btnStart').style.display = 'block';
+  }
+
   function guardarUrl() {
     appUrl = document.getElementById('urlInput').value.trim();
-    if (!appUrl) { alert('Ingresa la URL'); return; }
+    if (!appUrl) {
+      mostrarError('Ingresa la URL');
+      return;
+    }
     localStorage.setItem('appUrl', appUrl);
-    actualizarStatus('✓ URL guardada', 'success');
+    document.getElementById('status').className = 'status';
+    document.getElementById('status').textContent = '✓ URL configurada - Click en Iniciar';
+    document.getElementById('btnStart').style.display = 'block';
   }
-  
-  async function iniciarCamara() {
-    if (!appUrl) { alert('Primero guarda la URL'); return; }
-    
-    try {
-      document.getElementById('error').style.display = 'none';
-      actualizarStatus('Esperando cámara...', 'scanning');
-      
-      stream = await navigator.mediaDevices.getUserMedia({ 
-        video: { facingMode: 'environment' } 
-      });
-      
-      video = document.getElementById('video');
-      video.srcObject = stream;
-      video.style.display = 'block';
-      
-      video.onloadedmetadata = function() {
-        videoReady = true;
-        video.play();
-        scanning = true;
-        actualizarStatus('📹 Escaneando...', 'scanning');
-        escanear();
-      };
-      
-      setTimeout(() => {
-        if (!videoReady) {
-          throw new Error('Video no cargó');
-        }
-      }, 5000);
-      
+
+  function iniciar() {
+    if (!appUrl) {
+      mostrarError('Primero guarda la URL');
+      return;
+    }
+
+    document.getElementById('status').className = 'status';
+    document.getElementById('status').textContent = '⏳ Iniciando cámara...';
+
+    qrScanner = new Html5Qrcode('reader');
+
+    const config = {
+      fps: 10,
+      qrbox: { width: 250, height: 250 }
+    };
+
+    qrScanner.start(
+      { facingMode: 'environment' },
+      config,
+      onScanSuccess,
+      onScanFailure
+    ).then(() => {
+      document.getElementById('status').className = 'status';
+      document.getElementById('status').textContent = '📹 Escaneando...';
       document.getElementById('btnStart').style.display = 'none';
       document.getElementById('btnStop').style.display = 'block';
-      
-    } catch(e) {
-      document.getElementById('error').textContent = 'Error: ' + e.message;
-      document.getElementById('error').style.display = 'block';
-      actualizarStatus('❌ Error', 'error');
+    }).catch(err => {
+      mostrarError('Error: ' + err.message);
+    });
+  }
+
+  function detener() {
+    if (qrScanner) {
+      qrScanner.stop();
+      document.getElementById('status').className = 'status';
+      document.getElementById('status').textContent = '⏹ Detenido';
       document.getElementById('btnStart').style.display = 'block';
       document.getElementById('btnStop').style.display = 'none';
     }
   }
-  
-  function detenerCamara() {
-    scanning = false;
-    videoReady = false;
-    if (stream) stream.getTracks().forEach(t => t.stop());
-    if (video) video.style.display = 'none';
-    document.getElementById('btnStart').style.display = 'block';
-    document.getElementById('btnStop').style.display = 'none';
-    actualizarStatus('⏹ Detenido', 'ready');
+
+  function onScanSuccess(decodedText) {
+    enviarDatos(decodedText);
   }
-  
-  function actualizarStatus(msg, tipo = 'ready') {
-    document.getElementById('status').className = `status ${tipo}`;
-    document.getElementById('status').textContent = msg;
+
+  function onScanFailure(error) {
+    // No mostrar errores, solo continuar escaneando
   }
-  
-  function escanear() {
-    if (!scanning || !videoReady) return;
-    
-    if (video.videoWidth <= 0 || video.videoHeight <= 0) {
-      requestAnimationFrame(escanear);
-      return;
-    }
-    
-    try {
-      const canvas = document.getElementById('canvas');
-      const ctx = canvas.getContext('2d');
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      ctx.drawImage(video, 0, 0);
-      
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      const luminanceSource = new ZXing.HTMLCanvasElementLuminanceSource(canvas);
-      const binaryBitmap = new ZXing.BinaryBitmap(new ZXing.HybridBinarizer(luminanceSource));
-      const codeReader = new ZXing.MultiFormatReader();
-      
-      try {
-        const result = codeReader.decode(binaryBitmap);
-        if (result && result.text) {
-          procesarQR(result.text);
-        }
-      } catch(e) {
-        // QR no encontrado en este frame, continuar
-      }
-      
-    } catch(e) {
-      console.log('Error:', e);
-    }
-    
-    requestAnimationFrame(escanear);
-  }
-  
-  async function procesarQR(data) {
-    scanning = false;
-    actualizarStatus('📤 Enviando...', 'scanning');
-    
+
+  async function enviarDatos(data) {
+    document.getElementById('status').className = 'status';
+    document.getElementById('status').textContent = '📤 Enviando...';
+
     try {
       const response = await fetch(appUrl, {
         method: 'POST',
         body: JSON.stringify({ nombre: data, id: data, rango: 'Militar' })
       });
-      
+
       if (response.ok) {
         scans.unshift({ id: data, time: new Date().toLocaleTimeString('es-ES') });
-        mostrarScans();
-        actualizarStatus('✅ ¡Registrado!', 'success');
-        
-        setTimeout(() => {
-          if (document.getElementById('btnStop').style.display !== 'none' && videoReady) {
-            scanning = true;
-            actualizarStatus('📹 Escaneando...', 'scanning');
-            escanear();
-          }
-        }, 2000);
+        mostrarResultados();
+        document.getElementById('status').className = 'status';
+        document.getElementById('status').textContent = '✅ ¡Registrado!';
       } else {
-        actualizarStatus('❌ Error al enviar', 'error');
-        setTimeout(() => {
-          if (document.getElementById('btnStop').style.display !== 'none' && videoReady) {
-            scanning = true;
-            actualizarStatus('📹 Escaneando...', 'scanning');
-            escanear();
-          }
-        }, 1000);
+        mostrarError('Error al enviar');
       }
     } catch(e) {
-      actualizarStatus('❌ ' + e.message, 'error');
-      setTimeout(() => {
-        if (document.getElementById('btnStop').style.display !== 'none' && videoReady) {
-          scanning = true;
-          actualizarStatus('📹 Escaneando...', 'scanning');
-          escanear();
-        }
-      }, 1000);
+      mostrarError('Error: ' + e.message);
     }
+
+    setTimeout(() => {
+      if (document.getElementById('btnStop').style.display !== 'none') {
+        document.getElementById('status').className = 'status';
+        document.getElementById('status').textContent = '📹 Escaneando...';
+      }
+    }, 2000);
   }
-  
-  function mostrarScans() {
-    const el = document.getElementById('results');
-    document.getElementById('count').textContent = scans.length;
-    
+
+  function mostrarResultados() {
+    const el = document.getElementById('resultsList');
     if (scans.length === 0) {
       el.innerHTML = '<div class="empty">Sin escaneos aún</div>';
       return;
     }
-    
+
     el.innerHTML = scans.map((s, i) => `
       <div class="result">
-        <div class="result-text">
+        <div>
           <div class="result-id">${s.id}</div>
           <div class="result-time">${s.time}</div>
         </div>
-        <button class="remove-btn" onclick="eliminar(${i})">✕</button>
+        <button onclick="eliminar(${i})" style="background: #f44336; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">✕</button>
       </div>
     `).join('');
   }
-  
-  function eliminar(i) { scans.splice(i, 1); mostrarScans(); }
-  function limpiar() { if (confirm('¿Limpiar todos?')) { scans = []; mostrarScans(); } }
+
+  function eliminar(i) {
+    scans.splice(i, 1);
+    mostrarResultados();
+  }
+
+  function limpiarResultados() {
+    if (confirm('¿Limpiar todos los escaneos?')) {
+      scans = [];
+      mostrarResultados();
+    }
+  }
+
+  function mostrarError(msg) {
+    const el = document.getElementById('status');
+    el.className = 'status error';
+    el.textContent = '❌ ' + msg;
+  }
 </script>
+
 </body>
 </html>
