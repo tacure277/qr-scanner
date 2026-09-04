@@ -19,11 +19,13 @@
     .btn-stop { background: #f44336; color: white; display: none; }
     .status { background: #0d5f0d; color: #4CAF50; padding: 15px; border-radius: 6px; text-align: center; font-weight: bold; margin: 15px 0; }
     .status.error { background: #5f0d0d; color: #ff6b6b; }
+    .status.success { background: #0d5f0d; color: #4CAF50; }
     .result { background: #222; padding: 12px; margin: 8px 0; border-radius: 6px; border-left: 4px solid #4CAF50; display: flex; justify-content: space-between; }
     .result-id { color: #4CAF50; font-weight: bold; }
     .result-time { color: #aaa; font-size: 12px; }
     .results { max-height: 250px; overflow-y: auto; }
     .empty { text-align: center; color: #666; padding: 20px; }
+    .info { background: #1a4d1a; color: #4CAF50; padding: 10px; border-radius: 6px; margin-bottom: 10px; font-size: 12px; }
   </style>
 </head>
 <body>
@@ -31,6 +33,10 @@
 <div class="container">
   <h1>📱 Escáner QR</h1>
   
+  <div class="info">
+    ✓ Los QR deben contener solo el código (SOLDADO001, no URLs)
+  </div>
+
   <div class="config">
     <input type="text" id="urlInput" placeholder="Pega la URL del Apps Script">
     <button onclick="guardarUrl()">✓ Guardar URL</button>
@@ -39,7 +45,7 @@
   <div class="status" id="status">Configurando...</div>
 
   <div class="controls">
-    <button class="btn-start" id="btnStart" onclick="iniciar()">▶ Iniciar</button>
+    <button class="btn-start" id="btnStart" onclick="iniciar()">▶ Iniciar Escaneo</button>
     <button class="btn-stop" id="btnStop" onclick="detener()">⏹ Detener</button>
   </div>
 
@@ -59,6 +65,10 @@
   let appUrl = localStorage.getItem('appUrl') || '';
   let qrScanner = null;
   let scans = [];
+  let scanning = false;
+  let lastScan = 0;
+  let lastScannedCode = '';
+  let canScan = true;
 
   if (appUrl) {
     document.getElementById('urlInput').value = appUrl;
@@ -73,7 +83,7 @@
       return;
     }
     localStorage.setItem('appUrl', appUrl);
-    document.getElementById('status').className = 'status';
+    document.getElementById('status').className = 'status success';
     document.getElementById('status').textContent = '✓ URL configurada - Click en Iniciar';
     document.getElementById('btnStart').style.display = 'block';
   }
@@ -101,9 +111,10 @@
       onScanFailure
     ).then(() => {
       document.getElementById('status').className = 'status';
-      document.getElementById('status').textContent = '📹 Escaneando...';
+      document.getElementById('status').textContent = '📹 Escaneando... apunta al QR';
       document.getElementById('btnStart').style.display = 'none';
       document.getElementById('btnStop').style.display = 'block';
+      scanning = true;
     }).catch(err => {
       mostrarError('Error: ' + err.message);
     });
@@ -116,10 +127,17 @@
       document.getElementById('status').textContent = '⏹ Detenido';
       document.getElementById('btnStart').style.display = 'block';
       document.getElementById('btnStop').style.display = 'none';
+      scanning = false;
     }
   }
 
   function onScanSuccess(decodedText) {
+    // NO escanear si no estamos listos o es el mismo código
+    if (!canScan) return;
+    if (lastScannedCode === decodedText) return;
+    
+    lastScannedCode = decodedText;
+    canScan = false;
     enviarDatos(decodedText);
   }
 
@@ -129,7 +147,7 @@
 
   async function enviarDatos(data) {
     document.getElementById('status').className = 'status';
-    document.getElementById('status').textContent = '📤 Enviando...';
+    document.getElementById('status').textContent = '📤 Enviando ' + data + '...';
 
     try {
       const response = await fetch(appUrl, {
@@ -140,21 +158,27 @@
       if (response.ok) {
         scans.unshift({ id: data, time: new Date().toLocaleTimeString('es-ES') });
         mostrarResultados();
-        document.getElementById('status').className = 'status';
-        document.getElementById('status').textContent = '✅ ¡Registrado!';
+        document.getElementById('status').className = 'status success';
+        document.getElementById('status').textContent = '✅ ¡Registrado: ' + data + '! - Listo para otro...';
+        
+        // Esperar 3 segundos antes de permitir siguiente escaneo
+        setTimeout(() => {
+          canScan = true;
+          document.getElementById('status').className = 'status';
+          document.getElementById('status').textContent = '📹 Escaneando... apunta al siguiente QR';
+        }, 3000);
       } else {
         mostrarError('Error al enviar');
+        canScan = true;
       }
     } catch(e) {
       mostrarError('Error: ' + e.message);
-    }
-
-    setTimeout(() => {
-      if (document.getElementById('btnStop').style.display !== 'none') {
+      setTimeout(() => {
+        canScan = true;
         document.getElementById('status').className = 'status';
         document.getElementById('status').textContent = '📹 Escaneando...';
-      }
-    }, 2000);
+      }, 2000);
+    }
   }
 
   function mostrarResultados() {
