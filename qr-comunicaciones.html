@@ -159,8 +159,9 @@
     .qr-grid {
       display: grid;
       grid-template-columns: repeat(6, 1fr);
-      gap: 8px;
+      gap: 5px;
       margin-top: 15px;
+      padding: 0 5px;
     }
     
     .qr-grid.col4 {
@@ -170,43 +171,43 @@
     .qr-card {
       background: white;
       border: 1px solid #ddd;
-      padding: 4px;
-      border-radius: 4px;
+      padding: 3px;
+      border-radius: 3px;
       text-align: center;
       page-break-inside: avoid;
     }
     
     .qr-card h3 {
       color: #1a472a;
-      font-size: 8px;
-      margin-bottom: 2px;
+      font-size: 7px;
+      margin-bottom: 1px;
       font-weight: 700;
       text-transform: uppercase;
       word-break: break-word;
       line-height: 1;
-      min-height: 14px;
-      max-height: 14px;
+      min-height: 12px;
+      max-height: 12px;
       overflow: hidden;
       text-overflow: ellipsis;
     }
     
     .qr-card .dni {
       color: #5a7a6d;
-      font-size: 6px;
-      margin-bottom: 3px;
+      font-size: 5px;
+      margin-bottom: 2px;
       font-weight: 600;
     }
     
     .qr-image {
-      width: 2.5cm;
-      height: 2.5cm;
+      width: 2.0cm;
+      height: 2.0cm;
       margin: 0 auto;
       background: white;
       display: flex;
       align-items: center;
       justify-content: center;
       overflow: hidden;
-      border-radius: 2px;
+      border-radius: 1px;
     }
     
     .qr-image canvas {
@@ -357,7 +358,7 @@
       <button class="btn-generate" onclick="generarSanidad()">🎯 Generar QR</button>
       <button class="btn-print" id="btnPrint" onclick="window.print()">🖨️ Imprimir</button>
       <button class="btn-enviar" id="btnEnviarSan" onclick="enviarAGoogleSheets()">📤 Enviar a Sheets</button>
-      <button class="btn-generate" onclick="window.location.href='scanner-profesional.html'" style="background: linear-gradient(135deg, #6c757d 0%, #545b62 100%);">📱 Ir a Scanner</button>
+      <button class="btn-generate" onclick="window.location.href='scanner-profesional.html?grupo=Comunicaciones'" style="background: linear-gradient(135deg, #6c757d 0%, #545b62 100%);">📱 Ir a Scanner</button>
       <button class="btn-generate" onclick="window.location.href='index.html'" style="background: linear-gradient(135deg, #17a2b8 0%, #117a8b 100%);">🏠 Volver al Inicio</button>
     </div>
   </div>
@@ -414,7 +415,7 @@
       <button class="btn-add" onclick="agregarManual()">➕ Agregar Soldado</button>
       <button class="btn-print" id="btnPrintManual" onclick="window.print()">🖨️ Imprimir</button>
       <button class="btn-enviar" id="btnEnviarMan" onclick="enviarManualAGoogleSheets()">📤 Enviar a Sheets</button>
-      <button class="btn-generate" onclick="window.location.href='scanner-profesional.html'" style="background: linear-gradient(135deg, #6c757d 0%, #545b62 100%);">📱 Ir a Scanner</button>
+      <button class="btn-generate" onclick="window.location.href='scanner-profesional.html?grupo=Comunicaciones'" style="background: linear-gradient(135deg, #6c757d 0%, #545b62 100%);">📱 Ir a Scanner</button>
       <button class="btn-generate" onclick="window.location.href='index.html'" style="background: linear-gradient(135deg, #17a2b8 0%, #117a8b 100%);">🏠 Volver al Inicio</button>
     </div>
   </div>
@@ -439,13 +440,16 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
   const comunicaciones = [
-    { apellido: "POMA ORE KEVIN", dni: "10380231", grado: "SO 1 EP", armamento: "GALIL", numArm: "12528" },
+    { apellido: "PEPE ANA CLETO MOISES", dni: "10380231", grado: "TCO 2° EP ", armamento: "UZI", numArm: "12526" },
+    { apellido: "LUSTRE RODRIGUEZ LUIS", dni: "74602356", grado: "SGTO 1 REE", armamento: "FAL", numArm: "021325" },
+    
+    { apellido: "POMA ORE KEVIN", dni: "FALTA", grado: "SO 1 EP", armamento: "GALIL", numArm: "12528" },
     { apellido: "RETO NUÑES FABRICIO", dni: "6102156", grado: "SGTO 2", armamento: "FAL", numArm: "021325" },
     { apellido: "TAMAYO ROSALES JULIO", dni: "6191408", grado: "SGTO 2", armamento: "FAL", numArm: "021431" },
-    { apellido: "CHUQUILAURI TOLEDO", dni: "73656600", grado: "SGTO 2", armamento: "FAL", numArm: "021676" },
+    { apellido: "CHUQUILLAURI TOLEDO", dni: "73656600", grado: "CABO", armamento: "FAL", numArm: "021676" },
     { apellido: "HUAMAN ROSALES JUSUE", dni: "7104571", grado: "CABO", armamento: "FAL", numArm: "022187" },
     { apellido: "SANTIAGO OJEDA ELOY", dni: "7218249", grado: "CABO", armamento: "FAL", numArm: "022421" },
-    { apellido: "TINA PACAYA JUAN", dni: "6936689", grado: "CABO", armamento: "FAL", numArm: "022554" },
+    { apellido: "TINA PACAYA JUAN", dni: "6298669", grado: "CABO", armamento: "FAL", numArm: "022554" },
     { apellido: "ACHATA CASTRO AARON", dni: "11226186", grado: "CABO", armamento: "FAL", numArm: "022893" },
     { apellido: "REBATTA AVALOS HERLIN", dni: "6108051", grado: "CABO", armamento: "FAL", numArm: "022897" },
     { apellido: "CASTILLO CCANTO SMITH", dni: "7386143", grado: "CABO", armamento: "FAL", numArm: "023231" },
@@ -592,7 +596,10 @@
       
       for (const s of ordenado) {
         const qrData = `${s.apellido}|${s.grado}|${s.dni}|${s.armamento}|${s.numArm}`;
-        await fetch(url, { method: 'POST', body: JSON.stringify({ qrData }) });
+        await fetch(url, { 
+          method: 'POST', 
+          body: JSON.stringify({ qrData: qrData, grupo: "Comunicaciones" })
+        });
         enviados++;
       }
       
@@ -628,7 +635,10 @@
       
       for (const s of ordenado) {
         const qrData = `${s.apellido}|${s.grado}|${s.dni}|${s.armamento}|${s.numArmamento}`;
-        await fetch(url, { method: 'POST', body: JSON.stringify({ qrData }) });
+        await fetch(url, { 
+          method: 'POST', 
+          body: JSON.stringify({ qrData: qrData, grupo: "Comunicaciones" })
+        });
         enviados++;
       }
       
