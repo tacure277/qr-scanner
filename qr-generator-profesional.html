@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BATLLOG 112 - Generador de QR</title>
+  <title>BATLLOG 112 - Generador QR Avanzado</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { 
@@ -19,157 +19,209 @@
       text-align: center;
       border-radius: 8px;
       border-bottom: 3px solid #d4af37;
-      margin-bottom: 25px;
+      margin-bottom: 20px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     }
-    h1 { color: #d4af37; font-size: 28px; margin-bottom: 5px; font-weight: 700; }
-    .subtitle { color: #a8d5ba; font-size: 14px; font-weight: 500; }
-    .info-box { 
-      background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
-      color: #155724; 
-      padding: 18px; 
-      border-radius: 8px; 
-      margin-bottom: 25px; 
-      border-left: 4px solid #28a745;
-      font-size: 14px;
-      box-shadow: 0 2px 8px rgba(40, 167, 69, 0.1);
-    }
-    .controls { 
-      display: flex; 
-      gap: 10px; 
-      margin-bottom: 25px;
+    h1 { color: #d4af37; font-size: 28px; margin-bottom: 5px; }
+    .subtitle { color: #a8d5ba; font-size: 14px; }
+    
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
       flex-wrap: wrap;
     }
-    .controls button { 
-      padding: 12px 30px; 
-      border: none; 
-      border-radius: 6px; 
-      font-weight: 600; 
-      cursor: pointer; 
+    .tab-btn {
+      padding: 12px 25px;
+      background: linear-gradient(135deg, #2d5f40 0%, #1a472a 100%);
+      color: #d4af37;
+      border: 2px solid #d4af37;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+    .tab-btn.active {
+      background: #d4af37;
+      color: #1a472a;
+    }
+    .tab-btn:hover {
+      transform: translateY(-2px);
+    }
+    
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    
+    .form-section {
+      background: linear-gradient(135deg, #e8f3ee 0%, #dff0e8 100%);
+      padding: 20px;
+      border-radius: 8px;
+      border-left: 4px solid #2d5f40;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(45, 95, 64, 0.1);
+    }
+    
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    .form-group label {
+      display: block;
+      color: #1a472a;
+      font-weight: 600;
+      margin-bottom: 5px;
+      font-size: 13px;
+      text-transform: uppercase;
+    }
+    
+    .form-group input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #a8d5ba;
+      border-radius: 6px;
       font-size: 14px;
+      background: white;
+    }
+    
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+    
+    .controls {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    
+    button {
+      padding: 12px 30px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
       transition: all 0.3s;
       box-shadow: 0 4px 10px rgba(0,0,0,0.15);
     }
-    .btn-generate { 
+    
+    .btn-add {
+      background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+      color: white;
+    }
+    
+    .btn-generate {
       background: linear-gradient(135deg, #2d5f40 0%, #1a472a 100%);
-      color: #d4af37; 
+      color: #d4af37;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
     }
-    .btn-generate:hover { 
-      transform: translateY(-2px);
-      box-shadow: 0 6px 15px rgba(45, 95, 64, 0.3);
-    }
-    .btn-print { 
+    
+    .btn-print {
       background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
       color: white;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      display: none;
     }
-    .btn-print:hover { 
-      transform: translateY(-2px);
-      box-shadow: 0 6px 15px rgba(0, 123, 255, 0.3);
+    
+    .btn-print.show {
+      display: inline-block;
     }
-    .qr-grid { 
-      display: grid; 
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
-      gap: 20px; 
+    
+    .btn-clear {
+      background: linear-gradient(135deg, #dc3545 0%, #bd2130 100%);
+      color: white;
+    }
+    
+    .options {
+      background: #f5f5f5;
+      padding: 15px;
+      border-radius: 6px;
+      margin-bottom: 15px;
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    
+    .options label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      color: #1a472a;
+    }
+    
+    .options input[type="radio"] {
+      cursor: pointer;
+    }
+    
+    .qr-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
       margin-top: 30px;
     }
-    .qr-card { 
-      background: white; 
-      border: 2px solid #2d5f40; 
-      padding: 20px; 
-      border-radius: 8px; 
+    
+    .qr-grid.col3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .qr-card {
+      background: white;
+      border: 1px solid #ddd;
+      padding: 10px;
+      border-radius: 6px;
       text-align: center;
-      page-break-inside: avoid; 
-      box-shadow: 0 4px 12px rgba(45, 95, 64, 0.2);
-      transition: all 0.3s;
+      page-break-inside: avoid;
     }
-    .qr-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 20px rgba(45, 95, 64, 0.3);
-    }
-    .qr-card h3 { 
-      color: #1a472a; 
-      margin-bottom: 12px; 
-      font-size: 14px;
+    
+    .qr-card h3 {
+      color: #1a472a;
+      font-size: 12px;
+      margin-bottom: 8px;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.3px;
+      word-break: break-word;
+      line-height: 1.2;
+      min-height: 24px;
     }
-    .qr-number { 
-      background: linear-gradient(135deg, #2d5f40 0%, #1a472a 100%);
-      color: #d4af37;
-      padding: 8px;
-      border-radius: 6px;
-      font-weight: bold;
-      margin-bottom: 12px;
-      font-size: 12px;
-    }
-    .qr-image { 
-      width: 220px; 
-      height: 220px; 
-      margin: 0 auto 15px; 
-      border: 2px solid #d4af37;
-      border-radius: 6px;
+    
+    .qr-image {
+      width: 128px;
+      height: 128px;
+      margin: 0 auto 8px;
       background: white;
     }
-    .qr-image img { 
-      width: 100%; 
-      height: 100%; 
+    
+    .qr-image img {
+      width: 100%;
+      height: 100%;
     }
-    .qr-data { 
-      font-size: 10px; 
-      color: #1a472a; 
-      background: #f5f5f5; 
-      padding: 10px; 
-      border-radius: 4px; 
-      word-break: break-all;
-      border-left: 3px solid #d4af37;
-      text-align: left;
-    }
-    .qr-labels { 
-      font-size: 12px; 
-      color: #2d5f40; 
-      margin-top: 12px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      text-align: left;
-    }
-    .qr-labels div { 
-      background: #f5f5f5; 
-      padding: 6px;
-      border-radius: 4px;
-      border-left: 2px solid #d4af37;
-    }
-    .qr-labels strong { 
-      color: #1a472a; 
-      display: block;
-      font-size: 10px;
-      font-weight: 600;
-    }
-    .status { 
-      text-align: center; 
-      padding: 15px; 
+    
+    .status {
+      text-align: center;
+      padding: 15px;
       background: linear-gradient(135deg, #cfe2ff 0%, #b6d4fe 100%);
-      color: #084298; 
-      border-radius: 8px; 
+      color: #084298;
+      border-radius: 8px;
       margin-bottom: 20px;
       font-weight: 600;
       border-left: 4px solid #084298;
     }
-    .footer { 
-      text-align: center; 
-      color: #a8d5ba; 
-      padding: 20px; 
+    
+    .footer {
+      text-align: center;
+      color: #a8d5ba;
+      padding: 20px;
       margin-top: 40px;
       border-top: 1px solid rgba(212, 175, 55, 0.2);
     }
+    
     @media print {
       body { background: white; }
-      .header, .info-box, .controls, .status { display: none; }
+      .header, .tabs, .form-section, .controls, .options, .status, .footer { display: none; }
       .qr-grid { margin-top: 0; }
       .qr-card { page-break-inside: avoid; }
     }
@@ -179,95 +231,240 @@
 
 <div class="container">
   <div class="header">
-    <h1>🎖️ BATLLOG 112 - Generador de QR</h1>
-    <p class="subtitle">Compañía Sanidad - Relación de Personal</p>
+    <h1>🎖️ BATLLOG 112 - Generador QR Avanzado</h1>
+    <p class="subtitle">Compañía Sanidad</p>
   </div>
 
-  <div class="info-box">
-    ✓ Se generarán 13 códigos QR listos para imprimir. Formato: NOMBRE|GRADO|DNI|ARMAMENTO|N° ARMAMENTO
+  <div class="tabs">
+    <button class="tab-btn active" onclick="cambiarTab('sanidad')">📋 Sanidad (Precargados)</button>
+    <button class="tab-btn" onclick="cambiarTab('manual')">➕ Manual (Rellenar)</button>
   </div>
 
-  <div class="status" id="status"></div>
+  <!-- TAB SANIDAD -->
+  <div id="sanidad" class="tab-content active">
+    <div class="status">✓ 13 soldados precargados de Sanidad</div>
+    
+    <div class="options">
+      <label>
+        <input type="radio" name="columnas" value="4" checked onchange="cambiarColumnas(4)">
+        4 columnas
+      </label>
+      <label>
+        <input type="radio" name="columnas" value="3" onchange="cambiarColumnas(3)">
+        3 columnas
+      </label>
+    </div>
+    
+    <div class="controls">
+      <button class="btn-generate" onclick="generarSanidad()">🎯 Generar QR</button>
+      <button class="btn-print" id="btnPrint" onclick="window.print()">🖨️ Imprimir</button>
+      <button class="btn-clear" onclick="limpiarQR()">🗑️ Limpiar</button>
+    </div>
+  </div>
 
-  <div class="controls">
-    <button class="btn-generate" onclick="generarQR()">🎯 Generar QR</button>
-    <button class="btn-print" onclick="window.print()" style="display:none;" id="btnPrint">🖨️ Imprimir QR</button>
+  <!-- TAB MANUAL -->
+  <div id="manual" class="tab-content">
+    <div class="form-section">
+      <div class="form-row">
+        <div class="form-group">
+          <label>👤 Apellidos</label>
+          <input type="text" id="apellido" placeholder="Ej: HERRERA SAUCEDO">
+        </div>
+        <div class="form-group">
+          <label>⭐ Grado</label>
+          <input type="text" id="grado" placeholder="Ej: CABO, SGTO, SLDO">
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label>🆔 DNI</label>
+          <input type="text" id="dni" placeholder="Ej: 76440794">
+        </div>
+        <div class="form-group">
+          <label>🔫 Armamento</label>
+          <input type="text" id="armamento" placeholder="Ej: FAL, GALIL">
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label>🔢 N° Armamento</label>
+        <input type="text" id="numArmamento" placeholder="Ej: 1711788">
+      </div>
+    </div>
+    
+    <div class="options">
+      <label>
+        <input type="radio" name="columnasManual" value="4" checked onchange="cambiarColumnasManual(4)">
+        4 columnas
+      </label>
+      <label>
+        <input type="radio" name="columnasManual" value="3" onchange="cambiarColumnasManual(3)">
+        3 columnas
+      </label>
+    </div>
+    
+    <div class="controls">
+      <button class="btn-add" onclick="agregarManual()">➕ Agregar</button>
+      <button class="btn-generate" onclick="generarManual()">🎯 Generar QR</button>
+      <button class="btn-print" id="btnPrintManual" onclick="window.print()">🖨️ Imprimir</button>
+      <button class="btn-clear" onclick="limpiarManual()">🗑️ Limpiar</button>
+    </div>
   </div>
 
   <div class="qr-grid" id="qrGrid"></div>
 
   <div class="footer">
     <p>BATLLOG 112 © 2026 | Perú</p>
-    <p>Compañía Sanidad</p>
   </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
-  const soldados = [
-    { numero: "01", grado: "SGTO1 REE", nombre: "HUAMAN FUENTES WILMER", dni: "757425877", armamento: "GALIL", numArm: "97134108" },
-    { numero: "02", grado: "SGTO2", nombre: "HERRERA SAUCEDO ONEY", dni: "76440794", armamento: "FAL", numArm: "1711788" },
-    { numero: "03", grado: "CABO", nombre: "ISUIZA HUAMAN LLIN ERIC", dni: "74630366", armamento: "FAL", numArm: "1711474" },
-    { numero: "04", grado: "CABO", nombre: "PASQUEL CHUQUIYAURI JELSIN JAVIER", dni: "60353322", armamento: "FAL", numArm: "1607007" },
-    { numero: "05", grado: "CABO", nombre: "ALVARADO BETETA JESUS ORE", dni: "60978240", armamento: "FAL", numArm: "1606661" },
-    { numero: "06", grado: "CABO", nombre: "ROJAS LOMAS LARRY ABADIAS", dni: "81298002", armamento: "FAL", numArm: "1606561" },
-    { numero: "07", grado: "CABO", nombre: "ROJAS LOMAS JHANS LORENZO", dni: "81298001", armamento: "FAL", numArm: "1605285" },
-    { numero: "08", grado: "SLDO", nombre: "BORJAS CHAVARRIA CRISTOPHER", dni: "60671409", armamento: "FAL", numArm: "1604844" },
-    { numero: "09", grado: "SLDO", nombre: "CALISAYA LONG KEVIN", dni: "74587643", armamento: "FAL", numArm: "1604710" },
-    { numero: "10", grado: "SLDO", nombre: "FERNANDEZ AREVALO STEVEN", dni: "61265796", armamento: "FAL", numArm: "1604645" },
-    { numero: "11", grado: "SLDO", nombre: "TUANAMA QUILICHA PERCY", dni: "74395760", armamento: "FAL", numArm: "1594622" },
-    { numero: "12", grado: "SLDO", nombre: "YAHUARCANI PAREDES MOISES", dni: "61345749", armamento: "FAL", numArm: "1593604" },
-    { numero: "13", grado: "SLDO", nombre: "TITO COTIPA ILLANAMI", dni: "76779812", armamento: "FAL", numArm: "1593604" }
+  const sanidad = [
+    { apellido: "HUAMAN FUENTES", grado: "SGTO1", dni: "757425877", armamento: "GALIL", numArm: "97134108" },
+    { apellido: "HERRERA SAUCEDO", grado: "SGTO2", dni: "76440794", armamento: "FAL", numArm: "1711788" },
+    { apellido: "ISUIZA HUAMAN", grado: "CABO", dni: "74630366", armamento: "FAL", numArm: "1711474" },
+    { apellido: "PASQUEL CHUQUIYAURI", grado: "CABO", dni: "60353322", armamento: "FAL", numArm: "1607007" },
+    { apellido: "ALVARADO BETETA", grado: "CABO", dni: "60978240", armamento: "FAL", numArm: "1606661" },
+    { apellido: "ROJAS LOMAS", grado: "CABO", dni: "81298002", armamento: "FAL", numArm: "1606561" },
+    { apellido: "ROJAS LOMAS", grado: "CABO", dni: "81298001", armamento: "FAL", numArm: "1605285" },
+    { apellido: "BORJAS CHAVARRIA", grado: "SLDO", dni: "60671409", armamento: "FAL", numArm: "1604844" },
+    { apellido: "CALISAYA LONG", grado: "SLDO", dni: "74587643", armamento: "FAL", numArm: "1604710" },
+    { apellido: "FERNANDEZ AREVALO", grado: "SLDO", dni: "61265796", armamento: "FAL", numArm: "1604645" },
+    { apellido: "TUANAMA QUILICHA", grado: "SLDO", dni: "74395760", armamento: "FAL", numArm: "1594622" },
+    { apellido: "YAHUARCANI PAREDES", grado: "SLDO", dni: "61345749", armamento: "FAL", numArm: "1593604" },
+    { apellido: "TITO COTIPA", grado: "SLDO", dni: "76779812", armamento: "FAL", numArm: "1593604" }
   ];
 
-  function generarQR() {
-    const grid = document.getElementById('qrGrid');
-    const status = document.getElementById('status');
-    
-    grid.innerHTML = '';
-    status.textContent = 'Generando 13 códigos QR...';
+  let registrosManual = [];
+  let columnasActuales = 4;
+  let columnasManual = 4;
 
-    soldados.forEach((s, index) => {
-      setTimeout(() => {
-        const qrData = `${s.nombre}|${s.grado}|${s.dni}|${s.armamento}|${s.numArm}`;
-        
-        const card = document.createElement('div');
-        card.className = 'qr-card';
-        card.innerHTML = `
-          <div class="qr-number">Soldado #${s.numero}</div>
-          <h3>${s.nombre.substring(0, 30)}${s.nombre.length > 30 ? '...' : ''}</h3>
-          <div id="qr-${index}"></div>
-          <div class="qr-labels">
-            <div><strong>Grado:</strong> ${s.grado}</div>
-            <div><strong>DNI:</strong> ${s.dni}</div>
-            <div><strong>Arma:</strong> ${s.armamento}</div>
-            <div><strong>N° Arma:</strong> ${s.numArm}</div>
-          </div>
-          <div class="qr-data">${qrData}</div>
-        `;
-        grid.appendChild(card);
-        
-        // Generar QR con QRCode.js
-        new QRCode(document.getElementById(`qr-${index}`), {
-          text: qrData,
-          width: 200,
-          height: 200,
-          colorDark: "#1a472a",
-          colorLight: "#ffffff",
-          correctLevel: QRCode.CorrectLevel.H
-        });
-
-        if (index === soldados.length - 1) {
-          status.textContent = '✅ 13 QR generados correctamente - Listo para imprimir';
-          document.getElementById('btnPrint').style.display = 'inline-block';
-        }
-      }, index * 100);
-    });
+  function cambiarTab(tab) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById(tab).classList.add('active');
+    document.querySelector(`[onclick="cambiarTab('${tab}')"]`).classList.add('active');
+    document.getElementById('qrGrid').innerHTML = '';
   }
 
-  window.addEventListener('load', () => {
-    document.getElementById('status').textContent = 'Click en "🎯 Generar QR" para crear los códigos';
-  });
+  function cambiarColumnas(n) {
+    columnasActuales = n;
+    actualizarGrid();
+  }
+
+  function cambiarColumnasManual(n) {
+    columnasManual = n;
+    actualizarGrid();
+  }
+
+  function actualizarGrid() {
+    const grid = document.getElementById('qrGrid');
+    grid.className = `qr-grid ${columnasActuales === 3 ? 'col3' : ''}`;
+  }
+
+  function generarSanidad() {
+    const grid = document.getElementById('qrGrid');
+    grid.innerHTML = '';
+    
+    // Ordenar por apellido
+    const ordenado = [...sanidad].sort((a, b) => a.apellido.localeCompare(b.apellido));
+    
+    ordenado.forEach((s, index) => {
+      const qrData = `${s.apellido}|${s.grado}|${s.dni}|${s.armamento}|${s.numArm}`;
+      
+      const card = document.createElement('div');
+      card.className = 'qr-card';
+      card.innerHTML = `
+        <h3>${s.apellido}</h3>
+        <div id="qr-san-${index}" class="qr-image"></div>
+      `;
+      grid.appendChild(card);
+      
+      new QRCode(document.getElementById(`qr-san-${index}`), {
+        text: qrData,
+        width: 128,
+        height: 128,
+        colorDark: "#1a472a",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
+      });
+    });
+    
+    actualizarGrid();
+    document.getElementById('btnPrint').classList.add('show');
+  }
+
+  function agregarManual() {
+    const apellido = document.getElementById('apellido').value.trim();
+    const grado = document.getElementById('grado').value.trim();
+    const dni = document.getElementById('dni').value.trim();
+    const armamento = document.getElementById('armamento').value.trim();
+    const numArmamento = document.getElementById('numArmamento').value.trim();
+    
+    if (!apellido || !grado || !dni || !armamento || !numArmamento) {
+      alert('Completa todos los campos');
+      return;
+    }
+    
+    registrosManual.push({ apellido, grado, dni, armamento, numArmamento });
+    
+    document.getElementById('apellido').value = '';
+    document.getElementById('grado').value = '';
+    document.getElementById('dni').value = '';
+    document.getElementById('armamento').value = '';
+    document.getElementById('numArmamento').value = '';
+    document.getElementById('apellido').focus();
+  }
+
+  function generarManual() {
+    if (registrosManual.length === 0) {
+      alert('Agrega al menos un registro');
+      return;
+    }
+    
+    const grid = document.getElementById('qrGrid');
+    grid.innerHTML = '';
+    
+    // Ordenar por apellido
+    const ordenado = [...registrosManual].sort((a, b) => a.apellido.localeCompare(b.apellido));
+    
+    ordenado.forEach((s, index) => {
+      const qrData = `${s.apellido}|${s.grado}|${s.dni}|${s.armamento}|${s.numArmamento}`;
+      
+      const card = document.createElement('div');
+      card.className = 'qr-card';
+      card.innerHTML = `
+        <h3>${s.apellido}</h3>
+        <div id="qr-man-${index}" class="qr-image"></div>
+      `;
+      grid.appendChild(card);
+      
+      new QRCode(document.getElementById(`qr-man-${index}`), {
+        text: qrData,
+        width: 128,
+        height: 128,
+        colorDark: "#1a472a",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
+      });
+    });
+    
+    actualizarGrid();
+    document.getElementById('btnPrintManual').classList.add('show');
+  }
+
+  function limpiarQR() {
+    document.getElementById('qrGrid').innerHTML = '';
+    document.getElementById('btnPrint').classList.remove('show');
+  }
+
+  function limpiarManual() {
+    registrosManual = [];
+    document.getElementById('qrGrid').innerHTML = '';
+    document.getElementById('btnPrintManual').classList.remove('show');
+  }
 </script>
 
 </body>
