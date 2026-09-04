@@ -6,8 +6,8 @@
   <title>BATLLOG 112 - Scanner QR</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { 
-      font-family: 'Segoe UI', 'Roboto', Arial, sans-serif; 
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
       background: linear-gradient(135deg, #1a472a 0%, #2d5f40 50%, #0d2818 100%);
       padding: 15px;
       min-height: 100vh;
@@ -22,8 +22,8 @@
       border-radius: 8px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     }
-    h1 { color: #d4af37; font-size: 28px; margin-bottom: 5px; }
-    .subtitle { color: #a8d5ba; font-size: 13px; }
+    h1 { color: #d4af37; font-size: 24px; margin-bottom: 5px; }
+    .subtitle { color: #a8d5ba; font-size: 12px; }
     
     .config-section {
       background: linear-gradient(135deg, #e8f3ee 0%, #dff0e8 100%);
@@ -43,6 +43,7 @@
       font-weight: 600;
       margin-bottom: 5px;
       font-size: 12px;
+      text-transform: uppercase;
     }
     
     .form-group input {
@@ -51,6 +52,7 @@
       border: 1px solid #a8d5ba;
       border-radius: 6px;
       font-size: 13px;
+      background: white;
     }
     
     .button-group {
@@ -69,6 +71,7 @@
       cursor: pointer;
       transition: all 0.3s;
       font-size: 13px;
+      min-width: 120px;
     }
     
     .btn-primary {
@@ -132,57 +135,10 @@
       border-radius: 8px;
       overflow: hidden;
       box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+      display: none;
     }
     
-    #reader video {
-      width: 100%;
-    }
-    
-    .info-box {
-      background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
-      border: 2px solid #ffc107;
-      border-radius: 8px;
-      padding: 15px;
-      margin: 15px 0;
-      color: #856404;
-      font-size: 13px;
-      line-height: 1.6;
-    }
-    
-    .registros {
-      background: white;
-      padding: 15px;
-      border-radius: 8px;
-      margin-top: 20px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
-    
-    .registros h3 {
-      color: #1a472a;
-      margin-bottom: 10px;
-      font-size: 14px;
-    }
-    
-    .registro-item {
-      padding: 10px;
-      background: #f9f9f9;
-      border-left: 3px solid #2d5f40;
-      margin-bottom: 8px;
-      border-radius: 4px;
-      font-size: 12px;
-    }
-    
-    .registro-item strong {
-      color: #1a472a;
-    }
-    
-    .footer {
-      text-align: center;
-      color: #a8d5ba;
-      padding: 15px;
-      margin-top: 20px;
-      font-size: 11px;
-    }
+    #reader video { width: 100%; }
     
     .modal {
       display: none;
@@ -197,9 +153,7 @@
       justify-content: center;
     }
     
-    .modal.active {
-      display: flex;
-    }
+    .modal.active { display: flex; }
     
     .modal-content {
       background: white;
@@ -211,10 +165,7 @@
       border-top: 5px solid #2d5f40;
     }
     
-    .modal-content .check-icon {
-      font-size: 60px;
-      margin-bottom: 20px;
-    }
+    .modal-content .check-icon { font-size: 60px; margin-bottom: 20px; }
     
     .modal-content h2 {
       color: #1a472a;
@@ -225,6 +176,7 @@
     
     .modal-content p {
       color: #5a7a6d;
+      font-size: 14px;
       margin-bottom: 15px;
     }
     
@@ -237,9 +189,13 @@
     }
     
     .soldier-data div {
-      margin: 5px 0;
+      margin: 8px 0;
       font-size: 13px;
+      display: flex;
+      justify-content: space-between;
     }
+    
+    .soldier-data strong { color: #1a472a; }
     
     .modal-content button {
       padding: 11px 40px;
@@ -250,8 +206,16 @@
       font-weight: 600;
       cursor: pointer;
       font-size: 14px;
-      text-transform: uppercase;
       margin-top: 20px;
+      text-transform: uppercase;
+    }
+    
+    .footer {
+      text-align: center;
+      color: #a8d5ba;
+      padding: 15px;
+      margin-top: 20px;
+      font-size: 11px;
     }
   </style>
 </head>
@@ -265,7 +229,7 @@
 
   <div class="config-section">
     <div class="form-group">
-      <label>🔗 URL de Google Sheets (Apps Script)</label>
+      <label>🔗 URL de Google Apps Script</label>
       <input type="text" id="urlInput" placeholder="https://script.google.com/macros/s/...">
     </div>
     <div class="button-group">
@@ -274,23 +238,13 @@
     </div>
   </div>
 
-  <div id="status" class="status waiting">⏳ Esperando configuración...</div>
+  <div id="status" class="status waiting">⏳ Ingresa la URL y guarda</div>
 
-  <div id="reader" style="display: none;"></div>
-
-  <div class="info-box" id="infoBox" style="display: none;">
-    <strong>📱 Instrucciones:</strong>
-    Apunta la cámara al código QR y espera a que se detecte automáticamente.
-  </div>
+  <div id="reader"></div>
 
   <div class="button-group" id="controlButtons" style="display: none; margin: 15px 0;">
     <button class="btn-primary" id="btnStart" onclick="iniciarScanner()">📹 Iniciar Scanner</button>
     <button class="btn-primary" id="btnStop" onclick="detenerScanner()" style="display: none; background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);">⏹ Detener Scanner</button>
-  </div>
-
-  <div class="registros" id="registros" style="display: none;">
-    <h3>📊 Registros escaneados</h3>
-    <div id="registrosList"></div>
   </div>
 
   <div class="footer">
@@ -298,7 +252,7 @@
   </div>
 </div>
 
-<!-- Modal de Éxito -->
+<!-- Modal -->
 <div class="modal" id="modal">
   <div class="modal-content">
     <div class="check-icon">✅</div>
@@ -312,28 +266,20 @@
 <script src="https://unpkg.com/html5-qrcode"></script>
 <script>
   let appUrl = localStorage.getItem('appUrl') || '';
-  let grupo = new URLSearchParams(window.location.search).get('grupo') || '';
   let qrScanner = null;
-  let registros = [];
   let scanning = false;
   let canScan = true;
+  let grupo = new URLSearchParams(window.location.search).get('grupo') || 'Comunicaciones';
 
-  // Cargar configuración guardada
   if (appUrl) {
     document.getElementById('urlInput').value = appUrl;
     actualizarEstado();
   }
 
-  // Mostrar grupo actual
-  if (grupo) {
-    const statusDiv = document.getElementById('status');
-    statusDiv.innerHTML += `<br><small>Grupo: ${grupo}</small>`;
-  }
-
   function guardarUrl() {
     appUrl = document.getElementById('urlInput').value.trim();
     if (!appUrl) {
-      mostrarError('Ingresa la URL de Google Sheets');
+      mostrarError('Ingresa la URL de Google Apps Script');
       return;
     }
     localStorage.setItem('appUrl', appUrl);
@@ -343,18 +289,15 @@
   function actualizarEstado() {
     const status = document.getElementById('status');
     const controlButtons = document.getElementById('controlButtons');
-    const infoBox = document.getElementById('infoBox');
 
     if (appUrl) {
       status.className = 'status scanning';
       status.textContent = '✓ Configurado - Haz click en "Iniciar Scanner"';
       controlButtons.style.display = 'flex';
-      infoBox.style.display = 'block';
     } else {
       status.className = 'status waiting';
       status.textContent = '⏳ Ingresa la URL y guarda';
       controlButtons.style.display = 'none';
-      infoBox.style.display = 'none';
     }
   }
 
@@ -386,7 +329,7 @@
       scanning = true;
       canScan = true;
     }).catch(err => {
-      mostrarError('❌ No se pudo acceder a la cámara. Verifica los permisos.\n\nError: ' + err.message);
+      mostrarError('❌ No se pudo acceder a la cámara.\n' + err.message);
       document.getElementById('reader').style.display = 'none';
       document.getElementById('btnStart').style.display = 'block';
       document.getElementById('btnStop').style.display = 'none';
@@ -409,56 +352,43 @@
   function onScanSuccess(decodedText) {
     if (!canScan || !scanning) return;
     canScan = false;
-    procesarQR(decodedText);
+    procesarQR(decodedText.trim());
   }
 
-  function onScanFailure(error) {
-    // Sin errores en silencio
-  }
+  function onScanFailure(error) {}
 
-  async function procesarQR(qrData) {
+  async function procesarQR(dni) {
     const status = document.getElementById('status');
     status.className = 'status scanning';
-    status.textContent = '📤 Procesando QR...';
+    status.textContent = '📤 Enviando a Google Sheets...';
 
     try {
       const response = await fetch(appUrl, {
         method: 'POST',
-        body: JSON.stringify({ qrData: qrData, grupo: grupo || 'Comunicaciones' })
+        body: JSON.stringify({ qrData: dni, grupo: grupo })
       });
 
-      if (response.ok) {
-        const resultado = await response.json();
-        
-        if (resultado.success && resultado.datos) {
-          const datos = resultado.datos;
-          mostrarModalExito(datos);
-          registros.push(datos);
-          actualizarRegistros();
-          
-          setTimeout(() => {
-            canScan = true;
-            status.className = 'status scanning';
-            status.textContent = '📹 Escaneando... apunta al siguiente QR';
-          }, 2000);
-        } else {
-          mostrarError('❌ Soldado no encontrado en la base de datos');
-          setTimeout(() => {
-            canScan = true;
-            document.getElementById('status').className = 'status scanning';
-            document.getElementById('status').textContent = '📹 Escaneando...';
-          }, 2000);
-        }
-      } else {
-        mostrarError('❌ Error al enviar a Google Sheets');
+      const resultado = await response.json();
+
+      if (resultado.success && resultado.datos) {
+        const datos = resultado.datos;
+        mostrarModalExito(datos);
+
         setTimeout(() => {
           canScan = true;
-          document.getElementById('status').className = 'status scanning';
-          document.getElementById('status').textContent = '📹 Escaneando...';
+          status.className = 'status scanning';
+          status.textContent = '📹 Escaneando... apunta al siguiente QR';
+        }, 2500);
+      } else {
+        mostrarError('❌ Error: ' + (resultado.error || 'DNI no encontrado'));
+        setTimeout(() => {
+          canScan = true;
+          status.className = 'status scanning';
+          status.textContent = '📹 Escaneando...';
         }, 2000);
       }
     } catch (error) {
-      mostrarError('❌ Error: ' + error.message);
+      mostrarError('❌ Error de conexión: ' + error.message);
       setTimeout(() => {
         canScan = true;
         document.getElementById('status').className = 'status scanning';
@@ -467,34 +397,24 @@
     }
   }
 
-  function mostrarModalExito(soldado) {
+  function mostrarModalExito(datos) {
     const modal = document.getElementById('modal');
-    const data = document.getElementById('modalData');
-    data.innerHTML = `
-      <div><strong>Apellido:</strong> ${soldado.apellido}</div>
-      <div><strong>Grado:</strong> ${soldado.grado}</div>
-      <div><strong>DNI:</strong> ${soldado.dni}</div>
-      <div><strong>Armamento:</strong> ${soldado.armamento}</div>
-      <div><strong>N° Armamento:</strong> ${soldado.numArm}</div>
-      <div><strong>Hora:</strong> ${new Date().toLocaleString('es-PE')}</div>
+    const dataDiv = document.getElementById('modalData');
+    
+    dataDiv.innerHTML = `
+      <div><strong>Apellido:</strong> <span>${datos.apellido}</span></div>
+      <div><strong>Grado:</strong> <span>${datos.grado}</span></div>
+      <div><strong>DNI:</strong> <span>${datos.dni}</span></div>
+      <div><strong>Armamento:</strong> <span>${datos.armamento}</span></div>
+      <div><strong>N° Armamento:</strong> <span>${datos.numArm}</span></div>
+      <div><strong>Hora:</strong> <span>${new Date().toLocaleString('es-PE')}</span></div>
     `;
+    
     modal.classList.add('active');
   }
 
   function cerrarModal() {
     document.getElementById('modal').classList.remove('active');
-  }
-
-  function actualizarRegistros() {
-    const registrosDiv = document.getElementById('registros');
-    const registrosList = document.getElementById('registrosList');
-
-    registrosDiv.style.display = 'block';
-    registrosList.innerHTML = registros.map((r, i) => `
-      <div class="registro-item">
-        <strong>#${i + 1}</strong> - ${r.apellido} (${r.dni}) - ${r.grado}
-      </div>
-    `).join('');
   }
 
   function mostrarError(mensaje) {
