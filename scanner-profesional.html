@@ -312,6 +312,7 @@
 <script src="https://unpkg.com/html5-qrcode"></script>
 <script>
   let appUrl = localStorage.getItem('appUrl') || '';
+  let grupo = new URLSearchParams(window.location.search).get('grupo') || '';
   let qrScanner = null;
   let registros = [];
   let scanning = false;
@@ -321,6 +322,12 @@
   if (appUrl) {
     document.getElementById('urlInput').value = appUrl;
     actualizarEstado();
+  }
+
+  // Mostrar grupo actual
+  if (grupo) {
+    const statusDiv = document.getElementById('status');
+    statusDiv.innerHTML += `<br><small>Grupo: ${grupo}</small>`;
   }
 
   function guardarUrl() {
@@ -415,38 +422,35 @@
     status.textContent = '📤 Procesando QR...';
 
     try {
-      // Enviar a Google Sheets
       const response = await fetch(appUrl, {
         method: 'POST',
-        body: JSON.stringify({ qrData: qrData })
+        body: JSON.stringify({ qrData: qrData, grupo: grupo || 'Comunicaciones' })
       });
 
       if (response.ok) {
-        // Parsear datos QR
-        const partes = qrData.split('|');
-        const soldado = {
-          apellido: partes[0] || 'N/A',
-          grado: partes[1] || 'N/A',
-          dni: partes[2] || 'N/A',
-          armamento: partes[3] || 'N/A',
-          numArm: partes[4] || 'N/A'
-        };
-
-        // Mostrar modal
-        mostrarModalExito(soldado);
-
-        // Agregar al historial
-        registros.push(soldado);
-        actualizarRegistros();
-
-        // Pausa 2 segundos antes de permitir siguiente escaneo
-        setTimeout(() => {
-          canScan = true;
-          status.className = 'status scanning';
-          status.textContent = '📹 Escaneando... apunta al siguiente QR';
-        }, 2000);
+        const resultado = await response.json();
+        
+        if (resultado.success && resultado.datos) {
+          const datos = resultado.datos;
+          mostrarModalExito(datos);
+          registros.push(datos);
+          actualizarRegistros();
+          
+          setTimeout(() => {
+            canScan = true;
+            status.className = 'status scanning';
+            status.textContent = '📹 Escaneando... apunta al siguiente QR';
+          }, 2000);
+        } else {
+          mostrarError('❌ Soldado no encontrado en la base de datos');
+          setTimeout(() => {
+            canScan = true;
+            document.getElementById('status').className = 'status scanning';
+            document.getElementById('status').textContent = '📹 Escaneando...';
+          }, 2000);
+        }
       } else {
-        mostrarError('❌ Error al enviar a Google Sheets. Verifica la URL.');
+        mostrarError('❌ Error al enviar a Google Sheets');
         setTimeout(() => {
           canScan = true;
           document.getElementById('status').className = 'status scanning';
