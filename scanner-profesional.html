@@ -99,10 +99,9 @@
     }
     
     .status.scanning {
-      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-      color: white;
-      border-left: 4px solid #28a745;
-      animation: pulse 0.6s infinite;
+      background: linear-gradient(135deg, #d1ecf1 0%, #b8daff 100%);
+      color: #0c5460;
+      border-left: 4px solid #0c5460;
     }
     
     .status.error {
@@ -111,38 +110,13 @@
       border-left: 4px solid #721c24;
     }
     
-    @keyframes pulse {
-      0%, 100% { background: linear-gradient(135deg, #28a745 0%, #20c997 100%); }
-      50% { background: linear-gradient(135deg, #20c997 0%, #28a745 100%); }
-    }
-    
-    #videoContainer {
+    #reader {
       width: 100%;
       margin: 20px 0;
       border-radius: 8px;
       overflow: hidden;
       box-shadow: 0 8px 25px rgba(0,0,0,0.2);
       display: none;
-      position: relative;
-    }
-    
-    #video {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
-    
-    .video-overlay {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 250px;
-      height: 250px;
-      border: 3px solid #28a745;
-      border-radius: 8px;
-      box-shadow: inset 0 0 20px rgba(40, 167, 69, 0.3);
-      pointer-events: none;
     }
     
     .modal {
@@ -255,10 +229,7 @@
 
   <div id="status" class="status waiting">⏳ Ingresa la URL y guarda</div>
 
-  <div id="videoContainer">
-    <video id="video" autoplay playsinline></video>
-    <div class="video-overlay"></div>
-  </div>
+  <div id="reader"></div>
 
   <div class="button-group" id="controlButtons" style="display: none; margin: 15px 0;">
     <button class="btn-primary" id="btnStart" onclick="iniciarScanner()">📹 Iniciar Scanner</button>
@@ -281,6 +252,7 @@
   </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
 <script>
   let appUrl = localStorage.getItem('appUrl') || '';
@@ -310,7 +282,7 @@
     const controlButtons = document.getElementById('controlButtons');
 
     if (appUrl) {
-      status.className = 'status waiting';
+      status.className = 'status scanning';
       status.textContent = `✓ Grupo: ${grupo}. Click en "Iniciar Scanner"`;
       controlButtons.style.display = 'flex';
     } else {
@@ -330,10 +302,18 @@
     status.className = 'status scanning';
     status.textContent = '⏳ Abriendo cámara...';
 
-    const video = document.getElementById('video');
-    document.getElementById('videoContainer').style.display = 'block';
+    document.getElementById('reader').style.display = 'block';
     document.getElementById('btnStart').style.display = 'none';
     document.getElementById('btnStop').style.display = 'block';
+
+    const videoContainer = document.getElementById('reader');
+    const video = document.createElement('video');
+    video.setAttribute('autoplay', '');
+    video.setAttribute('playsinline', '');
+    video.style.width = '100%';
+    video.style.height = 'auto';
+    videoContainer.innerHTML = '';
+    videoContainer.appendChild(video);
 
     navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
       .then(stream => {
@@ -344,39 +324,41 @@
           status.textContent = `📹 Escaneando (${grupo})...`;
           scanning = true;
           canScan = true;
-          escanearQR();
+          escanearQR(video);
         }, 500);
       })
       .catch(err => {
         mostrarError('❌ Error: ' + err.message);
-        document.getElementById('videoContainer').style.display = 'none';
+        document.getElementById('reader').style.display = 'none';
         document.getElementById('btnStart').style.display = 'block';
         document.getElementById('btnStop').style.display = 'none';
       });
   }
 
-  function escanearQR() {
+  function escanearQR(video) {
     if (!scanning) return;
 
-    const video = document.getElementById('video');
     const canvas = document.createElement('canvas');
-    const context = canvas.getContext('2d');
-    
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     
     if (canvas.width > 0 && canvas.height > 0) {
-      context.drawImage(video, 0, 0);
-      const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-      const code = jsQR(imageData.data, canvas.width, canvas.height);
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
       
-      if (code && canScan) {
-        canScan = false;
-        procesarQR(code.data);
-      }
+      try {
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const code = jsQR(imageData.data, canvas.width, canvas.height);
+        
+        if (code && canScan) {
+          canScan = false;
+          procesarQR(code.data);
+          return;
+        }
+      } catch(e) {}
     }
 
-    animationId = requestAnimationFrame(escanearQR);
+    animationId = requestAnimationFrame(() => escanearQR(video));
   }
 
   function detenerScanner() {
@@ -390,7 +372,7 @@
       videoStream.getTracks().forEach(track => track.stop());
     }
     
-    document.getElementById('videoContainer').style.display = 'none';
+    document.getElementById('reader').style.display = 'none';
     document.getElementById('status').className = 'status waiting';
     document.getElementById('status').textContent = '⏹ Scanner detenido';
     document.getElementById('btnStart').style.display = 'block';
@@ -413,7 +395,7 @@
       if (resultado.success) {
         mostrarModalExito(resultado.datos);
         setTimeout(() => {
-          if (canScan === false && scanning) {
+          if (scanning) {
             canScan = true;
             status.className = 'status scanning';
             status.textContent = `📹 Escaneando...`;
@@ -423,17 +405,21 @@
         mostrarError('❌ ' + (resultado.error || 'Error'));
         setTimeout(() => {
           canScan = true;
+          status.textContent = `📹 Escaneando...`;
         }, 2000);
       }
     } catch (error) {
       mostrarError('❌ Error: ' + error.message);
       setTimeout(() => {
         canScan = true;
+        status.textContent = `📹 Escaneando...`;
       }, 2000);
     }
   }
 
   function mostrarModalExito(datos) {
+    scanning = false;
+    
     const dataDiv = document.getElementById('modalData');
     dataDiv.innerHTML = `
       <div><strong>Apellido:</strong> <span>${datos.apellido}</span></div>
@@ -449,6 +435,8 @@
 
   function cerrarModal() {
     document.getElementById('modal').classList.remove('active');
+    scanning = true;
+    canScan = true;
   }
 
   function mostrarError(mensaje) {
