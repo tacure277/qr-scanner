@@ -360,16 +360,8 @@
       const resultado = await response.json();
 
       if (resultado.success) {
-        // Parsear QR: APELLIDO|GRADO|DNI|ARMAMENTO|N°ARMAMENTO
-        const partes = qrData.split('|');
-        const datos = {
-          apellido: partes[0] || 'N/A',
-          grado: partes[1] || 'N/A',
-          dni: partes[2] || 'N/A',
-          armamento: partes[3] || 'N/A',
-          numArm: partes[4] || 'N/A'
-        };
-
+        // QR contiene solo DNI
+        const datos = resultado.datos; // Viene completo del Apps Script
         mostrarModalExito(datos);
 
         setTimeout(() => {
@@ -399,12 +391,17 @@
     const modal = document.getElementById('modal');
     const dataDiv = document.getElementById('modalData');
     
+    // Pausar el scanner
+    if (qrScanner) {
+      qrScanner.pause().catch(e => console.log('Scanner ya pausado'));
+    }
+    
     dataDiv.innerHTML = `
-      <div><strong>Apellido:</strong> <span>${datos.apellido}</span></div>
-      <div><strong>Grado:</strong> <span>${datos.grado}</span></div>
-      <div><strong>DNI:</strong> <span>${datos.dni}</span></div>
-      <div><strong>Armamento:</strong> <span>${datos.armamento}</span></div>
-      <div><strong>N° Armamento:</strong> <span>${datos.numArm}</span></div>
+      <div><strong>Apellido:</strong> <span>${datos.apellido || 'N/A'}</span></div>
+      <div><strong>Grado:</strong> <span>${datos.grado || 'N/A'}</span></div>
+      <div><strong>DNI:</strong> <span>${datos.dni || 'N/A'}</span></div>
+      <div><strong>Armamento:</strong> <span>${datos.armamento || 'N/A'}</span></div>
+      <div><strong>N° Armamento:</strong> <span>${datos.numArm || 'N/A'}</span></div>
       <div><strong>Hora:</strong> <span>${new Date().toLocaleString('es-PE')}</span></div>
     `;
     
@@ -413,6 +410,11 @@
 
   function cerrarModal() {
     document.getElementById('modal').classList.remove('active');
+    
+    // Reanudar el scanner
+    if (qrScanner) {
+      qrScanner.resume().catch(e => console.log('Scanner ya reanudado'));
+    }
   }
 
   function mostrarError(mensaje) {
