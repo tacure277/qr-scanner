@@ -345,7 +345,7 @@
 
       if (code && canScan) {
         canScan = false;
-        procesarQR(code.data);
+        procesarQR(code.data.trim().replace(/s/g, ''));
         return;
       }
     }
