@@ -109,18 +109,133 @@
       border-left: 4px solid #0c5460;
     }
     
+    .status.detected {
+      background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+      color: #155724;
+      border-left: 4px solid #155724;
+      animation: pulse 0.5s;
+    }
+    
     .status.error {
       background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
       color: #721c24;
       border-left: 4px solid #721c24;
     }
     
-    #video {
+    @keyframes pulse {
+      0%, 100% { background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%); }
+      50% { background: linear-gradient(135deg, #28a745 0%, #20c997 100%); }
+    }
+    
+    #videoContainer {
+      position: relative;
       width: 100%;
       margin: 20px 0;
       border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
       display: none;
       background: #000;
+    }
+    
+    #video {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    
+    .qr-overlay {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 280px;
+      height: 280px;
+      border: 3px solid #28a745;
+      border-radius: 12px;
+      box-shadow: 0 0 30px rgba(40, 167, 69, 0.5), inset 0 0 30px rgba(40, 167, 69, 0.2);
+      pointer-events: none;
+      z-index: 10;
+    }
+    
+    .corner {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      border: 3px solid #28a745;
+    }
+    
+    .corner.top-left {
+      top: -3px;
+      left: -3px;
+      border-right: none;
+      border-bottom: none;
+    }
+    
+    .corner.top-right {
+      top: -3px;
+      right: -3px;
+      border-left: none;
+      border-bottom: none;
+    }
+    
+    .corner.bottom-left {
+      bottom: -3px;
+      left: -3px;
+      border-right: none;
+      border-top: none;
+    }
+    
+    .corner.bottom-right {
+      bottom: -3px;
+      right: -3px;
+      border-left: none;
+      border-top: none;
+    }
+    
+    .center-dot {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 12px;
+      height: 12px;
+      background: #28a745;
+      border-radius: 50%;
+      box-shadow: 0 0 20px rgba(40, 167, 69, 0.8);
+      z-index: 11;
+    }
+    
+    .crosshair {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 280px;
+      height: 280px;
+      pointer-events: none;
+      z-index: 9;
+    }
+    
+    .crosshair::before,
+    .crosshair::after {
+      content: '';
+      position: absolute;
+      background: rgba(40, 167, 69, 0.3);
+    }
+    
+    .crosshair::before {
+      width: 100%;
+      height: 2px;
+      top: 50%;
+      left: 0;
+    }
+    
+    .crosshair::after {
+      width: 2px;
+      height: 100%;
+      top: 0;
+      left: 50%;
     }
     
     .modal {
@@ -232,7 +347,17 @@
 
   <div id="status" class="status waiting">⏳ Ingresa la URL y guarda</div>
 
-  <video id="video" playsinline autoplay></video>
+  <div id="videoContainer">
+    <video id="video" playsinline autoplay muted></video>
+    <div class="qr-overlay">
+      <div class="corner top-left"></div>
+      <div class="corner top-right"></div>
+      <div class="corner bottom-left"></div>
+      <div class="corner bottom-right"></div>
+      <div class="center-dot"></div>
+      <div class="crosshair"></div>
+    </div>
+  </div>
 
   <div class="button-group" id="controlButtons" style="display: none; margin: 15px 0;">
     <button class="btn-primary" id="btnStart" onclick="iniciarScanner()">📹 Iniciar Scanner</button>
@@ -302,55 +427,67 @@
 
     const status = document.getElementById('status');
     status.className = 'status scanning';
-    status.textContent = '⏳ Iniciando cámara...';
+    status.textContent = '⏳ Abriendo cámara...';
 
     const video = document.getElementById('video');
-    video.style.display = 'block';
+    const videoContainer = document.getElementById('videoContainer');
+    videoContainer.style.display = 'block';
     document.getElementById('btnStart').style.display = 'none';
     document.getElementById('btnStop').style.display = 'block';
 
-    navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+    navigator.mediaDevices.getUserMedia({ 
+      video: { facingMode: 'environment', focus: 'continuous' } 
+    })
       .then(stream => {
         videoStream = stream;
         video.srcObject = stream;
         
         video.onloadedmetadata = () => {
-          status.textContent = `📹 Escaneando (${grupo})...`;
+          status.textContent = `📹 Escaneando (${grupo})... Apunta al QR`;
           scanning = true;
           canScan = true;
-          escanear();
+          escanear(video);
         };
       })
       .catch(err => {
         mostrarError('❌ Error cámara: ' + err.message);
-        video.style.display = 'none';
+        videoContainer.style.display = 'none';
         document.getElementById('btnStart').style.display = 'block';
         document.getElementById('btnStop').style.display = 'none';
       });
   }
 
-  function escanear() {
+  function escanear(video) {
     if (!scanning) return;
 
-    const video = document.getElementById('video');
     const canvas = document.createElement('canvas');
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
 
     if (canvas.width > 0) {
       const ctx = canvas.getContext('2d');
-      ctx.drawImage(video, 0, 0);
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      const code = jsQR(imageData.data, canvas.width, canvas.height);
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      
+      try {
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const code = jsQR(imageData.data, canvas.width, canvas.height);
 
-      if (code && canScan) {
-        canScan = false;
-        procesarQR(code.data.trim().replace(/s/g, ''));
-        return;
-      }
+        if (code && canScan) {
+          canScan = false;
+          mostrarQRDetectado();
+          setTimeout(() => procesarQR(code.data), 300);
+          return;
+        }
+      } catch(e) {}
     }
 
-    animationId = requestAnimationFrame(escanear);
+    animationId = requestAnimationFrame(() => escanear(video));
+  }
+
+  function mostrarQRDetectado() {
+    const status = document.getElementById('status');
+    status.className = 'status detected';
+    status.textContent = '✅ QR DETECTADO!';
   }
 
   function detenerScanner() {
@@ -359,7 +496,7 @@
     if (animationId) cancelAnimationFrame(animationId);
     if (videoStream) videoStream.getTracks().forEach(t => t.stop());
     
-    document.getElementById('video').style.display = 'none';
+    document.getElementById('videoContainer').style.display = 'none';
     document.getElementById('status').className = 'status waiting';
     document.getElementById('status').textContent = '⏹ Scanner detenido';
     document.getElementById('btnStart').style.display = 'block';
@@ -383,7 +520,8 @@
         setTimeout(() => {
           if (scanning) {
             canScan = true;
-            status.textContent = `📹 Escaneando (${grupo})...`;
+            status.className = 'status scanning';
+            status.textContent = `📹 Escaneando (${grupo})... Apunta al QR`;
           }
         }, 2000);
       } else {
