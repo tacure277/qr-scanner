@@ -244,7 +244,7 @@
     const ordenado = [...sanidad].sort((a, b) => a.apellido.localeCompare(b.apellido));
     
     ordenado.forEach((s, index) => {
-      const qrData = s.dni;
+      const qrData = s.dni.toString().trim();
       
       const card = document.createElement('div');
       card.className = 'qr-card';
