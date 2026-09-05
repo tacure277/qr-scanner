@@ -105,9 +105,9 @@
       text-transform: uppercase;
       word-break: break-word;
       line-height: 1;
-      min-height: 14px;
-      max-height: 14px;
-      overflow: hidden;
+      min-height: 18px;
+      max-height: 18px;
+      overflow: visible;
     }
     .qr-card .dni {
       color: #5a7a6d;
@@ -116,13 +116,13 @@
       font-weight: 600;
     }
     .qr-image {
-      width: 2.5cm;
-      height: 2.5cm;
+      width: 150px;
+      height: 150px;
       margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
+      display: block;
+      
+      
+      overflow: visible;
       border-radius: 2px;
     }
     .qr-image canvas {
@@ -206,8 +206,8 @@
       grid.appendChild(card);
       new QRCode(document.getElementById(`qr-${index}`), {
         text: qrData,
-        width: 94,
-        height: 94,
+        width: 150,
+        height: 150,
         colorDark: "#1a472a",
         colorLight: "#ffffff",
         correctLevel: QRCode.CorrectLevel.L
