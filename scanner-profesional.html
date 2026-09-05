@@ -115,13 +115,12 @@
       border-left: 4px solid #721c24;
     }
     
-    #reader {
+    #video {
       width: 100%;
       margin: 20px 0;
       border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
       display: none;
+      background: #000;
     }
     
     .modal {
@@ -233,7 +232,7 @@
 
   <div id="status" class="status waiting">⏳ Ingresa la URL y guarda</div>
 
-  <div id="reader"></div>
+  <video id="video" playsinline autoplay></video>
 
   <div class="button-group" id="controlButtons" style="display: none; margin: 15px 0;">
     <button class="btn-primary" id="btnStart" onclick="iniciarScanner()">📹 Iniciar Scanner</button>
@@ -256,12 +255,13 @@
   </div>
 </div>
 
-<script src="https://unpkg.com/html5-qrcode"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
 <script>
   let appUrl = localStorage.getItem('appUrl') || '';
-  let qrScanner = null;
   let scanning = false;
   let canScan = true;
+  let videoStream = null;
+  let animationId = null;
   let grupo = new URLSearchParams(window.location.search).get('grupo') || 'Comunicaciones';
 
   if (appUrl) {
@@ -304,45 +304,67 @@
     status.className = 'status scanning';
     status.textContent = '⏳ Iniciando cámara...';
 
-    qrScanner = new Html5Qrcode('reader');
-    document.getElementById('reader').style.display = 'block';
+    const video = document.getElementById('video');
+    video.style.display = 'block';
+    document.getElementById('btnStart').style.display = 'none';
+    document.getElementById('btnStop').style.display = 'block';
 
-    qrScanner.start(
-      { facingMode: 'environment' },
-      { fps: 10, qrbox: { width: 250, height: 250 } },
-      onScanSuccess,
-      onScanFailure
-    ).then(() => {
-      status.textContent = `📹 Escaneando (${grupo})...`;
-      document.getElementById('btnStart').style.display = 'none';
-      document.getElementById('btnStop').style.display = 'block';
-      scanning = true;
-      canScan = true;
-    }).catch(err => {
-      mostrarError('❌ Error: ' + err);
-    });
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+      .then(stream => {
+        videoStream = stream;
+        video.srcObject = stream;
+        
+        video.onloadedmetadata = () => {
+          status.textContent = `📹 Escaneando (${grupo})...`;
+          scanning = true;
+          canScan = true;
+          escanear();
+        };
+      })
+      .catch(err => {
+        mostrarError('❌ Error cámara: ' + err.message);
+        video.style.display = 'none';
+        document.getElementById('btnStart').style.display = 'block';
+        document.getElementById('btnStop').style.display = 'none';
+      });
+  }
+
+  function escanear() {
+    if (!scanning) return;
+
+    const video = document.getElementById('video');
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    if (canvas.width > 0) {
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(video, 0, 0);
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const code = jsQR(imageData.data, canvas.width, canvas.height);
+
+      if (code && canScan) {
+        canScan = false;
+        procesarQR(code.data);
+        return;
+      }
+    }
+
+    animationId = requestAnimationFrame(escanear);
   }
 
   function detenerScanner() {
-    if (qrScanner) {
-      qrScanner.stop().then(() => {
-        document.getElementById('reader').style.display = 'none';
-        document.getElementById('status').className = 'status waiting';
-        document.getElementById('status').textContent = '⏹ Scanner detenido';
-        document.getElementById('btnStart').style.display = 'block';
-        document.getElementById('btnStop').style.display = 'none';
-        scanning = false;
-      });
-    }
+    scanning = false;
+    
+    if (animationId) cancelAnimationFrame(animationId);
+    if (videoStream) videoStream.getTracks().forEach(t => t.stop());
+    
+    document.getElementById('video').style.display = 'none';
+    document.getElementById('status').className = 'status waiting';
+    document.getElementById('status').textContent = '⏹ Scanner detenido';
+    document.getElementById('btnStart').style.display = 'block';
+    document.getElementById('btnStop').style.display = 'none';
   }
-
-  function onScanSuccess(decodedText) {
-    if (!canScan || !scanning) return;
-    canScan = false;
-    procesarQR(decodedText.trim());
-  }
-
-  function onScanFailure(error) {}
 
   async function procesarQR(qrData) {
     const status = document.getElementById('status');
@@ -366,23 +388,15 @@
         }, 2000);
       } else {
         mostrarError('❌ ' + (resultado.error || 'Error'));
-        setTimeout(() => {
-          canScan = true;
-        }, 2000);
+        setTimeout(() => { canScan = true; }, 2000);
       }
     } catch (error) {
       mostrarError('❌ Error: ' + error.message);
-      setTimeout(() => {
-        canScan = true;
-      }, 2000);
+      setTimeout(() => { canScan = true; }, 2000);
     }
   }
 
   function mostrarModalExito(datos) {
-    if (qrScanner && scanning) {
-      qrScanner.pause();
-    }
-    
     const dataDiv = document.getElementById('modalData');
     dataDiv.innerHTML = `
       <div><strong>Apellido:</strong> <span>${datos.apellido}</span></div>
@@ -392,15 +406,11 @@
       <div><strong>N° Armamento:</strong> <span>${datos.numArm}</span></div>
       <div><strong>Hora:</strong> <span>${new Date().toLocaleString('es-PE')}</span></div>
     `;
-    
     document.getElementById('modal').classList.add('active');
   }
 
   function cerrarModal() {
     document.getElementById('modal').classList.remove('active');
-    if (qrScanner && scanning) {
-      qrScanner.resume();
-    }
   }
 
   function mostrarError(mensaje) {
