@@ -1,178 +1,324 @@
-const SHEET_ID = "1Z2DjX95s83-U_xZIRRq6JH1wUH8QnPOK800tGj9UixQ";
-
-// BASE DE DATOS ÚNICA - TODOS LOS SOLDADOS
-const SOLDADOS_BATLLOG = {
-  // SANIDAD (13)
-  "757425877": { apellido: "HUAMAN FUENTES", grado: "SGTO1", armamento: "GALIL", numArm: "97134108", seccion: "Sanidad" },
-  "76440794": { apellido: "HERRERA SAUCEDO", grado: "SGTO2", armamento: "FAL", numArm: "1711788", seccion: "Sanidad" },
-  "74630366": { apellido: "ISUIZA HUAMAN", grado: "CABO", armamento: "FAL", numArm: "1711474", seccion: "Sanidad" },
-  "60353322": { apellido: "PASQUEL CHUQUIYAURI", grado: "CABO", armamento: "FAL", numArm: "1607007", seccion: "Sanidad" },
-  "60978240": { apellido: "ALVARADO BETETA", grado: "CABO", armamento: "FAL", numArm: "1606661", seccion: "Sanidad" },
-  "81298002": { apellido: "ROJAS LOMAS", grado: "CABO", armamento: "FAL", numArm: "1606561", seccion: "Sanidad" },
-  "81298001": { apellido: "ROJAS LOMAS", grado: "CABO", armamento: "FAL", numArm: "1605285", seccion: "Sanidad" },
-  "60671409": { apellido: "BORJAS CHAVARRIA", grado: "SLDO", armamento: "FAL", numArm: "1604844", seccion: "Sanidad" },
-  "74587643": { apellido: "CALISAYA LONG", grado: "SLDO", armamento: "FAL", numArm: "1604710", seccion: "Sanidad" },
-  "61265796": { apellido: "FERNANDEZ AREVALO", grado: "SLDO", armamento: "FAL", numArm: "1604645", seccion: "Sanidad" },
-  "74395760": { apellido: "TUANAMA QUILICHA", grado: "SLDO", armamento: "FAL", numArm: "1594622", seccion: "Sanidad" },
-  "61345749": { apellido: "YAHUARCANI PAREDES", grado: "SLDO", armamento: "FAL", numArm: "1593604", seccion: "Sanidad" },
-  "76779812": { apellido: "TITO COTIPA", grado: "SLDO", armamento: "FAL", numArm: "1593604", seccion: "Sanidad" },
-  
-  // COMUNICACIONES (14)
-  "10382331": { apellido: "PEBE ANACLETO MOISES", grado: "TCO 2° EP", armamento: "UZI", numArm: "12526", seccion: "Comunicaciones" },
-  "74602356": { apellido: "LUSTRE RODRIGUEZ LUIS", grado: "SGTO 1°", armamento: "FAL", numArm: "021259", seccion: "Comunicaciones" },
-  "10380231": { apellido: "POMA ORE KEVIN RONALD", grado: "SO 1 EP", armamento: "GALIL", numArm: "12528", seccion: "Comunicaciones" },
-  "61021564": { apellido: "RETO NUÑES FABRICIO RAUL", grado: "SGTO 2 SAA", armamento: "FAL", numArm: "021325", seccion: "Comunicaciones" },
-  "61717408": { apellido: "TAMAYO ROSALES JULIO", grado: "SGTO 2 SAA", armamento: "FAL", numArm: "021631", seccion: "Comunicaciones" },
-  "73656600": { apellido: "CHUQUILLAURI TOLEDO SHUGAR", grado: "CABO SAA", armamento: "FAL", numArm: "021676", seccion: "Comunicaciones" },
-  "71045744": { apellido: "HUAMAN ROSALES JUSUE", grado: "CABO SAA", armamento: "FAL", numArm: "022187", seccion: "Comunicaciones" },
-  "72182749": { apellido: "SANTIAGO OJEDA ELOY", grado: "CABO SAA", armamento: "FAL", numArm: "022421", seccion: "Comunicaciones" },
-  "62986689": { apellido: "TINA PACAYA JUAN CARLOS", grado: "CABO SAA", armamento: "FAL", numArm: "022554", seccion: "Comunicaciones" },
-  "74226186": { apellido: "ACHATA CASTRO AARON SAUL", grado: "CABO SAA", armamento: "FAL", numArm: "022893", seccion: "Comunicaciones" },
-  "61060543": { apellido: "REBATTA AVALOS HERLINS DELVIT", grado: "CABO SAA", armamento: "FAL", numArm: "022897", seccion: "Comunicaciones" },
-  "77851493": { apellido: "CASTILLO CCANTO SMITH LUIS", grado: "CABO SAA", armamento: "FAL", numArm: "023231", seccion: "Comunicaciones" },
-  "70700986": { apellido: "VARGAS FLORES AXEL ANTONIO", grado: "CABO SAA", armamento: "FAL", numArm: "023334", seccion: "Comunicaciones" },
-  "70649882": { apellido: "LAPA SAAVEDRA JEAN CLAUDE", grado: "CABO SAA", armamento: "FAL", numArm: "023406", seccion: "Comunicaciones" },
-  
-  // INGENIERÍA (18)
-  "96114249": { apellido: "LUJAN CAPCHA DAVID", grado: "CAP INF", armamento: "GALIL", numArm: "N/A", seccion: "Ingeniería" },
-  "96114239": { apellido: "CASTILLA LACION LUIS AMERICO", grado: "TCO1 T/INF", armamento: "GALIL", numArm: "N/A", seccion: "Ingeniería" },
-  "74561860": { apellido: "LEON SANCHEZ JUAN CARLOS", grado: "SO3 T/ADM", armamento: "GALIL", numArm: "96114244", seccion: "Ingeniería" },
-  "96114257": { apellido: "LOPEZ HUAPAYA YETSABEL", grado: "SO3 T/ADM", armamento: "GALIL", numArm: "N/A", seccion: "Ingeniería" },
-  "60972298": { apellido: "PUENTE ESPIRITU SEBASTIAN JESUS", grado: "SGTO2 SAA", armamento: "FAL", numArm: "020163", seccion: "Ingeniería" },
-  "60795970": { apellido: "MIO SIGUEÑAS ENRIQUE IGNASIO", grado: "SGTO2 SAA", armamento: "FAL", numArm: "018181", seccion: "Ingeniería" },
-  "60454451": { apellido: "LIMA ROJAS CLAUDIO", grado: "SGTO2 SAA", armamento: "FAL", numArm: "036703", seccion: "Ingeniería" },
-  "60093756": { apellido: "GUTIERREZ DE LA CRUZ YUCIDER", grado: "SGTO2 SAA", armamento: "FAL", numArm: "019297", seccion: "Ingeniería" },
-  "76900657": { apellido: "VALLES BADURELES JEREMY DANIEL", grado: "SGTO2 SAA", armamento: "FAL", numArm: "017760", seccion: "Ingeniería" },
-  "60834704": { apellido: "PECHE MAYANGA JUAN JESUS", grado: "SGTO2 SAA", armamento: "FAL", numArm: "020472", seccion: "Ingeniería" },
-  "60500863": { apellido: "AYZANA APOLINARIO CESAR", grado: "CABO SAA", armamento: "FAL", numArm: "020029", seccion: "Ingeniería" },
-  "63304509": { apellido: "GONZALES BARBOZA JEISON", grado: "CABO SAA", armamento: "FAL", numArm: "019644", seccion: "Ingeniería" },
-  "70702706": { apellido: "VALDEZ IPARRAGUIRE GUILLERMO", grado: "SLDO SAA", armamento: "FAL", numArm: "020552", seccion: "Ingeniería" },
-  "77461426": { apellido: "DAZA ASIPALI NOHL", grado: "SLDO SAA", armamento: "FAL", numArm: "019856", seccion: "Ingeniería" },
-  "77653237": { apellido: "HUARAZ ORE YANCEY GIOVANNI", grado: "SLDO SAA", armamento: "FAL", numArm: "020150", seccion: "Ingeniería" },
-  "77118574": { apellido: "YACHACHIN CUBAS EDDIE", grado: "SLDO SAA", armamento: "FAL", numArm: "021125", seccion: "Ingeniería" },
-  "76287176": { apellido: "SOLIER CORDOVA JERCY", grado: "SLDO SAA", armamento: "FAL", numArm: "021019", seccion: "Ingeniería" },
-  "61245568": { apellido: "FLORES PACAYA SERGIO JESUS", grado: "SLDO SAA", armamento: "FAL", numArm: "020698", seccion: "Ingeniería" },
-  
-  // INTENDENCIA (19)
-  "41750123": { apellido: "ORTEGA RUDAS EDSON YOBER", grado: "MY INT", armamento: "N/A", numArm: "12505", seccion: "Intendencia" },
-  "70753379": { apellido: "SOTO MENDOZA ELIZABETH", grado: "TTE INT", armamento: "N/A", numArm: "12507", seccion: "Intendencia" },
-  "73171102": { apellido: "GUTIERREZ ILLA JULIO CESAR", grado: "SO3 T/ADM", armamento: "N/A", numArm: "12508", seccion: "Intendencia" },
-  "75229582": { apellido: "RAMOS RAMOS BRENDA", grado: "SO3 T/ADM", armamento: "N/A", numArm: "12511", seccion: "Intendencia" },
-  "75974925": { apellido: "REE QUIROZ VASQUEZ GHERSSON", grado: "SGTO1° REE", armamento: "N/A", numArm: "9713401", seccion: "Intendencia" },
-  "63095671": { apellido: "REE SILVANO MONTES ANGELLO", grado: "SGTO1° REE", armamento: "N/A", numArm: "1532264", seccion: "Intendencia" },
-  "70651611": { apellido: "LIVIA VASQUEZ CHARLI BRAYAN", grado: "CABO SMV", armamento: "N/A", numArm: "97133271", seccion: "Intendencia" },
-  "74286083": { apellido: "HUAÑAPI OJANAMA MORGAN", grado: "CABO SMV", armamento: "N/A", numArm: "97133265", seccion: "Intendencia" },
-  "61956273": { apellido: "PACAYA IPUSHIMA JHENS CLEVER", grado: "CABO SMV", armamento: "N/A", numArm: "97133273", seccion: "Intendencia" },
-  "76717562": { apellido: "FATAMA PIZANGO DENNIS", grado: "CABO SMV", armamento: "N/A", numArm: "82801", seccion: "Intendencia" },
-  "74956799": { apellido: "CALLIRGOS GARCIA ELIEZER", grado: "CABO SMV", armamento: "N/A", numArm: "97133270", seccion: "Intendencia" },
-  "61059992": { apellido: "DAVALOS DURAND EUGENIO", grado: "CABO SMV", armamento: "N/A", numArm: "97133272", seccion: "Intendencia" },
-  "60061551": { apellido: "QUISPE MEJIA ISIDRO LUIS", grado: "CABO SMV", armamento: "N/A", numArm: "63773", seccion: "Intendencia" },
-  "74407407": { apellido: "MEDINA PLACIDO JOSE LUIS", grado: "SLDO SMV", armamento: "N/A", numArm: "53520", seccion: "Intendencia" },
-  "61269266": { apellido: "BALLENA BARDALES JOSUE JAVIER", grado: "SLDO SMV", armamento: "N/A", numArm: "82392", seccion: "Intendencia" },
-  "60688165": { apellido: "RUIZ SILVA YASSER KARL", grado: "SLDO SMV", armamento: "N/A", numArm: "82405", seccion: "Intendencia" },
-  "74537881": { apellido: "CANTARO MASIAS CHRISTOFER M.", grado: "SLDO SMV", armamento: "N/A", numArm: "171236", seccion: "Intendencia" },
-  "61362912": { apellido: "LOPEZ ACHAHUANCO FRANK", grado: "SLDO SMV", armamento: "N/A", numArm: "1579219", seccion: "Intendencia" },
-  "70732139": { apellido: "CHUNGA ALVARADO JHAIR", grado: "SLDO SMV", armamento: "N/A", numArm: "82515", seccion: "Intendencia" },
-  
-  // COMANDO Y SERVICIO (24)
-  "40691376": { apellido: "MORALES GOMEZ RUBEN GIANCARLO", grado: "TTE CRL COM", armamento: "UZI", numArm: "12498", seccion: "Comando y Servicio" },
-  "70369147": { apellido: "HEREDIA LOPEZ ALFREDO ARTURO", grado: "MY COM", armamento: "UZI", numArm: "12499", seccion: "Comando y Servicio" },
-  "45515341": { apellido: "ESPINOZA PALACIOS YESSENIA DEL ROSARIO", grado: "CAP COM", armamento: "UZI", numArm: "12501", seccion: "Comando y Servicio" },
-  "78635540": { apellido: "SANCHEZ PANTA PEDRO JAIME", grado: "SGTO2° SAA", armamento: "FAL", numArm: "31186", seccion: "Comando y Servicio" },
-  "44614990": { apellido: "ABAD PALACIOS EDGAR ALBERTO", grado: "SO1° T/ADM", armamento: "GALIL", numArm: "96114220", seccion: "Comando y Servicio" },
-  "61244179": { apellido: "CHAVEZ PEÑA JEAN PIERE", grado: "SGTO1° REE", armamento: "GALIL", numArm: "96114224", seccion: "Comando y Servicio" },
-  "70538740": { apellido: "SALAZAR ÑAHUI JUAN ANIBAL", grado: "SGTO2° SAA", armamento: "FAL", numArm: "32351", seccion: "Comando y Servicio" },
-  "61171490": { apellido: "ILUQUIZ MANRIQUE LEONEL DAVID", grado: "SLDO SAA", armamento: "FAL", numArm: "33903", seccion: "Comando y Servicio" },
-  "61772703": { apellido: "VILLANTOY LAULATE CARLOS ALBERTO", grado: "SLDO SAA", armamento: "FAL", numArm: "34268", seccion: "Comando y Servicio" },
-  "62444290": { apellido: "ROCA ROSALES EDUARDO ENRIQUE", grado: "SLDO SAA", armamento: "FAL", numArm: "35141", seccion: "Comando y Servicio" },
-  "72865858": { apellido: "LIÑAN TORRES VICTOR LEONARDO", grado: "CABO SAA", armamento: "FAL", numArm: "33345", seccion: "Comando y Servicio" },
-  "72424298": { apellido: "BARJA HILARIO EDU EDGAR", grado: "SGTO2° SAA", armamento: "FAL", numArm: "32957", seccion: "Comando y Servicio" },
-  "71180716": { apellido: "ANYAIPOMA FERNANDEZ MICHAEL DEREK", grado: "CABO SAA", armamento: "FAL", numArm: "33029", seccion: "Comando y Servicio" },
-  "70707365": { apellido: "QUINDE VELASQUEZ ENRIQUE FRANCISCO", grado: "CABO SAA", armamento: "FAL", numArm: "32986", seccion: "Comando y Servicio" },
-  "60195460": { apellido: "PIRICHICO PUÑIRO HUMBERTO JESUS", grado: "SGTO2° SAA", armamento: "FAL", numArm: "32504", seccion: "Comando y Servicio" },
-  "60443201": { apellido: "QUINTO NAVARRO NEFER ABRAHAM", grado: "SLDO SAA", armamento: "FAL", numArm: "33670", seccion: "Comando y Servicio" },
-  "60089205": { apellido: "BAZAN SALAS WILMER ALEJANDRO", grado: "SGTO2° SAA", armamento: "FAL", numArm: "31721", seccion: "Comando y Servicio" },
-  "74659256": { apellido: "CASTRO BRAVO JOSEMARIA", grado: "SLDO SAA", armamento: "FAL", numArm: "36173", seccion: "Comando y Servicio" },
-  "09633112": { apellido: "QUISPE PAHIUA RICARDO", grado: "TCO3° T/INF", armamento: "UZI", numArm: "12504", seccion: "Comando y Servicio" },
-  "92640502": { apellido: "GALARZA MONTES KLEVER JHANPIER", grado: "SGTO2° SAA", armamento: "FAL", numArm: "31352", seccion: "Comando y Servicio" },
-  "72357945": { apellido: "GARCIA SURITA BRAYAN", grado: "SGTO2° SAA", armamento: "FAL", numArm: "32792", seccion: "Comando y Servicio" },
-  "60234359": { apellido: "HUINCHO SEMINARIO ELEONAY ORNAN", grado: "SLDO SAA", armamento: "FAL", numArm: "34810", seccion: "Comando y Servicio" },
-  "60061570": { apellido: "CASTRO SEGURA VINCEL", grado: "SLDO SAA", armamento: "FAL", numArm: "35525", seccion: "Comando y Servicio" },
-  "71162210": { apellido: "NESTARES TAMARIS JHASTEEN", grado: "SLDO SAA", armamento: "FAL", numArm: "36092", seccion: "Comando y Servicio" }
-};
-
-function doPost(e) {
-  try {
-    const spreadsheet = SpreadsheetApp.openById(SHEET_ID);
-    const jsonData = JSON.parse(e.postData.contents);
-    const dni = (jsonData.qrData || "").trim();
-    const grupo = (jsonData.grupo || "").trim();
-    
-    const soldado = SOLDADOS_BATLLOG[dni];
-    
-    if (!soldado) {
-      return respuestaJSON({
-        success: false,
-        error: "DNI no encontrado"
-      });
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BATLLOG 112 - Centro de Control</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: 'Segoe UI', 'Roboto', Arial, sans-serif; 
+      background: linear-gradient(135deg, #1a472a 0%, #2d5f40 50%, #0d2818 100%);
+      padding: 20px;
+      min-height: 100vh;
+    }
+    .container { max-width: 1100px; margin: 0 auto; }
+    .header {
+      background: linear-gradient(135deg, #2d5f40 0%, #1a472a 100%);
+      padding: 40px 30px;
+      text-align: center;
+      border-radius: 12px;
+      border-bottom: 4px solid #d4af37;
+      margin-bottom: 40px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    }
+    .logo-container { 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      gap: 25px;
+      margin-bottom: 20px;
+    }
+    .logo { 
+      width: 100px; 
+      height: 100px; 
+      background: linear-gradient(135deg, #1a472a 0%, #0d2818 100%);
+      border: 3px solid #d4af37;
+      border-radius: 50%; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      color: #d4af37; 
+      font-weight: bold; 
+      font-size: 12px; 
+      text-align: center;
+      box-shadow: 0 6px 15px rgba(212, 175, 55, 0.4);
+    }
+    .header h1 { 
+      color: #d4af37; 
+      font-size: 36px; 
+      margin-bottom: 10px;
+      font-weight: 700;
+      text-shadow: 0 3px 6px rgba(0,0,0,0.4);
+    }
+    .header p { 
+      color: #a8d5ba; 
+      font-size: 15px;
+      font-weight: 500;
+      margin-bottom: 5px;
+    }
+    .header .subtitle { 
+      color: #7db3a0;
+      font-size: 13px;
     }
     
-    let sheet = spreadsheet.getSheetByName(grupo);
-    if (!sheet) {
-      sheet = spreadsheet.insertSheet(grupo);
-      sheet.appendRow(['N°', 'Grado', 'Nombres y Apellidos', 'DNI', 'Armamento', 'N° Armamento', 'Fecha/Hora']);
+    .banner {
+      background: linear-gradient(90deg, #d4af37 0%, #c9a027 100%);
+      color: #1a472a;
+      padding: 15px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 16px;
+      border-radius: 8px;
+      margin-bottom: 40px;
+      box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+      letter-spacing: 1px;
+      text-transform: uppercase;
     }
     
-    const ahora = new Date();
-    const fechaHora = ahora.toLocaleString('es-PE');
-    const numRegistro = sheet.getLastRow();
+    .content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-bottom: 30px;
+    }
     
-    sheet.appendRow([
-      numRegistro,
-      soldado.grado,
-      soldado.apellido,
-      dni,
-      soldado.armamento,
-      soldado.numArm,
-      fechaHora
-    ]);
+    .section {
+      background: linear-gradient(135deg, #f8f9f7 0%, #f0f3ef 100%);
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+      border-top: 4px solid #2d5f40;
+    }
     
-    const lastRow = sheet.getLastRow();
-    sheet.getRange(`A${lastRow}:G${lastRow}`).setBorder(true, true, true, true, true, true);
+    .section h2 {
+      color: #1a472a;
+      font-size: 20px;
+      margin-bottom: 20px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #d4af37;
+    }
     
-    return respuestaJSON({
-      success: true,
-      grupo: grupo,
-      datos: {
-        apellido: soldado.apellido,
-        grado: soldado.grado,
-        dni: dni,
-        armamento: soldado.armamento,
-        numArm: soldado.numArm
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .menu-item {
+      padding: 16px 18px;
+      background: white;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      text-decoration: none;
+      color: #1a472a;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 2px 8px rgba(45, 95, 64, 0.08);
+      border-left: 4px solid #2d5f40;
+    }
+    
+    .menu-item:hover {
+      background: linear-gradient(135deg, #e8f3ee 0%, #dff0e8 100%);
+      border-color: #2d5f40;
+      border-left: 4px solid #d4af37;
+      transform: translateX(5px);
+      box-shadow: 0 4px 15px rgba(45, 95, 64, 0.15);
+    }
+    
+    .menu-item.active {
+      background: linear-gradient(135deg, #2d5f40 0%, #1a472a 100%);
+      color: #d4af37;
+      border-color: #d4af37;
+      box-shadow: 0 4px 15px rgba(45, 95, 64, 0.25);
+    }
+    
+    .menu-icon {
+      font-size: 20px;
+      min-width: 24px;
+    }
+    
+    .menu-text {
+      flex: 1;
+    }
+    
+    .menu-desc {
+      font-size: 12px;
+      opacity: 0.7;
+      margin-top: 2px;
+    }
+    
+    @media (max-width: 768px) {
+      .content {
+        grid-template-columns: 1fr;
       }
-    });
+      .header h1 {
+        font-size: 28px;
+      }
+      .logo-container {
+        flex-direction: column;
+        gap: 15px;
+      }
+    }
     
-  } catch(error) {
-    return respuestaJSON({
-      success: false,
-      error: error.toString()
-    });
-  }
-}
+    .footer {
+      text-align: center;
+      color: #a8d5ba;
+      padding: 20px;
+      border-top: 1px solid rgba(212, 175, 55, 0.2);
+      font-size: 12px;
+      margin-top: 30px;
+    }
+    
+    .info-box {
+      background: linear-gradient(135deg, #cfe2ff 0%, #b6d4fe 100%);
+      border: 2px solid #084298;
+      border-radius: 8px;
+      padding: 15px;
+      margin-top: 20px;
+      color: #084298;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    
+    .info-box strong {
+      color: #042c53;
+      display: block;
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+<body>
 
-function doGet(e) {
-  return respuestaJSON({message: "OK"});
-}
+<div class="container">
+  
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo-container">
+      <img src="bat-log-112-logo.png" alt="Logo BATLLOG 112" style="width: 100px; height: 100px; border-radius: 50%; border: 3px solid #d4af37; box-shadow: 0 6px 15px rgba(212, 175, 55, 0.4);">
+      <div>
+        <h1>🎖️ BATLLOG 112</h1>
+        <p>Batallón Logístico 112</p>
+        <p class="subtitle">Sistema Integral de QR - Perú</p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="banner">
+    🚀 CENTRO DE CONTROL - SELECCIONA UN MÓDULO
+  </div>
+  
+  <!-- CONTENIDO PRINCIPAL -->
+  <div class="content">
+    
+    <!-- GENERADORES DE QR -->
+    <div class="section">
+      <h2>📋 GENERAR QR POR SECCIÓN</h2>
+      
+      <div class="menu">
+        <a href="qr-comando.html" class="menu-item">
+          <span class="menu-icon">🎖️</span>
+          <span class="menu-text">
+            <strong>Comando y Servicio</strong>
+            <div class="menu-desc">24 soldados</div>
+          </span>
+        </a>
 
-function doOptions(e) {
-  return respuestaJSON({message: "OK"});
-}
+        <a href="qr-sanidad.html" class="menu-item">
+          <span class="menu-icon">🏥</span>
+          <span class="menu-text">
+            <strong>Sanidad</strong>
+            <div class="menu-desc">13 soldados</div>
+          </span>
+        </a>
 
-function respuestaJSON(data) {
-  return ContentService
-    .createTextOutput(JSON.stringify(data))
-    .setMimeType(ContentService.MimeType.JSON)
-    .addHeader("Access-Control-Allow-Origin", "*")
-    .addHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
-    .addHeader("Access-Control-Allow-Headers", "Content-Type");
-}
+        <a href="qr-material-guerra.html" class="menu-item">
+          <span class="menu-icon">🔫</span>
+          <span class="menu-text">
+            <strong>Material de Guerra</strong>
+            <div class="menu-desc">Pendiente de datos</div>
+          </span>
+        </a>
+
+        <a href="qr-ingenieria.html" class="menu-item">
+          <span class="menu-icon">🔧</span>
+          <span class="menu-text">
+            <strong>Ingeniería</strong>
+            <div class="menu-desc">18 soldados</div>
+          </span>
+        </a>
+
+        <a href="qr-intendencia.html" class="menu-item">
+          <span class="menu-icon">📦</span>
+          <span class="menu-text">
+            <strong>Intendencia</strong>
+            <div class="menu-desc">19 soldados</div>
+          </span>
+        </a>
+
+        <a href="qr-comunicaciones.html" class="menu-item">
+          <span class="menu-icon">📡</span>
+          <span class="menu-text">
+            <strong>Comunicaciones</strong>
+            <div class="menu-desc">14 soldados</div>
+          </span>
+        </a>
+      </div>
+      
+      <div class="info-box">
+        <strong>ℹ️ Cómo funciona:</strong>
+        Cada sección permite generar QR de soldados precargados o agregar nuevos. Imprime o envía directamente a Google Sheets.
+      </div>
+    </div>
+    
+    <!-- HERRAMIENTAS -->
+    <div class="section">
+      <h2>🎯 HERRAMIENTAS</h2>
+      
+      <div class="menu">
+        <a href="scanner-profesional.html" class="menu-item">
+          <span class="menu-icon">📱</span>
+          <span class="menu-text">
+            <strong>Scanner de QR</strong>
+            <div class="menu-desc">Escanea y registra soldados</div>
+          </span>
+        </a>
+      </div>
+      
+      <div class="info-box">
+        <strong>📌 Flujo correcto:</strong>
+        1. Abre cualquier sección (Sanidad/Comunicaciones)<br>
+        2. Genera QR → Imprime o Envía a Sheets<br>
+        3. Abre Scanner de QR → Lee los códigos<br>
+        4. Los datos se guardan automáticamente
+      </div>
+      
+      <div class="info-box">
+        <strong>📌 Flujo recomendado:</strong>
+        1. Genera QR en cualquier sección<br>
+        2. Imprime o distribuye<br>
+        3. Escanea con el Scanner<br>
+        4. Los datos se guardan en Sheets
+      </div>
+    </div>
+    
+  </div>
+  
+  <!-- FOOTER -->
+  <div class="footer">
+    <p>BATLLOG 112 © 2026 | Sistema Integral de Control de QR</p>
+    <p>Batallón Logístico 112 - Perú</p>
+  </div>
+
+</div>
+
+</body>
+</html>
