@@ -3,34 +3,321 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BATLLOG 112 - Ingeniería</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <title>BATLLOG 112 - Ingeniería QR</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: Arial, sans-serif; background: #1a472a; padding: 20px; }
-    .container { max-width: 1200px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; }
-    .header { text-align: center; margin-bottom: 30px; border-bottom: 3px solid #d4af37; padding-bottom: 20px; }
-    .header h1 { color: #d4af37; font-size: 28px; margin-bottom: 5px; }
-    .header p { color: #666; margin: 5px 0; }
-    .controls { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
-    .btn { padding: 10px 20px; font-size: 14px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; transition: all 0.3s; }
-    .btn-primary { background: #d4af37; color: #1a472a; }
-    .btn-primary:hover { background: #c9a027; }
-    .btn-success { background: #28a745; color: white; }
-    .btn-success:hover { background: #218838; }
-    .btn-danger { background: #dc3545; color: white; }
-    .btn-danger:hover { background: #c82333; }
-    .btn-info { background: #17a2b8; color: white; }
-    .btn-info:hover { background: #138496; }
-    .info-status { padding: 10px; background: #e8f4f8; border: 2px solid #084298; border-radius: 5px; color: #084298; font-weight: bold; }
-    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 20px; }
-    .card { background: #f9f9f9; border: 2px solid #ddd; border-radius: 8px; padding: 6px; text-align: center; }
-    .card h3 { font-size: 12px; color: #333; margin: 3px 0; }
-    .card p { font-size: 10px; color: #666; margin: 2px 0; }
-    .qr-image { width: 100%; height: auto; }
-    input { padding: 8px; font-size: 12px; border: 1px solid #ddd; border-radius: 5px; }
-    @media print { body { padding: 0; } .controls { display: none; } .grid { grid-template-columns: repeat(5, 1fr); } }
-    @media (max-width: 768px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+    body { 
+      font-family: 'Segoe UI', 'Roboto', Arial, sans-serif; 
+      background: linear-gradient(135deg, #1a472a 0%, #2d5f40 50%, #0d2818 100%);
+      padding: 15px;
+      min-height: 100vh;
+    }
+    .container { max-width: 1200px; margin: 0 auto; }
+    .header {
+      background: linear-gradient(135deg, #2d5f40 0%, #1a472a 100%);
+      padding: 15px;
+      text-align: center;
+      border-radius: 8px;
+      border-bottom: 3px solid #d4af37;
+      margin-bottom: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    h1 { color: #d4af37; font-size: 24px; margin-bottom: 3px; }
+    .subtitle { color: #a8d5ba; font-size: 12px; }
+    
+    .tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      padding: 10px 20px;
+      background: linear-gradient(135deg, #2d5f40 0%, #1a472a 100%);
+      color: #d4af37;
+      border: 2px solid #d4af37;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+    .tab-btn.active {
+      background: #d4af37;
+      color: #1a472a;
+    }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    
+    .form-section {
+      background: linear-gradient(135deg, #e8f3ee 0%, #dff0e8 100%);
+      padding: 15px;
+      border-radius: 8px;
+      border-left: 4px solid #2d5f40;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 8px rgba(45, 95, 64, 0.1);
+    }
+    
+    .form-group {
+      margin-bottom: 10px;
+    }
+    
+    .form-group label {
+      display: block;
+      color: #1a472a;
+      font-weight: 600;
+      margin-bottom: 4px;
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+    
+    .form-group input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #a8d5ba;
+      border-radius: 6px;
+      font-size: 13px;
+      background: white;
+    }
+    
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
+    }
+    
+    .controls {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+    
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      font-size: 12px;
+    }
+    
+    .btn-add {
+      background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+      color: white;
+    }
+    
+    .btn-generate {
+      background: linear-gradient(135deg, #2d5f40 0%, #1a472a 100%);
+      color: #d4af37;
+      text-transform: uppercase;
+    }
+    
+    .btn-print {
+      background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+      color: white;
+      text-transform: uppercase;
+      display: none;
+    }
+    
+    .btn-print.show {
+      display: inline-block;
+    }
+    
+    .btn-enviar {
+      background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+      color: white;
+      display: none;
+    }
+    
+    .btn-enviar.show {
+      display: inline-block;
+    }
+    
+    .options {
+      background: #f5f5f5;
+      padding: 6px;
+      border-radius: 6px;
+      margin-bottom: 12px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    
+    .options label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      color: #1a472a;
+      font-size: 13px;
+    }
+    
+    .qr-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 15px;
+    }
+    
+    .qr-grid.col4 {
+      grid-template-columns: repeat(5, 1fr);
+    }
+    
+    .qr-card {
+      background: white;
+      border: 1px solid #ddd;
+      padding: 4px;
+      border-radius: 4px;
+      text-align: center;
+      page-break-inside: avoid;
+    }
+    
+    .qr-card h3 {
+      color: #1a472a;
+      font-size: 8px;
+      margin-bottom: 2px;
+      font-weight: 700;
+      text-transform: uppercase;
+      word-break: break-word;
+      line-height: 1;
+      min-height: 14px;
+      max-height: 14px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .qr-card .dni {
+      color: #5a7a6d;
+      font-size: 6px;
+      margin-bottom: 3px;
+      font-weight: 600;
+    }
+    
+    .qr-image {
+      width: 2.5cm;
+      height: 2.5cm;
+      margin: 0 auto;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border-radius: 2px;
+    }
+    
+    .qr-image canvas {
+      width: 100% !important;
+      height: 100% !important;
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+    
+    .status {
+      text-align: center;
+      padding: 6px;
+      background: linear-gradient(135deg, #cfe2ff 0%, #b6d4fe 100%);
+      color: #084298;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      font-weight: 600;
+      border-left: 4px solid #084298;
+      font-size: 13px;
+    }
+    
+    .footer {
+      text-align: center;
+      color: #a8d5ba;
+      padding: 15px;
+      margin-top: 30px;
+      border-top: 1px solid rgba(212, 175, 55, 0.2);
+      font-size: 11px;
+    }
+    
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal.active {
+      display: flex;
+    }
+    
+    .modal-content {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      text-align: center;
+      max-width: 90%;
+      box-shadow: 0 15px 50px rgba(0,0,0,0.4);
+      border-top: 5px solid #2d5f40;
+    }
+    
+    .modal-content h2 {
+      color: #1a472a;
+      font-size: 28px;
+      margin-bottom: 15px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    
+    .modal-content .check-icon {
+      font-size: 60px;
+      margin-bottom: 20px;
+    }
+    
+    .modal-content p {
+      color: #5a7a6d;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+    
+    .modal-content .info {
+      background: #f5f5f5;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 20px 0;
+      text-align: left;
+    }
+    
+    .modal-content .info div {
+      margin: 8px 0;
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+    }
+    
+    .modal-content button {
+      padding: 11px 40px;
+      background: linear-gradient(135deg, #2d5f40 0%, #1a472a 100%);
+      color: #d4af37;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 14px;
+      margin-top: 20px;
+      text-transform: uppercase;
+    }
+    
+    @media print {
+      body { background: white; }
+      .header, .tabs, .form-section, .controls, .options, .status, .footer { display: none; }
+      .qr-grid { margin-top: 0; }
+    }
   </style>
 </head>
 <body>
@@ -38,85 +325,346 @@
 <div class="container">
   <div class="header">
     <h1>🎖️ BATLLOG 112 - Ingeniería</h1>
-    <p>Generador de QR - Compañía Ingeniería</p>
+    <p class="subtitle">Generador de QR - Compañía Ingeniería</p>
   </div>
 
-  <div class="controls">
-    <button class="btn btn-primary" onclick="generarIngenieria()">🔲 GENERAR QR</button>
-    <button class="btn btn-success" onclick="window.print()">🖨️ IMPRIMIR</button>
-    <button class="btn btn-info" onclick="irScanner()">📱 IR A SCANNER</button>
-    <button class="btn btn-danger" onclick="location.href='index.html'">🏠 VOLVER AL INICIO</button>
+  <div class="tabs">
+    <button class="tab-btn active" onclick="cambiarTab('sanidad')">📋 Precargados</button>
+    <button class="tab-btn" onclick="cambiarTab('manual')">➕ Manual</button>
   </div>
 
-  <div class="info-status">
-    ✓ 18 soldados de Ingeniería precargados
+  <!-- TAB PRECARGADOS -->
+  <div id="sanidad" class="tab-content active">
+    <div class="status">✓ 18 soldados de Ingeniería precargados</div>
+    
+    <div class="options">
+      <label>
+        <input type="radio" name="columnas" value="6" checked onchange="cambiarColumnas(6)">
+        6 columnas
+      </label>
+      <label>
+        <input type="radio" name="columnas" value="4" onchange="cambiarColumnas(4)">
+        4 columnas
+      </label>
+    </div>
+    
+    <div class="form-section">
+      <div class="form-group">
+        <label>🔗 URL de Google Sheets</label>
+        <input type="text" id="urlGoogleSheets" placeholder="https://script.google.com/macros/s/...">
+      </div>
+    </div>
+    
+    <div class="controls">
+      <button class="btn-generate" onclick="generarIngeniería()">🎯 Generar QR</button>
+      <button class="btn-print" id="btnPrint" onclick="window.print()">🖨️ Imprimir</button>
+      <button class="btn-enviar" id="btnEnviarSan" onclick="enviarAGoogleSheets()">📤 Enviar a Sheets</button>
+      <button class="btn-generate" onclick="window.location.href='scanner-profesional.html?grupo=Ingeniería'" style="background: linear-gradient(135deg, #6c757d 0%, #545b62 100%);">📱 Ir a Scanner</button>
+      <button class="btn-generate" onclick="window.location.href='index.html'" style="background: linear-gradient(135deg, #17a2b8 0%, #117a8b 100%);">🏠 Volver al Inicio</button>
+    </div>
   </div>
 
-  <div id="qrGrid" class="grid"></div>
+  <!-- TAB MANUAL -->
+  <div id="manual" class="tab-content">
+    <div class="status">✓ Rellena y haz click en Agregar - los QR se generan automáticamente</div>
+    
+    <div class="form-section">
+      <div class="form-group">
+        <label>🔗 URL de Google Sheets</label>
+        <input type="text" id="urlGoogleSheetsManual" placeholder="https://script.google.com/macros/s/...">
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label>👤 Apellidos</label>
+          <input type="text" id="apellido" placeholder="Ej: HERRERA">
+        </div>
+        <div class="form-group">
+          <label>🆔 DNI</label>
+          <input type="text" id="dni" placeholder="Ej: 76440794">
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label>⭐ Grado</label>
+          <input type="text" id="grado" placeholder="Ej: CABO">
+        </div>
+        <div class="form-group">
+          <label>🔫 Armamento</label>
+          <input type="text" id="armamento" placeholder="Ej: FAL">
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label>🔢 N° Armamento</label>
+        <input type="text" id="numArmamento" placeholder="Ej: 1711788">
+      </div>
+    </div>
+    
+    <div class="options">
+      <label>
+        <input type="radio" name="columnasManual" value="6" checked onchange="cambiarColumnasManual(6)">
+        6 columnas
+      </label>
+      <label>
+        <input type="radio" name="columnasManual" value="4" onchange="cambiarColumnasManual(4)">
+        4 columnas
+      </label>
+    </div>
+    
+    <div class="controls">
+      <button class="btn-add" onclick="agregarManual()">➕ Agregar Soldado</button>
+      <button class="btn-print" id="btnPrintManual" onclick="window.print()">🖨️ Imprimir</button>
+      <button class="btn-enviar" id="btnEnviarMan" onclick="enviarManualAGoogleSheets()">📤 Enviar a Sheets</button>
+      <button class="btn-generate" onclick="window.location.href='scanner-profesional.html?grupo=Ingeniería'" style="background: linear-gradient(135deg, #6c757d 0%, #545b62 100%);">📱 Ir a Scanner</button>
+      <button class="btn-generate" onclick="window.location.href='index.html'" style="background: linear-gradient(135deg, #17a2b8 0%, #117a8b 100%);">🏠 Volver al Inicio</button>
+    </div>
+  </div>
+
+  <div class="qr-grid" id="qrGrid"></div>
+
+  <div class="footer">
+    <p>BATLLOG 112 © 2026 | Perú</p>
+  </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<!-- Modal -->
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <div class="check-icon">✅</div>
+    <h2>ENVIADO CON ÉXITO</h2>
+    <p>Los registros se guardaron correctamente</p>
+    <div class="info" id="modalInfo"></div>
+    <button onclick="cerrarModal()">Aceptar</button>
+  </div>
+</div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
-  const ingenieria = [
-    { apellido: "LUJAN CAPCHA DAVID", dni: "96114249", grado: "CAP INF", armamento: "GALIL", numArm: "N/A" },
-    { apellido: "CASTILLA LACION LUIS AMERICO", dni: "96114239", grado: "TCO1 T/INF", armamento: "GALIL", numArm: "N/A" },
-    { apellido: "LEON SANCHEZ JUAN CARLOS", dni: "74561860", grado: "SO3 T/ADM", armamento: "GALIL", numArm: "96114244" },
-    { apellido: "LOPEZ HUAPAYA YETSABEL", dni: "96114257", grado: "SO3 T/ADM", armamento: "GALIL", numArm: "N/A" },
-    { apellido: "PUENTE ESPIRITU SEBASTIAN JESUS", dni: "60972298", grado: "SGTO2 SAA", armamento: "FAL", numArm: "020163" },
-    { apellido: "MIO SIGUEÑAS ENRIQUE IGNASIO", dni: "60795970", grado: "SGTO2 SAA", armamento: "FAL", numArm: "018181" },
-    { apellido: "LIMA ROJAS CLAUDIO", dni: "60454451", grado: "SGTO2 SAA", armamento: "FAL", numArm: "036703" },
-    { apellido: "GUTIERREZ DE LA CRUZ YUCIDER", dni: "60093756", grado: "SGTO2 SAA", armamento: "FAL", numArm: "019297" },
-    { apellido: "VALLES BADURELES JEREMY DANIEL", dni: "76900657", grado: "SGTO2 SAA", armamento: "FAL", numArm: "017760" },
-    { apellido: "PECHE MAYANGA JUAN JESUS", dni: "60834704", grado: "SGTO2 SAA", armamento: "FAL", numArm: "020472" },
-    { apellido: "AYZANA APOLINARIO CESAR", dni: "60500863", grado: "CABO SAA", armamento: "FAL", numArm: "020029" },
-    { apellido: "GONZALES BARBOZA JEISON", dni: "63304509", grado: "CABO SAA", armamento: "FAL", numArm: "019644" },
-    { apellido: "VALDEZ IPARRAGUIRE GUILLERMO", dni: "70702706", grado: "SLDO SAA", armamento: "FAL", numArm: "020552" },
-    { apellido: "DAZA ASIPALI NOHL", dni: "77461426", grado: "SLDO SAA", armamento: "FAL", numArm: "019856" },
-    { apellido: "HUARAZ ORE YANCEY GIOVANNI", dni: "77653237", grado: "SLDO SAA", armamento: "FAL", numArm: "020150" },
-    { apellido: "YACHACHIN CUBAS EDDIE", dni: "77118574", grado: "SLDO SAA", armamento: "FAL", numArm: "021125" },
-    { apellido: "SOLIER CORDOVA JERCY", dni: "76287176", grado: "SLDO SAA", armamento: "FAL", numArm: "021019" },
-    { apellido: "FLORES PACAYA SERGIO JESUS", dni: "61245568", grado: "SLDO SAA", armamento: "FAL", numArm: "020698" }
+  const sanidad = [
+    { apellido: "ORTEGA RUDAS EDSON YOBER", dni: "41750123", grado: "MY INT", armamento: "N/A", numArm: "12505" },
+    { apellido: "SOTO MENDOZA ELIZABETH", dni: "70753379", grado: "TTE INT", armamento: "N/A", numArm: "12507" },
+    { apellido: "GUTIERREZ ILLA JULIO CESAR", dni: "73171102", grado: "SO3 T/ADM", armamento: "N/A", numArm: "12508" },
+    { apellido: "RAMOS RAMOS BRENDA", dni: "75229582", grado: "SO3 T/ADM", armamento: "N/A", numArm: "12511" },
+    { apellido: "REE QUIROZ VASQUEZ GHERSSON", dni: "75974925", grado: "SGTO1° REE", armamento: "N/A", numArm: "9713401" },
+    { apellido: "REE SILVANO MONTES ANGELLO", dni: "63095671", grado: "SGTO1° REE", armamento: "N/A", numArm: "1532264" },
+    { apellido: "LIVIA VASQUEZ CHARLI BRAYAN", dni: "70651611", grado: "CABO SMV", armamento: "N/A", numArm: "97133271" },
+    { apellido: "HUAÑAPI OJANAMA MORGAN", dni: "74286083", grado: "CABO SMV", armamento: "N/A", numArm: "97133265" },
+    { apellido: "PACAYA IPUSHIMA JHENS CLEVER", dni: "61956273", grado: "CABO SMV", armamento: "N/A", numArm: "97133273" },
+    { apellido: "FATAMA PIZANGO DENNIS", dni: "76717562", grado: "CABO SMV", armamento: "N/A", numArm: "82801" },
+    { apellido: "CALLIRGOS GARCIA ELIEZER", dni: "74956799", grado: "CABO SMV", armamento: "N/A", numArm: "97133270" },
+    { apellido: "DAVALOS DURAND EUGENIO", dni: "61059992", grado: "CABO SMV", armamento: "N/A", numArm: "97133272" },
+    { apellido: "QUISPE MEJIA ISIDRO LUIS", dni: "60061551", grado: "CABO SMV", armamento: "N/A", numArm: "63773" },
+    { apellido: "MEDINA PLACIDO JOSE LUIS", dni: "74407407", grado: "SLDO SMV", armamento: "N/A", numArm: "53520" },
+    { apellido: "BALLENA BARDALES JOSUE JAVIER", dni: "61269266", grado: "SLDO SMV", armamento: "N/A", numArm: "82392" },
+    { apellido: "RUIZ SILVA YASSER KARL", dni: "60688165", grado: "SLDO SMV", armamento: "N/A", numArm: "82405" },
+    { apellido: "CANTARO MASIAS CHRISTOFER M.", dni: "74537881", grado: "SLDO SMV", armamento: "N/A", numArm: "171236" },
+    { apellido: "LOPEZ ACHAHUANCO FRANK", dni: "61362912", grado: "SLDO SMV", armamento: "N/A", numArm: "1579219" },
+    { apellido: "CHUNGA ALVARADO JHAIR", dni: "70732139", grado: "SLDO SMV", armamento: "N/A", numArm: "82515" }
   ];
 
-  function generarIngenieria() {
+  let registrosManual = [];
+  let columnasActuales = 6;
+  let columnasManual = 6;
+
+  function cambiarTab(tab) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById(tab).classList.add('active');
+    document.querySelector(`[onclick="cambiarTab('${tab}')"]`).classList.add('active');
+    document.getElementById('qrGrid').innerHTML = '';
+  }
+
+  function cambiarColumnas(n) {
+    columnasActuales = n;
+    actualizarGrid();
+  }
+
+  function cambiarColumnasManual(n) {
+    columnasManual = n;
+    actualizarGrid();
+  }
+
+  function actualizarGrid() {
+    const grid = document.getElementById('qrGrid');
+    grid.className = 'qr-grid';
+    if (columnasActuales === 4 || columnasManual === 4) {
+      grid.classList.add('col4');
+    }
+  }
+
+  function generarIngeniería() {
     const grid = document.getElementById('qrGrid');
     grid.innerHTML = '';
     
-    ingenieria.forEach((s, index) => {
+    const ordenado = [...sanidad].sort((a, b) => a.apellido.localeCompare(b.apellido));
+    
+    ordenado.forEach((s, index) => {
       const qrData = s.dni;
+      
       const card = document.createElement('div');
-      card.className = 'card';
+      card.className = 'qr-card';
       card.innerHTML = `
         <h3>${s.apellido}</h3>
-        <p>${s.grado}</p>
-        <p>DNI: ${s.dni}</p>
-        <div id="qr-${index}" class="qr-image"></div>
+        <div class="dni">${s.dni}</div>
+        <div id="qr-san-${index}" class="qr-image"></div>
       `;
       grid.appendChild(card);
       
-      new QRCode(document.getElementById(`qr-${index}`), {
+      new QRCode(document.getElementById(`qr-san-${index}`), {
         text: qrData,
-        width: 120,
-        height: 120,
+        width: 94,
+        height: 94,
         colorDark: "#1a472a",
         colorLight: "#ffffff",
         correctLevel: QRCode.CorrectLevel.L
       });
     });
+    
+    actualizarGrid();
+    document.getElementById('btnPrint').classList.add('show');
+    document.getElementById('btnEnviarSan').classList.add('show');
   }
 
-  function irScanner() {
-    const urlAppsScript = prompt('Ingresa la URL del Apps Script:');
-    if (urlAppsScript) {
-      localStorage.setItem('appsScriptUrl', urlAppsScript);
-      window.location.href = 'scanner-profesional.html?grupo=Ingeniería';
+  function agregarManual() {
+    const apellido = document.getElementById('apellido').value.trim();
+    const dni = document.getElementById('dni').value.trim();
+    const grado = document.getElementById('grado').value.trim();
+    const armamento = document.getElementById('armamento').value.trim();
+    const numArmamento = document.getElementById('numArmamento').value.trim();
+    
+    if (!apellido || !dni || !grado || !armamento || !numArmamento) {
+      alert('Completa todos los campos');
+      return;
+    }
+    
+    registrosManual.push({ apellido, dni, grado, armamento, numArmamento });
+    
+    document.getElementById('apellido').value = '';
+    document.getElementById('dni').value = '';
+    document.getElementById('grado').value = '';
+    document.getElementById('armamento').value = '';
+    document.getElementById('numArmamento').value = '';
+    document.getElementById('apellido').focus();
+    
+    generarManualAutomatico();
+  }
+
+  function generarManualAutomatico() {
+    if (registrosManual.length === 0) return;
+    
+    const grid = document.getElementById('qrGrid');
+    grid.innerHTML = '';
+    
+    const ordenado = [...registrosManual].sort((a, b) => a.apellido.localeCompare(b.apellido));
+    
+    ordenado.forEach((s, index) => {
+      const qrData = s.dni;
+      
+      const card = document.createElement('div');
+      card.className = 'qr-card';
+      card.innerHTML = `
+        <h3>${s.apellido}</h3>
+        <div class="dni">${s.dni}</div>
+        <div id="qr-man-${index}" class="qr-image"></div>
+      `;
+      grid.appendChild(card);
+      
+      new QRCode(document.getElementById(`qr-man-${index}`), {
+        text: qrData,
+        width: 94,
+        height: 94,
+        colorDark: "#1a472a",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.L
+      });
+    });
+    
+    actualizarGrid();
+    document.getElementById('btnPrintManual').classList.add('show');
+    document.getElementById('btnEnviarMan').classList.add('show');
+  }
+
+  async function enviarAGoogleSheets() {
+    const url = document.getElementById('urlGoogleSheets').value.trim();
+    if (!url) {
+      alert('Configura la URL primero');
+      return;
+    }
+    
+    const btn = document.getElementById('btnEnviarSan');
+    btn.disabled = true;
+    btn.textContent = '📤 Enviando...';
+    
+    try {
+      const ordenado = [...sanidad].sort((a, b) => a.apellido.localeCompare(b.apellido));
+      let enviados = 0;
+      
+      for (const s of ordenado) {
+        const qrData = s.dni;
+        await fetch(url, { method: 'POST', body: JSON.stringify({ qrData }) });
+        enviados++;
+      }
+      
+      mostrarModal(enviados, ordenado.length);
+      btn.disabled = false;
+      btn.textContent = '📤 Enviar a Sheets';
+    } catch(e) {
+      alert('Error: ' + e.message);
+      btn.disabled = false;
+      btn.textContent = '📤 Enviar a Sheets';
     }
   }
 
-  window.onload = function() {
-    generarIngenieria();
-  };
+  async function enviarManualAGoogleSheets() {
+    const url = document.getElementById('urlGoogleSheetsManual').value.trim();
+    if (!url) {
+      alert('Configura la URL primero');
+      return;
+    }
+    
+    if (registrosManual.length === 0) {
+      alert('No hay registros para enviar');
+      return;
+    }
+    
+    const btn = document.getElementById('btnEnviarMan');
+    btn.disabled = true;
+    btn.textContent = '📤 Enviando...';
+    
+    try {
+      const ordenado = [...registrosManual].sort((a, b) => a.apellido.localeCompare(b.apellido));
+      let enviados = 0;
+      
+      for (const s of ordenado) {
+        const qrData = s.dni;
+        await fetch(url, { method: 'POST', body: JSON.stringify({ qrData }) });
+        enviados++;
+      }
+      
+      mostrarModal(enviados, ordenado.length);
+      btn.disabled = false;
+      btn.textContent = '📤 Enviar a Sheets';
+    } catch(e) {
+      alert('Error: ' + e.message);
+      btn.disabled = false;
+      btn.textContent = '📤 Enviar a Sheets';
+    }
+  }
+
+  function mostrarModal(enviados, total) {
+    const info = document.getElementById('modalInfo');
+    info.innerHTML = `
+      <div><strong>Registros enviados:</strong> <span>${enviados}/${total}</span></div>
+      <div><strong>Hora:</strong> <span>${new Date().toLocaleString('es-PE')}</span></div>
+    `;
+    document.getElementById('modal').classList.add('active');
+  }
+
+  function cerrarModal() {
+    document.getElementById('modal').classList.remove('active');
+  }
 </script>
 
 </body>
