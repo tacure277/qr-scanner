@@ -3,224 +3,322 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BATLLOG 112 - Comando y Servicio QR</title>
+  <title>BATLLOG 112 - Centro de Control</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { 
       font-family: 'Segoe UI', 'Roboto', Arial, sans-serif; 
       background: linear-gradient(135deg, #1a472a 0%, #2d5f40 50%, #0d2818 100%);
-      padding: 15px;
+      padding: 20px;
       min-height: 100vh;
     }
-    .container { max-width: 1200px; margin: 0 auto; }
+    .container { max-width: 1100px; margin: 0 auto; }
     .header {
       background: linear-gradient(135deg, #2d5f40 0%, #1a472a 100%);
+      padding: 40px 30px;
+      text-align: center;
+      border-radius: 12px;
+      border-bottom: 4px solid #d4af37;
+      margin-bottom: 40px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    }
+    .logo-container { 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      gap: 25px;
+      margin-bottom: 20px;
+    }
+    .logo { 
+      width: 100px; 
+      height: 100px; 
+      background: linear-gradient(135deg, #1a472a 0%, #0d2818 100%);
+      border: 3px solid #d4af37;
+      border-radius: 50%; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      color: #d4af37; 
+      font-weight: bold; 
+      font-size: 12px; 
+      text-align: center;
+      box-shadow: 0 6px 15px rgba(212, 175, 55, 0.4);
+    }
+    .header h1 { 
+      color: #d4af37; 
+      font-size: 36px; 
+      margin-bottom: 10px;
+      font-weight: 700;
+      text-shadow: 0 3px 6px rgba(0,0,0,0.4);
+    }
+    .header p { 
+      color: #a8d5ba; 
+      font-size: 15px;
+      font-weight: 500;
+      margin-bottom: 5px;
+    }
+    .header .subtitle { 
+      color: #7db3a0;
+      font-size: 13px;
+    }
+    
+    .banner {
+      background: linear-gradient(90deg, #d4af37 0%, #c9a027 100%);
+      color: #1a472a;
       padding: 15px;
       text-align: center;
+      font-weight: 700;
+      font-size: 16px;
       border-radius: 8px;
-      border-bottom: 3px solid #d4af37;
-      margin-bottom: 15px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      margin-bottom: 40px;
+      box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+      letter-spacing: 1px;
+      text-transform: uppercase;
     }
-    h1 { color: #d4af37; font-size: 24px; margin-bottom: 3px; }
-    .subtitle { color: #a8d5ba; font-size: 12px; }
-    .status {
-      text-align: center;
-      padding: 6px;
-      background: linear-gradient(135deg, #cfe2ff 0%, #b6d4fe 100%);
-      color: #084298;
-      border-radius: 8px;
-      margin-bottom: 15px;
-      font-weight: 600;
-      border-left: 4px solid #084298;
-      font-size: 13px;
+    
+    .content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-bottom: 30px;
     }
-    .options {
-      background: #f5f5f5;
-      padding: 6px;
-      border-radius: 6px;
-      margin-bottom: 12px;
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      flex-wrap: wrap;
+    
+    .section {
+      background: linear-gradient(135deg, #f8f9f7 0%, #f0f3ef 100%);
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+      border-top: 4px solid #2d5f40;
     }
-    .options label {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-      font-weight: 500;
+    
+    .section h2 {
       color: #1a472a;
-      font-size: 13px;
-    }
-    .controls {
+      font-size: 20px;
+      margin-bottom: 20px;
+      font-weight: 700;
       display: flex;
-      gap: 4px;
-      margin-bottom: 15px;
-      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #d4af37;
     }
-    button {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 6px;
+    
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .menu-item {
+      padding: 16px 18px;
+      background: white;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      text-decoration: none;
+      color: #1a472a;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.3s;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-      font-size: 12px;
-    }
-    .btn-generate {
-      background: linear-gradient(135deg, #2d5f40 0%, #1a472a 100%);
-      color: #d4af37;
-      text-transform: uppercase;
-    }
-    .btn-print {
-      background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-      color: white;
-      text-transform: uppercase;
-      display: none;
-    }
-    .btn-print.show { display: inline-block; }
-    .qr-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin-top: 15px;
-    }
-    .qr-grid.col5 { grid-template-columns: repeat(5, 1fr); }
-    .qr-card {
-      background: white;
-      border: 1px solid #ddd;
-      padding: 4px;
-      border-radius: 4px;
-      text-align: center;
-      page-break-inside: avoid;
-    }
-    .qr-card h3 {
-      color: #1a472a;
-      font-size: 8px;
-      margin-bottom: 2px;
-      font-weight: 700;
-      text-transform: uppercase;
-      word-break: break-word;
-      line-height: 1;
-      min-height: 14px;
-      max-height: 14px;
-      overflow: hidden;
-    }
-    .qr-card .dni {
-      color: #5a7a6d;
-      font-size: 6px;
-      margin-bottom: 3px;
-      font-weight: 600;
-    }
-    .qr-image {
-      width: 2.5cm;
-      height: 2.5cm;
-      margin: 0 auto;
       display: flex;
       align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      border-radius: 2px;
+      gap: 12px;
+      box-shadow: 0 2px 8px rgba(45, 95, 64, 0.08);
+      border-left: 4px solid #2d5f40;
     }
-    .qr-image canvas {
-      width: 100% !important;
-      height: 100% !important;
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
+    
+    .menu-item:hover {
+      background: linear-gradient(135deg, #e8f3ee 0%, #dff0e8 100%);
+      border-color: #2d5f40;
+      border-left: 4px solid #d4af37;
+      transform: translateX(5px);
+      box-shadow: 0 4px 15px rgba(45, 95, 64, 0.15);
     }
+    
+    .menu-item.active {
+      background: linear-gradient(135deg, #2d5f40 0%, #1a472a 100%);
+      color: #d4af37;
+      border-color: #d4af37;
+      box-shadow: 0 4px 15px rgba(45, 95, 64, 0.25);
+    }
+    
+    .menu-icon {
+      font-size: 20px;
+      min-width: 24px;
+    }
+    
+    .menu-text {
+      flex: 1;
+    }
+    
+    .menu-desc {
+      font-size: 12px;
+      opacity: 0.7;
+      margin-top: 2px;
+    }
+    
+    @media (max-width: 768px) {
+      .content {
+        grid-template-columns: 1fr;
+      }
+      .header h1 {
+        font-size: 28px;
+      }
+      .logo-container {
+        flex-direction: column;
+        gap: 15px;
+      }
+    }
+    
     .footer {
       text-align: center;
       color: #a8d5ba;
-      padding: 15px;
-      margin-top: 30px;
+      padding: 20px;
       border-top: 1px solid rgba(212, 175, 55, 0.2);
-      font-size: 11px;
+      font-size: 12px;
+      margin-top: 30px;
     }
-    @media print {
-      body { background: white; }
-      .header, .controls, .options, .status, .footer { display: none; }
-      .qr-grid { margin-top: 0; }
+    
+    .info-box {
+      background: linear-gradient(135deg, #cfe2ff 0%, #b6d4fe 100%);
+      border: 2px solid #084298;
+      border-radius: 8px;
+      padding: 15px;
+      margin-top: 20px;
+      color: #084298;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    
+    .info-box strong {
+      color: #042c53;
+      display: block;
+      margin-bottom: 5px;
     }
   </style>
 </head>
 <body>
+
 <div class="container">
+  
+  <!-- HEADER -->
   <div class="header">
-    <h1>🎖️ BATLLOG 112 - Comando y Servicio</h1>
-    <p class="subtitle">Generador de QR - Compañía Comando y Servicio</p>
+    <div class="logo-container">
+      <img src="bat-log-112-logo.png" alt="Logo BATLLOG 112" style="width: 100px; height: 100px; border-radius: 50%; border: 3px solid #d4af37; box-shadow: 0 6px 15px rgba(212, 175, 55, 0.4);">
+      <div>
+        <h1>🎖️ BATLLOG 112</h1>
+        <p>Batallón Logístico 112</p>
+        <p class="subtitle">Sistema Integral de QR - Perú</p>
+      </div>
+    </div>
   </div>
-  <div class="status">✓ 24 soldados de Comando y Servicio precargados</div>
-  <div class="options">
-    <label><input type="radio" name="columnas" value="3" checked onchange="cambiarColumnas(3)">3 columnas</label>
-    <label><input type="radio" name="columnas" value="5" onchange="cambiarColumnas(5)">5 columnas</label>
+  
+  <div class="banner">
+    🚀 CENTRO DE CONTROL - SELECCIONA UN MÓDULO
   </div>
-  <div class="controls">
-    <button class="btn-generate" onclick="generarComando()">🎯 Generar QR</button>
-    <button class="btn-print" id="btnPrint" onclick="window.print()">🖨️ Imprimir</button>
-    <button class="btn-generate" onclick="window.location.href='scanner-profesional.html?grupo=Comando y Servicio'" style="background: linear-gradient(135deg, #6c757d 0%, #545b62 100%);">📱 Ir a Scanner</button>
-    <button class="btn-generate" onclick="window.location.href='index.html'" style="background: linear-gradient(135deg, #17a2b8 0%, #117a8b 100%);">🏠 Volver al Inicio</button>
+  
+  <!-- CONTENIDO PRINCIPAL -->
+  <div class="content">
+    
+    <!-- GENERADORES DE QR -->
+    <div class="section">
+      <h2>📋 GENERAR QR POR SECCIÓN</h2>
+      
+      <div class="menu">
+        <a href="qr-comando.html" class="menu-item">
+          <span class="menu-icon">🎖️</span>
+          <span class="menu-text">
+            <strong>Comando y Servicio</strong>
+            <div class="menu-desc">24 soldados</div>
+          </span>
+        </a>
+
+        <a href="qr-sanidad.html" class="menu-item">
+          <span class="menu-icon">🏥</span>
+          <span class="menu-text">
+            <strong>Sanidad</strong>
+            <div class="menu-desc">13 soldados</div>
+          </span>
+        </a>
+
+        <a href="qr-material-guerra.html" class="menu-item">
+          <span class="menu-icon">🔫</span>
+          <span class="menu-text">
+            <strong>Material de Guerra</strong>
+            <div class="menu-desc">Pendiente de datos</div>
+          </span>
+        </a>
+
+        <a href="qr-ingenieria.html" class="menu-item">
+          <span class="menu-icon">🔧</span>
+          <span class="menu-text">
+            <strong>Ingeniería</strong>
+            <div class="menu-desc">18 soldados</div>
+          </span>
+        </a>
+
+        <a href="qr-intendencia.html" class="menu-item">
+          <span class="menu-icon">📦</span>
+          <span class="menu-text">
+            <strong>Intendencia</strong>
+            <div class="menu-desc">19 soldados</div>
+          </span>
+        </a>
+
+        <a href="qr-comunicaciones.html" class="menu-item">
+          <span class="menu-icon">📡</span>
+          <span class="menu-text">
+            <strong>Comunicaciones</strong>
+            <div class="menu-desc">14 soldados</div>
+          </span>
+        </a>
+      </div>
+      
+      <div class="info-box">
+        <strong>ℹ️ Cómo funciona:</strong>
+        Cada sección permite generar QR de soldados precargados o agregar nuevos. Imprime o envía directamente a Google Sheets.
+      </div>
+    </div>
+    
+    <!-- HERRAMIENTAS -->
+    <div class="section">
+      <h2>🎯 HERRAMIENTAS</h2>
+      
+      <div class="menu">
+        <a href="scanner-profesional.html" class="menu-item">
+          <span class="menu-icon">📱</span>
+          <span class="menu-text">
+            <strong>Scanner de QR</strong>
+            <div class="menu-desc">Escanea y registra soldados</div>
+          </span>
+        </a>
+      </div>
+      
+      <div class="info-box">
+        <strong>📌 Flujo correcto:</strong>
+        1. Abre cualquier sección (Sanidad/Comunicaciones)<br>
+        2. Genera QR → Imprime o Envía a Sheets<br>
+        3. Abre Scanner de QR → Lee los códigos<br>
+        4. Los datos se guardan automáticamente
+      </div>
+      
+      <div class="info-box">
+        <strong>📌 Flujo recomendado:</strong>
+        1. Genera QR en cualquier sección<br>
+        2. Imprime o distribuye<br>
+        3. Escanea con el Scanner<br>
+        4. Los datos se guardan en Sheets
+      </div>
+    </div>
+    
   </div>
-  <div class="qr-grid" id="qrGrid"></div>
-  <div class="footer"><p>BATLLOG 112 © 2026 | Perú</p></div>
+  
+  <!-- FOOTER -->
+  <div class="footer">
+    <p>BATLLOG 112 © 2026 | Sistema Integral de Control de QR</p>
+    <p>Batallón Logístico 112 - Perú</p>
+  </div>
+
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script>
-  const comando = [
-    { apellido: "MORALES GOMEZ RUBEN GIANCARLO", dni: "40691376", grado: "TTE CRL COM", armamento: "UZI", numArm: "12498" },
-    { apellido: "HEREDIA LOPEZ ALFREDO ARTURO", dni: "70369147", grado: "MY COM", armamento: "UZI", numArm: "12499" },
-    { apellido: "ESPINOZA PALACIOS YESSENIA DEL ROSARIO", dni: "45515341", grado: "CAP COM", armamento: "UZI", numArm: "12501" },
-    { apellido: "SANCHEZ PANTA PEDRO JAIME", dni: "78635540", grado: "SGTO2° SAA", armamento: "FAL", numArm: "31186" },
-    { apellido: "ABAD PALACIOS EDGAR ALBERTO", dni: "44614990", grado: "SO1° T/ADM", armamento: "GALIL", numArm: "96114220" },
-    { apellido: "CHAVEZ PEÑA JEAN PIERE", dni: "61244179", grado: "SGTO1° REE", armamento: "GALIL", numArm: "96114224" },
-    { apellido: "SALAZAR ÑAHUI JUAN ANIBAL", dni: "70538740", grado: "SGTO2° SAA", armamento: "FAL", numArm: "32351" },
-    { apellido: "ILUQUIZ MANRIQUE LEONEL DAVID", dni: "61171490", grado: "SLDO SAA", armamento: "FAL", numArm: "33903" },
-    { apellido: "VILLANTOY LAULATE CARLOS ALBERTO", dni: "61772703", grado: "SLDO SAA", armamento: "FAL", numArm: "34268" },
-    { apellido: "ROCA ROSALES EDUARDO ENRIQUE", dni: "62444290", grado: "SLDO SAA", armamento: "FAL", numArm: "35141" },
-    { apellido: "LIÑAN TORRES VICTOR LEONARDO", dni: "72865858", grado: "CABO SAA", armamento: "FAL", numArm: "33345" },
-    { apellido: "BARJA HILARIO EDU EDGAR", dni: "72424298", grado: "SGTO2° SAA", armamento: "FAL", numArm: "32957" },
-    { apellido: "ANYAIPOMA FERNANDEZ MICHAEL DEREK", dni: "71180716", grado: "CABO SAA", armamento: "FAL", numArm: "33029" },
-    { apellido: "QUINDE VELASQUEZ ENRIQUE FRANCISCO", dni: "70707365", grado: "CABO SAA", armamento: "FAL", numArm: "32986" },
-    { apellido: "PIRICHICO PUÑIRO HUMBERTO JESUS", dni: "60195460", grado: "SGTO2° SAA", armamento: "FAL", numArm: "32504" },
-    { apellido: "QUINTO NAVARRO NEFER ABRAHAM", dni: "60443201", grado: "SLDO SAA", armamento: "FAL", numArm: "33670" },
-    { apellido: "BAZAN SALAS WILMER ALEJANDRO", dni: "60089205", grado: "SGTO2° SAA", armamento: "FAL", numArm: "31721" },
-    { apellido: "CASTRO BRAVO JOSEMARIA", dni: "74659256", grado: "SLDO SAA", armamento: "FAL", numArm: "36173" },
-    { apellido: "QUISPE PAHIUA RICARDO", dni: "09633112", grado: "TCO3° T/INF", armamento: "UZI", numArm: "12504" },
-    { apellido: "GALARZA MONTES KLEVER JHANPIER", dni: "92640502", grado: "SGTO2° SAA", armamento: "FAL", numArm: "31352" },
-    { apellido: "GARCIA SURITA BRAYAN", dni: "72357945", grado: "SGTO2° SAA", armamento: "FAL", numArm: "32792" },
-    { apellido: "HUINCHO SEMINARIO ELEONAY ORNAN", dni: "60234359", grado: "SLDO SAA", armamento: "FAL", numArm: "34810" },
-    { apellido: "CASTRO SEGURA VINCEL", dni: "60061570", grado: "SLDO SAA", armamento: "FAL", numArm: "35525" },
-    { apellido: "NESTARES TAMARIS JHASTEEN", dni: "71162210", grado: "SLDO SAA", armamento: "FAL", numArm: "36092" }
-  ];
-  function cambiarColumnas(n) {
-    const grid = document.getElementById('qrGrid');
-    if (n === 5) grid.classList.add('col5');
-    else grid.classList.remove('col5');
-  }
-  function generarComando() {
-    const grid = document.getElementById('qrGrid');
-    grid.innerHTML = '';
-    const ordenado = [...comando].sort((a, b) => a.apellido.localeCompare(b.apellido));
-    ordenado.forEach((s, index) => {
-      const qrData = `${s.apellido}|${s.grado}|${s.dni}|${s.armamento}|${s.numArm}`;
-      const card = document.createElement('div');
-      card.className = 'qr-card';
-      card.innerHTML = `<h3>${s.apellido}</h3><div class="dni">${s.dni}</div><div id="qr-${index}" class="qr-image"></div>`;
-      grid.appendChild(card);
-      new QRCode(document.getElementById(`qr-${index}`), {
-        text: qrData,
-        width: 94,
-        height: 94,
-        colorDark: "#1a472a",
-        colorLight: "#ffffff",
-        correctLevel: QRCode.CorrectLevel.L
-      });
-    });
-    document.getElementById('btnPrint').classList.add('show');
-  }
-</script>
+
 </body>
 </html>
