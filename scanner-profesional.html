@@ -258,13 +258,12 @@
   </div>
 </div>
 
-<script src="https://unpkg.com/html5-qrcode"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
 <script>
   let appUrl = localStorage.getItem('appUrl') || '';
   let qrScanner = null;
   let scanning = false;
   let canScan = true;
-  
   let grupo = new URLSearchParams(window.location.search).get('grupo') || 'Comunicaciones';
 
   if (appUrl) {
@@ -307,23 +306,23 @@
     status.className = 'status scanning';
     status.textContent = '⏳ Iniciando cámara...';
 
-    qrScanner = new Html5Qrcode('reader');
     document.getElementById('reader').style.display = 'block';
+    document.getElementById('btnStart').style.display = 'none';
+    document.getElementById('btnStop').style.display = 'block';
+
+    qrScanner = new Html5Qrcode("reader");
 
     qrScanner.start(
-      { facingMode: 'environment' },
-      { fps: 15, qrbox: { width: 300, height: 300 } },
+      { facingMode: "environment" },
+      { fps: 10, qrbox: { width: 250, height: 250 } },
       onScanSuccess,
       onScanFailure
     ).then(() => {
-      status.className = 'status scanning';
       status.textContent = `📹 Escaneando (${grupo})...`;
-      document.getElementById('btnStart').style.display = 'none';
-      document.getElementById('btnStop').style.display = 'block';
       scanning = true;
       canScan = true;
     }).catch(err => {
-      mostrarError('❌ Error: ' + err.message);
+      mostrarError('❌ Error: ' + err);
       document.getElementById('reader').style.display = 'none';
       document.getElementById('btnStart').style.display = 'block';
       document.getElementById('btnStop').style.display = 'none';
@@ -339,7 +338,7 @@
         document.getElementById('btnStart').style.display = 'block';
         document.getElementById('btnStop').style.display = 'none';
         scanning = false;
-      }).catch(err => console.log(err));
+      });
     }
   }
 
@@ -349,7 +348,9 @@
     procesarQR(decodedText.trim());
   }
 
-  function onScanFailure(error) {}
+  function onScanFailure(error) {
+    // Sin errores
+  }
 
   async function procesarQR(qrData) {
     const status = document.getElementById('status');
@@ -389,7 +390,7 @@
 
   function mostrarModalExito(datos) {
     if (qrScanner && scanning) {
-      qrScanner.pause().catch(e => {});
+      qrScanner.pause();
     }
     
     const dataDiv = document.getElementById('modalData');
@@ -408,7 +409,7 @@
   function cerrarModal() {
     document.getElementById('modal').classList.remove('active');
     if (qrScanner && scanning) {
-      qrScanner.resume().catch(e => {});
+      qrScanner.resume();
     }
   }
 
