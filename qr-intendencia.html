@@ -116,8 +116,8 @@
       font-weight: 600;
     }
     .qr-image {
-      width: 150px;
-      height: 150px;
+      width: 2.50cm;
+      height: 2.50cm;
       margin: 0 auto;
       display: block;
       
@@ -200,15 +200,15 @@
     grid.innerHTML = '';
     const ordenado = [...intendencia].sort((a, b) => a.apellido.localeCompare(b.apellido));
     ordenado.forEach((s, index) => {
-      const qrData = `${s.apellido}|${s.grado}|${s.dni}|${s.armamento}|${s.numArm}`;
+      const qrData = s.dni;
       const card = document.createElement('div');
       card.className = 'qr-card';
       card.innerHTML = `<h3>${s.apellido}</h3><div class="dni">${s.dni}</div><div id="qr-${index}" class="qr-image"></div>`;
       grid.appendChild(card);
       new QRCode(document.getElementById(`qr-${index}`), {
         text: qrData,
-        width: 150,
-        height: 150,
+        width: 120,
+        height: 120,
         colorDark: "#1a472a",
         colorLight: "#ffffff",
         correctLevel: QRCode.CorrectLevel.L
