@@ -83,6 +83,11 @@
       color: white;
     }
     
+    .btn-stop {
+      background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+      color: white;
+    }
+    
     .status {
       text-align: center;
       padding: 12px;
@@ -130,7 +135,6 @@
       z-index: 1000;
       align-items: center;
       justify-content: center;
-      padding: 15px;
     }
     
     .modal.active { display: flex; }
@@ -145,7 +149,7 @@
       border-top: 5px solid #28a745;
     }
     
-    .modal-content .check-icon {
+    .check-icon {
       font-size: 60px;
       margin-bottom: 20px;
     }
@@ -233,7 +237,7 @@
 
   <div class="button-group" id="controlButtons" style="display: none; margin: 15px 0;">
     <button class="btn-primary" id="btnStart" onclick="iniciarScanner()">📹 Iniciar Scanner</button>
-    <button class="btn-primary" id="btnStop" onclick="detenerScanner()" style="background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); display: none;">⏹ Detener</button>
+    <button class="btn-primary btn-stop" id="btnStop" style="display: none;" onclick="detenerScanner()">⏹ Detener</button>
   </div>
 
   <div class="footer">
@@ -252,14 +256,12 @@
   </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+<script src="https://unpkg.com/html5-qrcode"></script>
 <script>
   let appUrl = localStorage.getItem('appUrl') || '';
+  let qrScanner = null;
   let scanning = false;
   let canScan = true;
-  let videoStream = null;
-  let animationId = null;
   let grupo = new URLSearchParams(window.location.search).get('grupo') || 'Comunicaciones';
 
   if (appUrl) {
@@ -300,88 +302,50 @@
 
     const status = document.getElementById('status');
     status.className = 'status scanning';
-    status.textContent = '⏳ Abriendo cámara...';
+    status.textContent = '⏳ Iniciando cámara...';
 
+    qrScanner = new Html5Qrcode('reader');
     document.getElementById('reader').style.display = 'block';
-    document.getElementById('btnStart').style.display = 'none';
-    document.getElementById('btnStop').style.display = 'block';
 
-    const videoContainer = document.getElementById('reader');
-    const video = document.createElement('video');
-    video.setAttribute('autoplay', '');
-    video.setAttribute('playsinline', '');
-    video.style.width = '100%';
-    video.style.height = 'auto';
-    videoContainer.innerHTML = '';
-    videoContainer.appendChild(video);
-
-    navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
-      .then(stream => {
-        videoStream = stream;
-        video.srcObject = stream;
-        
-        setTimeout(() => {
-          status.textContent = `📹 Escaneando (${grupo})...`;
-          scanning = true;
-          canScan = true;
-          escanearQR(video);
-        }, 500);
-      })
-      .catch(err => {
-        mostrarError('❌ Error: ' + err.message);
-        document.getElementById('reader').style.display = 'none';
-        document.getElementById('btnStart').style.display = 'block';
-        document.getElementById('btnStop').style.display = 'none';
-      });
-  }
-
-  function escanearQR(video) {
-    if (!scanning) return;
-
-    const canvas = document.createElement('canvas');
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    
-    if (canvas.width > 0 && canvas.height > 0) {
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-      
-      try {
-        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        const code = jsQR(imageData.data, canvas.width, canvas.height);
-        
-        if (code && canScan) {
-          canScan = false;
-          procesarQR(code.data);
-          return;
-        }
-      } catch(e) {}
-    }
-
-    animationId = requestAnimationFrame(() => escanearQR(video));
+    qrScanner.start(
+      { facingMode: 'environment' },
+      { fps: 10, qrbox: { width: 250, height: 250 } },
+      onScanSuccess,
+      onScanFailure
+    ).then(() => {
+      status.textContent = `📹 Escaneando (${grupo})...`;
+      document.getElementById('btnStart').style.display = 'none';
+      document.getElementById('btnStop').style.display = 'block';
+      scanning = true;
+      canScan = true;
+    }).catch(err => {
+      mostrarError('❌ Error: ' + err);
+    });
   }
 
   function detenerScanner() {
-    scanning = false;
-    
-    if (animationId) {
-      cancelAnimationFrame(animationId);
+    if (qrScanner) {
+      qrScanner.stop().then(() => {
+        document.getElementById('reader').style.display = 'none';
+        document.getElementById('status').className = 'status waiting';
+        document.getElementById('status').textContent = '⏹ Scanner detenido';
+        document.getElementById('btnStart').style.display = 'block';
+        document.getElementById('btnStop').style.display = 'none';
+        scanning = false;
+      });
     }
-    
-    if (videoStream) {
-      videoStream.getTracks().forEach(track => track.stop());
-    }
-    
-    document.getElementById('reader').style.display = 'none';
-    document.getElementById('status').className = 'status waiting';
-    document.getElementById('status').textContent = '⏹ Scanner detenido';
-    document.getElementById('btnStart').style.display = 'block';
-    document.getElementById('btnStop').style.display = 'none';
   }
+
+  function onScanSuccess(decodedText) {
+    if (!canScan || !scanning) return;
+    canScan = false;
+    procesarQR(decodedText.trim());
+  }
+
+  function onScanFailure(error) {}
 
   async function procesarQR(qrData) {
     const status = document.getElementById('status');
-    status.className = 'status scanning';
     status.textContent = '📤 Enviando...';
 
     try {
@@ -397,28 +361,27 @@
         setTimeout(() => {
           if (scanning) {
             canScan = true;
-            status.className = 'status scanning';
-            status.textContent = `📹 Escaneando...`;
+            status.textContent = `📹 Escaneando (${grupo})...`;
           }
         }, 2000);
       } else {
         mostrarError('❌ ' + (resultado.error || 'Error'));
         setTimeout(() => {
           canScan = true;
-          status.textContent = `📹 Escaneando...`;
         }, 2000);
       }
     } catch (error) {
       mostrarError('❌ Error: ' + error.message);
       setTimeout(() => {
         canScan = true;
-        status.textContent = `📹 Escaneando...`;
       }, 2000);
     }
   }
 
   function mostrarModalExito(datos) {
-    scanning = false;
+    if (qrScanner && scanning) {
+      qrScanner.pause();
+    }
     
     const dataDiv = document.getElementById('modalData');
     dataDiv.innerHTML = `
@@ -435,8 +398,9 @@
 
   function cerrarModal() {
     document.getElementById('modal').classList.remove('active');
-    scanning = true;
-    canScan = true;
+    if (qrScanner && scanning) {
+      qrScanner.resume();
+    }
   }
 
   function mostrarError(mensaje) {
