@@ -597,7 +597,7 @@
       
       for (const s of ordenado) {
         const qrData = `${s.apellido}|${s.grado}|${s.dni}|${s.armamento}|${s.numArm}`;
-        await fetch(url, { method: 'POST', body: JSON.stringify({ qrData }) });
+        await fetch(url, { method: 'POST', body: JSON.stringify({ qrData, grupo: "Sanidad" }) });
         enviados++;
       }
       
@@ -633,7 +633,7 @@
       
       for (const s of ordenado) {
         const qrData = `${s.apellido}|${s.grado}|${s.dni}|${s.armamento}|${s.numArmamento}`;
-        await fetch(url, { method: 'POST', body: JSON.stringify({ qrData }) });
+        await fetch(url, { method: 'POST', body: JSON.stringify({ qrData, grupo: "Sanidad" }) });
         enviados++;
       }
       
