@@ -78,11 +78,6 @@
       text-transform: uppercase;
     }
     
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 15px rgba(40, 167, 69, 0.3);
-    }
-    
     .btn-secondary {
       background: linear-gradient(135deg, #6c757d 0%, #545b62 100%);
       color: white;
@@ -137,7 +132,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0,0,0,0.8);
+      background: rgba(0,0,0,0.7);
       z-index: 1000;
       align-items: center;
       justify-content: center;
@@ -148,107 +143,66 @@
     
     .modal-content {
       background: white;
-      padding: 50px;
-      border-radius: 16px;
+      padding: 40px;
+      border-radius: 12px;
       text-align: center;
       max-width: 500px;
-      max-height: 80vh;
-      overflow-y: auto;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-      border-top: 8px solid #28a745;
-      animation: slideIn 0.4s ease-out;
+      box-shadow: 0 15px 50px rgba(0,0,0,0.4);
+      border-top: 5px solid #28a745;
     }
     
-    @keyframes slideIn {
-      from {
-        transform: translateY(-50px);
-        opacity: 0;
-      }
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
-    }
-    
-    .check-icon {
-      font-size: 80px;
+    .modal-content .check-icon {
+      font-size: 60px;
       margin-bottom: 20px;
-      animation: pulse 0.6s ease-in-out;
-    }
-    
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.1); }
     }
     
     .modal-content h2 {
-      color: #28a745;
-      font-size: 32px;
-      margin-bottom: 15px;
+      color: #1a472a;
+      font-size: 24px;
+      margin-bottom: 10px;
       text-transform: uppercase;
-      font-weight: 700;
-      letter-spacing: 1px;
     }
     
     .modal-content p {
-      color: #666;
-      margin-bottom: 30px;
-      font-size: 16px;
+      color: #5a7a6d;
+      margin-bottom: 15px;
+      font-size: 14px;
     }
     
     .soldier-data {
-      background: linear-gradient(135deg, #f5f5f5 0%, #efefef 100%);
-      padding: 25px;
-      border-radius: 10px;
+      background: #f5f5f5;
+      padding: 15px;
+      border-radius: 8px;
       text-align: left;
-      margin: 25px 0;
-      border-left: 5px solid #28a745;
+      margin: 15px 0;
     }
     
     .soldier-data div {
-      margin: 12px 0;
-      font-size: 14px;
+      margin: 8px 0;
+      font-size: 13px;
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      padding-bottom: 12px;
       border-bottom: 1px solid #ddd;
+      padding-bottom: 8px;
     }
     
     .soldier-data div:last-child {
       border-bottom: none;
     }
     
-    .soldier-data strong {
-      color: #1a472a;
-      font-weight: 600;
-    }
-    
-    .soldier-data span {
-      color: #333;
-      text-align: right;
-    }
+    .soldier-data strong { color: #1a472a; }
     
     .modal-content button {
-      padding: 14px 50px;
+      padding: 11px 40px;
       background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
       color: white;
       border: none;
-      border-radius: 8px;
+      border-radius: 6px;
       font-weight: 600;
       cursor: pointer;
-      font-size: 16px;
-      margin-top: 25px;
+      font-size: 14px;
+      margin-top: 20px;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-      box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
-      transition: all 0.3s;
-    }
-    
-    .modal-content button:hover {
-      background: linear-gradient(135deg, #1e7e34 0%, #15592b 100%);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
     }
     
     .footer {
@@ -293,14 +247,14 @@
   </div>
 </div>
 
-<!-- MODAL EMERGENTE -->
+<!-- Modal -->
 <div class="modal" id="modal">
   <div class="modal-content">
     <div class="check-icon">✅</div>
-    <h2>ESCANEO COMPLETADO</h2>
-    <p>Soldado registrado exitosamente</p>
+    <h2>ESCANEO EXITOSO</h2>
+    <p>Soldado registrado correctamente</p>
     <div class="soldier-data" id="modalData"></div>
-    <button onclick="cerrarModal()">✓ Aceptar y Continuar</button>
+    <button onclick="cerrarModal()">Aceptar</button>
   </div>
 </div>
 
@@ -321,7 +275,7 @@
   function guardarUrl() {
     appUrl = document.getElementById('urlInput').value.trim();
     if (!appUrl) {
-      mostrarError('❌ Ingresa la URL de Google Apps Script');
+      mostrarError('❌ Ingresa la URL');
       return;
     }
     localStorage.setItem('appUrl', appUrl);
@@ -334,7 +288,7 @@
 
     if (appUrl) {
       status.className = 'status scanning';
-      status.textContent = `✓ Configurado - Grupo: ${grupo} - Haz click en "Iniciar Scanner"`;
+      status.textContent = `✓ Grupo: ${grupo}. Click en "Iniciar Scanner"`;
       controlButtons.style.display = 'flex';
     } else {
       status.className = 'status waiting';
@@ -345,33 +299,31 @@
 
   function iniciarScanner() {
     if (!appUrl) {
-      mostrarError('❌ Primero configura la URL');
+      mostrarError('❌ Configura la URL primero');
       return;
     }
 
     const status = document.getElementById('status');
     status.className = 'status scanning';
-    status.textContent = '⏳ Iniciando cámara... por favor espera';
+    status.textContent = '⏳ Iniciando cámara...';
 
     qrScanner = new Html5Qrcode('reader');
     document.getElementById('reader').style.display = 'block';
 
-    const config = { fps: 15, qrbox: { width: 300, height: 300 } };
-
     qrScanner.start(
       { facingMode: 'environment' },
-      config,
+      { fps: 15, qrbox: { width: 300, height: 300 } },
       onScanSuccess,
       onScanFailure
     ).then(() => {
       status.className = 'status scanning';
-      status.textContent = `📹 Escaneando (${grupo})... apunta al código QR`;
+      status.textContent = `📹 Escaneando (${grupo})...`;
       document.getElementById('btnStart').style.display = 'none';
       document.getElementById('btnStop').style.display = 'block';
       scanning = true;
       canScan = true;
     }).catch(err => {
-      mostrarError('❌ No se pudo acceder a la cámara. ' + err.message);
+      mostrarError('❌ Error: ' + err.message);
       document.getElementById('reader').style.display = 'none';
       document.getElementById('btnStart').style.display = 'block';
       document.getElementById('btnStop').style.display = 'none';
@@ -387,9 +339,7 @@
         document.getElementById('btnStart').style.display = 'block';
         document.getElementById('btnStop').style.display = 'none';
         scanning = false;
-      }).catch(err => {
-        console.log('Error al detener:', err);
-      });
+      }).catch(err => console.log(err));
     }
   }
 
@@ -399,14 +349,12 @@
     procesarQR(decodedText.trim());
   }
 
-  function onScanFailure(error) {
-    // Sin errores continuos
-  }
+  function onScanFailure(error) {}
 
   async function procesarQR(qrData) {
     const status = document.getElementById('status');
     status.className = 'status scanning';
-    status.textContent = '📤 Enviando a Google Sheets...';
+    status.textContent = '📤 Enviando...';
 
     try {
       const response = await fetch(appUrl, {
@@ -417,59 +365,48 @@
       const resultado = await response.json();
 
       if (resultado.success) {
-        const datos = resultado.datos;
-        mostrarModalExito(datos);
-
+        mostrarModalExito(resultado.datos);
         setTimeout(() => {
           if (canScan === false && scanning) {
             canScan = true;
             status.className = 'status scanning';
-            status.textContent = `📹 Escaneando... apunta al siguiente QR`;
+            status.textContent = `📹 Escaneando...`;
           }
-        }, 2500);
+        }, 2000);
       } else {
-        mostrarError('❌ ' + (resultado.error || 'Error al registrar'));
+        mostrarError('❌ ' + (resultado.error || 'Error'));
         setTimeout(() => {
           canScan = true;
-          status.className = 'status scanning';
-          status.textContent = `📹 Escaneando...`;
         }, 2000);
       }
     } catch (error) {
       mostrarError('❌ Error: ' + error.message);
       setTimeout(() => {
         canScan = true;
-        document.getElementById('status').className = 'status scanning';
-        document.getElementById('status').textContent = `📹 Escaneando...`;
       }, 2000);
     }
   }
 
   function mostrarModalExito(datos) {
-    const modal = document.getElementById('modal');
-    const dataDiv = document.getElementById('modalData');
-    
     if (qrScanner && scanning) {
       qrScanner.pause().catch(e => {});
     }
     
+    const dataDiv = document.getElementById('modalData');
     dataDiv.innerHTML = `
-      <div><strong>Apellido:</strong> <span>${datos.apellido || 'N/A'}</span></div>
-      <div><strong>Grado:</strong> <span>${datos.grado || 'N/A'}</span></div>
-      <div><strong>DNI:</strong> <span>${datos.dni || 'N/A'}</span></div>
-      <div><strong>Armamento:</strong> <span>${datos.armamento || 'N/A'}</span></div>
-      <div><strong>N° Armamento:</strong> <span>${datos.numArm || 'N/A'}</span></div>
+      <div><strong>Apellido:</strong> <span>${datos.apellido}</span></div>
+      <div><strong>Grado:</strong> <span>${datos.grado}</span></div>
+      <div><strong>DNI:</strong> <span>${datos.dni}</span></div>
+      <div><strong>Armamento:</strong> <span>${datos.armamento}</span></div>
+      <div><strong>N° Armamento:</strong> <span>${datos.numArm}</span></div>
       <div><strong>Hora:</strong> <span>${new Date().toLocaleString('es-PE')}</span></div>
-      <div><strong>Grupo:</strong> <span>${grupo}</span></div>
     `;
     
-    modal.classList.add('active');
+    document.getElementById('modal').classList.add('active');
   }
 
   function cerrarModal() {
-    const modal = document.getElementById('modal');
-    modal.classList.remove('active');
-    
+    document.getElementById('modal').classList.remove('active');
     if (qrScanner && scanning) {
       qrScanner.resume().catch(e => {});
     }
