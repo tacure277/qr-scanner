@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BATLLOG 112 - QR Servicio</title>
+  <title>BATLLOG 112 - QR Material de Guerra</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { 
@@ -148,12 +148,12 @@
 
 <div class="container">
   <div class="header">
-    <h1>🎖️ BATLLOG 112 - QR Servicio</h1>
-    <p class="subtitle">16 soldados</p>
+    <h1>🎖️ BATLLOG 112 - QR Material de Guerra</h1>
+    <p class="subtitle">19 soldados</p>
   </div>
 
   <div class="button-group">
-    <button class="btn-primary" onclick="generarServicio()">🎯 Generar QR</button>
+    <button class="btn-primary" onclick="generarMaterialGuerra()">🎯 Generar QR</button>
     <button class="btn-scanner" onclick="irScanner()">📱 Ir a Scanner</button>
     <button class="btn-print" id="btnPrint" onclick="imprimirQR()">🖨️ Imprimir</button>
     <button class="btn-secondary" onclick="window.location.href='index.html'">🏠 Volver</button>
@@ -168,7 +168,10 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
-  const servicio = [
+  const materialGuerra = [
+    { apellido: "MONTESINO TORRES HAIZEL", dni: "76481131", grado: "CAP MG", armamento: "UZI", numArm: "12537" },
+    { apellido: "ARROYO VARGAS TRIONER", dni: "44880823", grado: "SO1 T/MAMP", armamento: "UZI", numArm: "12543" },
+    { apellido: "CASSANY LEVA EDGAR", dni: "45307168", grado: "SO1 T/VVHH", armamento: "UZI", numArm: "12545" },
     { apellido: "CURITIMA RODRIGUEZ SET SEM", dni: "72102143", grado: "SGTO1 REE", armamento: "GALIL", numArm: "96114412" },
     { apellido: "ROJAS PEREYRA JUAN", dni: "90646479", grado: "SGTO2 SMV", armamento: "GALIL", numArm: "96114420" },
     { apellido: "LEON CHAMBI RENE", dni: "78376951", grado: "SGTO SMV", armamento: "GALIL", numArm: "96114430" },
@@ -187,11 +190,11 @@
     { apellido: "TUESTA TAFUR BRICH", dni: "60035789", grado: "SLDO SMV", armamento: "FAL", numArm: "14197" }
   ];
 
-  function generarServicio() {
+  function generarMaterialGuerra() {
     const grid = document.getElementById('qrGrid');
     grid.innerHTML = '';
     
-    const ordenado = [...servicio].sort((a, b) => a.apellido.localeCompare(b.apellido));
+    const ordenado = [...materialGuerra].sort((a, b) => a.apellido.localeCompare(b.apellido));
     
     ordenado.forEach((s, index) => {
       const qrData = s.dni;
@@ -219,7 +222,7 @@
   }
 
   function irScanner() {
-    window.location.href = 'scanner-profesional.html?grupo=Servicio';
+    window.location.href = 'scanner-profesional.html?grupo=Material de Guerra';
   }
 
   function imprimirQR() {
