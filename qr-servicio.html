@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BATLLOG 112 - QR Servicio</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: 'Segoe UI', Arial, sans-serif; 
+      background: linear-gradient(135deg, #1a472a 0%, #2d5f40 50%, #0d2818 100%);
+      padding: 15px;
+      min-height: 100vh;
+    }
+    .container { max-width: 1000px; margin: 0 auto; }
+    .header {
+      background: linear-gradient(135deg, #2d5f40 0%, #1a472a 100%);
+      padding: 20px;
+      text-align: center;
+      border-radius: 8px;
+      border-bottom: 3px solid #d4af37;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    h1 { color: #d4af37; font-size: 24px; margin-bottom: 5px; }
+    .subtitle { color: #a8d5ba; font-size: 13px; }
+    
+    .button-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    
+    button {
+      padding: 12px 25px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 13px;
+      text-transform: uppercase;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+      color: white;
+      flex: 1;
+      min-width: 150px;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(40, 167, 69, 0.3);
+    }
+    
+    .btn-secondary {
+      background: linear-gradient(135deg, #6c757d 0%, #545b62 100%);
+      color: white;
+      flex: 1;
+      min-width: 150px;
+    }
+    
+    .btn-scanner {
+      background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+      color: white;
+      flex: 1;
+      min-width: 150px;
+    }
+    
+    .btn-print {
+      background: linear-gradient(135deg, #fd7e14 0%, #e66a00 100%);
+      color: white;
+      flex: 1;
+      min-width: 150px;
+      display: none;
+    }
+    
+    .btn-print.show {
+      display: block;
+    }
+    
+    #qrGrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+    
+    .qr-card {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    .qr-card h3 {
+      color: #1a472a;
+      font-size: 12px;
+      margin-bottom: 8px;
+      word-wrap: break-word;
+    }
+    
+    .qr-card .dni {
+      color: #666;
+      font-size: 11px;
+      margin-bottom: 10px;
+    }
+    
+    .qr-image {
+      width: 2.50cm !important;
+      height: 2.50cm !important;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: visible;
+      border-radius: 2px;
+      background: white;
+    }
+    
+    .qr-image canvas {
+      width: 100% !important;
+      height: 100% !important;
+      max-width: 100%;
+      max-height: 100%;
+    }
+    
+    .footer {
+      text-align: center;
+      color: #a8d5ba;
+      padding: 15px;
+      margin-top: 20px;
+      font-size: 11px;
+    }
+    
+    @media print {
+      body { background: white; }
+      .header, .button-group, .footer { display: none; }
+      #qrGrid { gap: 10px; }
+      .qr-card { box-shadow: none; border: 1px solid #ddd; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>🎖️ BATLLOG 112 - QR Servicio</h1>
+    <p class="subtitle">16 soldados</p>
+  </div>
+
+  <div class="button-group">
+    <button class="btn-primary" onclick="generarServicio()">🎯 Generar QR</button>
+    <button class="btn-scanner" onclick="irScanner()">📱 Ir a Scanner</button>
+    <button class="btn-print" id="btnPrint" onclick="imprimirQR()">🖨️ Imprimir</button>
+    <button class="btn-secondary" onclick="window.location.href='index.html'">🏠 Volver</button>
+  </div>
+
+  <div id="qrGrid"></div>
+
+  <div class="footer">
+    <p>BATLLOG 112 © 2026 | Perú</p>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+  const servicio = [
+    { apellido: "CURITIMA RODRIGUEZ SET SEM", dni: "72102143", grado: "SGTO1 REE", armamento: "GALIL", numArm: "96114412" },
+    { apellido: "ROJAS PEREYRA JUAN", dni: "90646479", grado: "SGTO2 SMV", armamento: "GALIL", numArm: "96114420" },
+    { apellido: "LEON CHAMBI RENE", dni: "78376951", grado: "SGTO SMV", armamento: "GALIL", numArm: "96114430" },
+    { apellido: "AGUIRRE CUSIQUICHE JEFFE", dni: "74476361", grado: "CABO SMV", armamento: "GALIL", numArm: "96114434" },
+    { apellido: "SUMOSO SANTOS WILMER", dni: "71990592", grado: "CABO SMV", armamento: "GALIL", numArm: "97134041" },
+    { apellido: "TARAZONA SALINAS RUSBEL", dni: "60239285", grado: "CABO SMV", armamento: "GALIL", numArm: "97134043" },
+    { apellido: "CAMPOS LOPEZ YOSMEL", dni: "60239286", grado: "CABO SMV", armamento: "GALIL", numArm: "97134051" },
+    { apellido: "TARAZONA SALINAS JEYDER", dni: "72377245", grado: "CABO SAA", armamento: "GALIL", numArm: "97133997" },
+    { apellido: "FERNANDEZ ROJAS CRISTIAN", dni: "60494914", grado: "CABO SMV", armamento: "FAL", numArm: "018495" },
+    { apellido: "TENAZOA RUIZ OTWEN", dni: "78730440", grado: "SLDO SMV", armamento: "FAL", numArm: "018525" },
+    { apellido: "PONCE HUARANGA", dni: "73280625", grado: "SLDO SAA", armamento: "FAL", numArm: "018548" },
+    { apellido: "PEREZ NUÑEZ ISRAEL", dni: "76221985", grado: "SLDO SAA", armamento: "FAL", numArm: "018779" },
+    { apellido: "MACEDO TAMANI EDGAR", dni: "73233202", grado: "SLDO SMV", armamento: "FAL", numArm: "1628" },
+    { apellido: "CARBAJAL MONTALVO HENRY", dni: "72377229", grado: "SLDO SMV", armamento: "FAL", numArm: "7489" },
+    { apellido: "CHAVEZ TORRELIO GABRIEL", dni: "78212086", grado: "SLDO SMV", armamento: "FAL", numArm: "12145" },
+    { apellido: "TUESTA TAFUR BRICH", dni: "60035789", grado: "SLDO SMV", armamento: "FAL", numArm: "14197" }
+  ];
+
+  function generarServicio() {
+    const grid = document.getElementById('qrGrid');
+    grid.innerHTML = '';
+    
+    const ordenado = [...servicio].sort((a, b) => a.apellido.localeCompare(b.apellido));
+    
+    ordenado.forEach((s, index) => {
+      const qrData = s.dni;
+      
+      const card = document.createElement('div');
+      card.className = 'qr-card';
+      card.innerHTML = `
+        <h3>${s.apellido}</h3>
+        <div class="dni">${s.dni}</div>
+        <div id="qr-${index}" class="qr-image"></div>
+      `;
+      grid.appendChild(card);
+      
+      new QRCode(document.getElementById(`qr-${index}`), {
+        text: qrData,
+        width: 95,
+        height: 95,
+        colorDark: "#1a472a",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.L
+      });
+    });
+    
+    document.getElementById('btnPrint').classList.add('show');
+  }
+
+  function irScanner() {
+    window.location.href = 'scanner-profesional.html?grupo=Servicio';
+  }
+
+  function imprimirQR() {
+    window.print();
+  }
+</script>
+
+</body>
+</html>
