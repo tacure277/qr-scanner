@@ -154,8 +154,8 @@
 
   <div class="button-group">
     <button class="btn-primary" onclick="generarMaterialGuerra()">🎯 Generar QR</button>
-    <button class="btn-scanner" onclick="irScanner()">📱 Ir a Scanner</button>
-    <button class="btn-print" id="btnPrint" onclick="imprimirQR()">🖨️ Imprimir</button>
+    <button class="btn-generate" onclick="window.location.href='scanner-entrada-v2.html'" style="background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);">📥 Entrada</button>
+    <button class="btn-generate" onclick="window.location.href='scanner-salida-v2.html'" style="background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);">📤 Salida</button>
     <button class="btn-secondary" onclick="window.location.href='index.html'">🏠 Volver</button>
   </div>
 
@@ -218,16 +218,9 @@
       });
     });
     
-    document.getElementById('btnPrint').classList.add('show');
   }
 
-  function irScanner() {
-    window.location.href = 'scanner-profesional.html?grupo=Material de Guerra';
-  }
 
-  function imprimirQR() {
-    window.print();
-  }
 </script>
 
 </body>
