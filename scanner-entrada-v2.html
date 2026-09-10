@@ -243,6 +243,7 @@
   let videoStream = null;
   let animationId = null;
   let soldadoActual = null;
+  let enviando = false; // ← EVITAR DUPLICADOS // ← EVITAR DUPLICADOS
   const tipo = 'ENTRADA';
 
   if (appUrl) {
@@ -346,6 +347,9 @@
   }
 
   function guardarRegistro() {
+    if (enviando) return; // ← NO ENVIAR OTRA VEZ
+    enviando = true;
+
     const observacion = document.getElementById('observacion').value.trim();
     const estado = document.getElementById('estado').value;
 
@@ -362,6 +366,7 @@
     })
     .then(r => r.json())
     .then(resultado => {
+      enviando = false; // ← PERMITIR PRÓXIMO ENVÍO
       if (resultado.success) {
         document.getElementById('status').className = 'status success';
         document.getElementById('status').textContent = '✅ GUARDADO EN ENTRADA';
@@ -370,7 +375,10 @@
         mostrarError('❌ ' + resultado.error);
       }
     })
-    .catch(e => mostrarError('❌ Error: ' + e.message));
+    .catch(e => {
+      enviando = false;
+      mostrarError('❌ Error: ' + e.message);
+    });
   }
 
   function resetFormulario() {
