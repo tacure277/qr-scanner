@@ -20,23 +20,18 @@
       border-radius: 8px;
       border-bottom: 3px solid #d4af37;
       margin-bottom: 20px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     }
-    h1 { color: #d4af37; font-size: 24px; margin-bottom: 5px; }
-    .subtitle { color: #a8d5ba; font-size: 13px; }
-    
+    h1 { color: #d4af37; font-size: 24px; }
     .config-section {
-      background: linear-gradient(135deg, #e8f3ee 0%, #dff0e8 100%);
+      background: #e8f3ee;
       padding: 15px;
       border-radius: 8px;
       margin-bottom: 20px;
       border-left: 4px solid #dc3545;
     }
-    
     .form-group {
       margin-bottom: 10px;
     }
-    
     .form-group label {
       display: block;
       color: #1a472a;
@@ -44,7 +39,6 @@
       margin-bottom: 5px;
       font-size: 12px;
     }
-    
     .form-group input, .form-group textarea, .form-group select {
       width: 100%;
       padding: 10px;
@@ -52,19 +46,16 @@
       border-radius: 6px;
       font-size: 13px;
     }
-    
     .form-group textarea {
       resize: vertical;
       min-height: 60px;
     }
-    
     .button-group {
       display: flex;
       gap: 10px;
       margin-top: 15px;
       flex-wrap: wrap;
     }
-    
     button {
       flex: 1;
       padding: 12px;
@@ -76,23 +67,19 @@
       font-size: 13px;
       min-width: 120px;
     }
-    
     .btn-primary {
       background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
       color: white;
       text-transform: uppercase;
     }
-    
     .btn-secondary {
       background: linear-gradient(135deg, #6c757d 0%, #545b62 100%);
       color: white;
     }
-    
     .btn-stop {
       background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
       color: white;
     }
-    
     .status {
       text-align: center;
       padding: 12px;
@@ -100,55 +87,33 @@
       margin-bottom: 15px;
       font-weight: 600;
       font-size: 13px;
-    }
-    
-    .status.waiting {
-      background: linear-gradient(135deg, #cfe2ff 0%, #b6d4fe 100%);
+      background: #cfe2ff;
       color: #084298;
       border-left: 4px solid #084298;
     }
-    
-    .status.scanning {
-      background: linear-gradient(135deg, #d1ecf1 0%, #b8daff 100%);
-      color: #0c5460;
-      border-left: 4px solid #0c5460;
-    }
-    
-    .status.detected {
-      background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
-      color: #155724;
-      border-left: 4px solid #155724;
-      animation: pulse 0.5s;
-    }
-    
     .status.error {
-      background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+      background: #f8d7da;
       color: #721c24;
-      border-left: 4px solid #721c24;
+      border-left-color: #721c24;
     }
-    
-    @keyframes pulse {
-      0%, 100% { background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%); }
-      50% { background: linear-gradient(135deg, #dc3545 0%, #20c997 100%); }
+    .status.success {
+      background: #d4edda;
+      color: #155724;
+      border-left-color: #155724;
     }
-    
     #videoContainer {
       position: relative;
       width: 100%;
       margin: 20px 0;
       border-radius: 8px;
       overflow: hidden;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
       display: none;
       background: #000;
     }
-    
     #video {
       width: 100%;
       height: auto;
-      display: block;
     }
-    
     .qr-overlay {
       position: absolute;
       top: 50%;
@@ -158,91 +123,10 @@
       height: 280px;
       border: 3px solid #dc3545;
       border-radius: 12px;
-      box-shadow: 0 0 30px rgba(40, 167, 69, 0.5), inset 0 0 30px rgba(40, 167, 69, 0.2);
       pointer-events: none;
       z-index: 10;
+      box-shadow: 0 0 30px rgba(40, 167, 69, 0.5);
     }
-    
-    .corner {
-      position: absolute;
-      width: 30px;
-      height: 30px;
-      border: 3px solid #dc3545;
-    }
-    
-    .corner.top-left {
-      top: -3px;
-      left: -3px;
-      border-right: none;
-      border-bottom: none;
-    }
-    
-    .corner.top-right {
-      top: -3px;
-      right: -3px;
-      border-left: none;
-      border-bottom: none;
-    }
-    
-    .corner.bottom-left {
-      bottom: -3px;
-      left: -3px;
-      border-right: none;
-      border-top: none;
-    }
-    
-    .corner.bottom-right {
-      bottom: -3px;
-      right: -3px;
-      border-left: none;
-      border-top: none;
-    }
-    
-    .center-dot {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 12px;
-      height: 12px;
-      background: #dc3545;
-      border-radius: 50%;
-      box-shadow: 0 0 20px rgba(40, 167, 69, 0.8);
-      z-index: 11;
-    }
-    
-    .crosshair {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 280px;
-      height: 280px;
-      pointer-events: none;
-      z-index: 9;
-    }
-    
-    .crosshair::before,
-    .crosshair::after {
-      content: '';
-      position: absolute;
-      background: rgba(40, 167, 69, 0.3);
-    }
-    
-    .crosshair::before {
-      width: 100%;
-      height: 2px;
-      top: 50%;
-      left: 0;
-    }
-    
-    .crosshair::after {
-      width: 2px;
-      height: 100%;
-      top: 0;
-      left: 50%;
-    }
-    
     .modal {
       display: none;
       position: fixed;
@@ -255,31 +139,15 @@
       align-items: center;
       justify-content: center;
     }
-    
     .modal.active { display: flex; }
-    
     .modal-content {
       background: white;
       padding: 40px;
       border-radius: 12px;
       text-align: center;
       max-width: 500px;
-      box-shadow: 0 15px 50px rgba(0,0,0,0.4);
       border-top: 5px solid #dc3545;
     }
-    
-    .check-icon {
-      font-size: 60px;
-      margin-bottom: 20px;
-    }
-    
-    .modal-content h2 {
-      color: #1a472a;
-      font-size: 24px;
-      margin-bottom: 10px;
-      text-transform: uppercase;
-    }
-    
     .soldier-data {
       background: #f5f5f5;
       padding: 15px;
@@ -287,7 +155,6 @@
       text-align: left;
       margin: 15px 0;
     }
-    
     .soldier-data div {
       margin: 8px 0;
       font-size: 13px;
@@ -296,26 +163,6 @@
       border-bottom: 1px solid #ddd;
       padding-bottom: 8px;
     }
-    
-    .soldier-data div:last-child {
-      border-bottom: none;
-    }
-    
-    .soldier-data strong { color: #1a472a; }
-    
-    .modal-content button {
-      padding: 11px 40px;
-      background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-weight: 600;
-      cursor: pointer;
-      font-size: 14px;
-      margin-top: 20px;
-      text-transform: uppercase;
-    }
-    
     .footer {
       text-align: center;
       color: #a8d5ba;
@@ -330,7 +177,6 @@
 <div class="container">
   <div class="header">
     <h1>📤 BATLLOG 112 - Scanner SALIDA</h1>
-    <p class="subtitle">Registro de salida de armas</p>
   </div>
 
   <div class="config-section">
@@ -344,18 +190,11 @@
     </div>
   </div>
 
-  <div id="status" class="status waiting">⏳ Ingresa la URL y guarda</div>
+  <div id="status" class="status">⏳ Ingresa la URL y guarda</div>
 
   <div id="videoContainer">
     <video id="video" playsinline autoplay muted></video>
-    <div class="qr-overlay">
-      <div class="corner top-left"></div>
-      <div class="corner top-right"></div>
-      <div class="corner bottom-left"></div>
-      <div class="corner bottom-right"></div>
-      <div class="center-dot"></div>
-      <div class="crosshair"></div>
-    </div>
+    <div class="qr-overlay"></div>
   </div>
 
   <div class="button-group" id="controlButtons" style="display: none; margin: 15px 0;">
@@ -377,7 +216,7 @@
         </select>
       </div>
       <div class="button-group">
-        <button class="btn-primary" onclick="guardarRegistro()">✓ Guardar</button>
+        <button class="btn-primary" onclick="guardarRegistro()">✓ Guardar SALIDA</button>
         <button class="btn-secondary" onclick="resetFormulario()">↻ Otro</button>
       </div>
     </div>
@@ -391,9 +230,7 @@
 <!-- Modal -->
 <div class="modal" id="modal">
   <div class="modal-content">
-    <div class="check-icon">✅</div>
-    <h2>ESCANEO DETECTADO</h2>
-    <p>Datos del soldado</p>
+    <h2>✅ ESCANEO DETECTADO</h2>
     <div class="soldier-data" id="modalData"></div>
   </div>
 </div>
@@ -406,7 +243,7 @@
   let videoStream = null;
   let animationId = null;
   let soldadoActual = null;
-  const modo = 'salida';
+  const tipo = 'SALIDA';
 
   if (appUrl) {
     document.getElementById('urlInput').value = appUrl;
@@ -426,13 +263,10 @@
   function actualizarEstado() {
     const status = document.getElementById('status');
     const controlButtons = document.getElementById('controlButtons');
-
     if (appUrl) {
-      status.className = 'status scanning';
-      status.textContent = `✓ URL configurada - SALIDA`;
+      status.textContent = '✓ URL configurada - SALIDA';
       controlButtons.style.display = 'flex';
     } else {
-      status.className = 'status waiting';
       status.textContent = '⏳ Ingresa la URL y guarda';
       controlButtons.style.display = 'none';
     }
@@ -444,25 +278,17 @@
       return;
     }
 
-    const status = document.getElementById('status');
-    status.className = 'status scanning';
-    status.textContent = '⏳ Abriendo cámara...';
-
     const video = document.getElementById('video');
     const videoContainer = document.getElementById('videoContainer');
     videoContainer.style.display = 'block';
     document.getElementById('btnStart').style.display = 'none';
     document.getElementById('btnStop').style.display = 'block';
 
-    navigator.mediaDevices.getUserMedia({ 
-      video: { facingMode: 'environment', focus: 'continuous' } 
-    })
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
       .then(stream => {
         videoStream = stream;
         video.srcObject = stream;
-        
         video.onloadedmetadata = () => {
-          status.textContent = `📹 Escaneando - SALIDA... Apunta al QR`;
           scanning = true;
           canScan = true;
           escanear(video);
@@ -493,7 +319,6 @@
 
         if (code && canScan) {
           canScan = false;
-          mostrarQRDetectado();
           soldadoActual = code.data.trim().replace(/\s/g, "");
           detenerScanner();
           mostrarFormulario();
@@ -505,15 +330,8 @@
     animationId = requestAnimationFrame(() => escanear(video));
   }
 
-  function mostrarQRDetectado() {
-    const status = document.getElementById('status');
-    status.className = 'status detected';
-    status.textContent = '✅ QR DETECTADO!';
-  }
-
   function detenerScanner() {
     scanning = false;
-    
     if (animationId) cancelAnimationFrame(animationId);
     if (videoStream) videoStream.getTracks().forEach(t => t.stop());
     
@@ -533,7 +351,7 @@
 
     const data = {
       qrData: soldadoActual,
-      modo: modo,
+      tipo: tipo,
       observacion: observacion,
       estado: estado
     };
@@ -545,7 +363,7 @@
     .then(r => r.json())
     .then(resultado => {
       if (resultado.success) {
-        document.getElementById('status').className = 'status detected';
+        document.getElementById('status').className = 'status success';
         document.getElementById('status').textContent = '✅ GUARDADO EN SALIDA';
         setTimeout(resetFormulario, 2000);
       } else {
@@ -559,7 +377,6 @@
     document.getElementById('observacion').value = '';
     document.getElementById('estado').value = 'Correcto';
     document.getElementById('formularioSeccion').style.display = 'none';
-    document.getElementById('status').className = 'status scanning';
     document.getElementById('status').textContent = '✓ Listo para otro escaneo';
     soldadoActual = null;
     canScan = true;
