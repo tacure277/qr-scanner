@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BATLLOG 112 - Intendencia QR</title>
+  <title>BATLLOG 112 - Comunicaciones QR</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { 
@@ -24,6 +24,7 @@
     }
     h1 { color: #d4af37; font-size: 24px; margin-bottom: 3px; }
     .subtitle { color: #a8d5ba; font-size: 12px; }
+    
     .status {
       text-align: center;
       padding: 6px;
@@ -35,6 +36,7 @@
       border-left: 4px solid #084298;
       font-size: 13px;
     }
+    
     .options {
       background: #f5f5f5;
       padding: 6px;
@@ -45,6 +47,7 @@
       align-items: center;
       flex-wrap: wrap;
     }
+    
     .options label {
       display: flex;
       align-items: center;
@@ -54,12 +57,14 @@
       color: #1a472a;
       font-size: 13px;
     }
+    
     .controls {
       display: flex;
       gap: 4px;
       margin-bottom: 15px;
       flex-wrap: wrap;
     }
+    
     button {
       padding: 10px 20px;
       border: none;
@@ -70,25 +75,35 @@
       box-shadow: 0 4px 10px rgba(0,0,0,0.15);
       font-size: 12px;
     }
+    
     .btn-generate {
       background: linear-gradient(135deg, #2d5f40 0%, #1a472a 100%);
       color: #d4af37;
       text-transform: uppercase;
     }
+    
     .btn-print {
       background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
       color: white;
       text-transform: uppercase;
       display: none;
     }
-    .btn-print.show { display: inline-block; }
+    
+    .btn-print.show {
+      display: inline-block;
+    }
+    
     .qr-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 8px;
       margin-top: 15px;
     }
-    .qr-grid.col5 { grid-template-columns: repeat(5, 1fr); }
+    
+    .qr-grid.col5 {
+      grid-template-columns: repeat(5, 1fr);
+    }
+    
     .qr-card {
       background: white;
       border: 1px solid #ddd;
@@ -97,6 +112,7 @@
       text-align: center;
       page-break-inside: avoid;
     }
+    
     .qr-card h3 {
       color: #1a472a;
       font-size: 8px;
@@ -109,12 +125,14 @@
       max-height: 18px;
       overflow: visible;
     }
+    
     .qr-card .dni {
       color: #5a7a6d;
       font-size: 6px;
       margin-bottom: 3px;
       font-weight: 600;
     }
+    
     .qr-image {
       width: 2.50cm !important;
       height: 2.50cm !important;
@@ -133,6 +151,7 @@
       max-width: 100%;
       max-height: 100%;
     }
+    
     .qr-image canvas {
       width: 100% !important;
       height: 100% !important;
@@ -140,6 +159,7 @@
       max-height: 100%;
       object-fit: contain;
     }
+    
     .footer {
       text-align: center;
       color: #a8d5ba;
@@ -148,6 +168,7 @@
       border-top: 1px solid rgba(212, 175, 55, 0.2);
       font-size: 11px;
     }
+    
     @media print {
       body { background: white; }
       .header, .controls, .options, .status, .footer { display: none; }
@@ -158,62 +179,84 @@
 <body>
 <div class="container">
   <div class="header">
-    <h1>🎖️ BATLLOG 112 - Intendencia</h1>
-    <p class="subtitle">Generador de QR - Compañía Intendencia</p>
+    <h1>🎖️ BATLLOG 112 - Comunicaciones</h1>
+    <p class="subtitle">Generador de QR - Compañía Comunicaciones</p>
   </div>
-  <div class="status">✓ 19 soldados de Intendencia precargados</div>
+
+  <div class="status">✓ 14 soldados de Comunicaciones precargados</div>
+  
   <div class="options">
-    <label><input type="radio" name="columnas" value="3" checked onchange="cambiarColumnas(3)">3 columnas</label>
-    <label><input type="radio" name="columnas" value="5" onchange="cambiarColumnas(5)">5 columnas</label>
+    <label>
+      <input type="radio" name="columnas" value="3" checked onchange="cambiarColumnas(3)">
+      3 columnas
+    </label>
+    <label>
+      <input type="radio" name="columnas" value="5" onchange="cambiarColumnas(5)">
+      5 columnas
+    </label>
   </div>
+  
   <div class="controls">
-    <button class="btn-generate" onclick="generarIntendencia()">🎯 Generar QR</button>
+    <button class="btn-generate" onclick="generarComunicaciones()">🎯 Generar QR</button>
     <button class="btn-print" id="btnPrint" onclick="window.print()">🖨️ Imprimir</button>
     <button class="btn-generate" onclick="window.location.href='scanner-entrada-v2.html'" style="background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);">📥 Entrada</button>
     <button class="btn-generate" onclick="window.location.href='scanner-salida-v2.html'" style="background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);">📤 Salida</button>
     <button class="btn-generate" onclick="window.location.href='index.html'" style="background: linear-gradient(135deg, #17a2b8 0%, #117a8b 100%);">🏠 Volver al Inicio</button>
   </div>
+
   <div class="qr-grid" id="qrGrid"></div>
-  <div class="footer"><p>BATLLOG 112 © 2026 | Perú</p></div>
+
+  <div class="footer">
+    <p>BATLLOG 112 © 2026 | Perú</p>
+  </div>
 </div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
-  const intendencia = [
-    { apellido: "ORTEGA RUDAS EDSON YOBER", dni: "41750123", grado: "MY INT", armamento: "N/A", numArm: "12505" },
-    { apellido: "SOTO MENDOZA ELIZABETH", dni: "70753379", grado: "TTE INT", armamento: "N/A", numArm: "12507" },
-    { apellido: "GUTIERREZ ILLA JULIO CESAR", dni: "73171102", grado: "SO3 T/ADM", armamento: "N/A", numArm: "12508" },
-    { apellido: "RAMOS RAMOS BRENDA", dni: "75229582", grado: "SO3 T/ADM", armamento: "N/A", numArm: "12511" },
-    { apellido: "REE QUIROZ VASQUEZ GHERSSON", dni: "75974925", grado: "SGTO1° REE", armamento: "N/A", numArm: "9713401" },
-    { apellido: "REE SILVANO MONTES ANGELLO", dni: "63095671", grado: "SGTO1° REE", armamento: "N/A", numArm: "1532264" },
-    { apellido: "LIVIA VASQUEZ CHARLI BRAYAN", dni: "70651611", grado: "CABO SMV", armamento: "N/A", numArm: "97133271" },
-    { apellido: "HUAÑAPI OJANAMA MORGAN", dni: "74286083", grado: "CABO SMV", armamento: "N/A", numArm: "97133265" },
-    { apellido: "PACAYA IPUSHIMA JHENS CLEVER", dni: "61956273", grado: "CABO SMV", armamento: "N/A", numArm: "97133273" },
-    { apellido: "FATAMA PIZANGO DENNIS", dni: "76717562", grado: "CABO SMV", armamento: "N/A", numArm: "82801" },
-    { apellido: "CALLIRGOS GARCIA ELIEZER", dni: "74956799", grado: "CABO SMV", armamento: "N/A", numArm: "97133270" },
-    { apellido: "DAVALOS DURAND EUGENIO", dni: "61059992", grado: "CABO SMV", armamento: "N/A", numArm: "97133272" },
-    { apellido: "QUISPE MEJIA ISIDRO LUIS", dni: "60061551", grado: "CABO SMV", armamento: "N/A", numArm: "63773" },
-    { apellido: "MEDINA PLACIDO JOSE LUIS", dni: "74407407", grado: "SLDO SMV", armamento: "N/A", numArm: "53520" },
-    { apellido: "BALLENA BARDALES JOSUE JAVIER", dni: "61269266", grado: "SLDO SMV", armamento: "N/A", numArm: "82392" },
-    { apellido: "RUIZ SILVA YASSER KARL", dni: "60688165", grado: "SLDO SMV", armamento: "N/A", numArm: "82405" },
-    { apellido: "CANTARO MASIAS CHRISTOFER M.", dni: "74537881", grado: "SLDO SMV", armamento: "N/A", numArm: "171236" },
-    { apellido: "LOPEZ ACHAHUANCO FRANK", dni: "61362912", grado: "SLDO SMV", armamento: "N/A", numArm: "1579219" },
-    { apellido: "CHUNGA ALVARADO JHAIR", dni: "70732139", grado: "SLDO SMV", armamento: "N/A", numArm: "82515" }
+  const comunicaciones = [
+    { apellido: "PEBE ANACLETO MOISES", dni: "10382331", grado: "TCO 2° EP", armamento: "UZI", numArm: "12526" },
+    { apellido: "LUSTRE RODRIGUEZ LUIS", dni: "74602356", grado: "SGTO 1°", armamento: "FAL", numArm: "021259" },
+    { apellido: "POMA ORE KEVIN RONALD", dni: "10380231", grado: "SO 1 EP", armamento: "GALIL", numArm: "12528" },
+    { apellido: "RETO NUÑES FABRICIO RAUL", dni: "61021564", grado: "SGTO 2 SAA", armamento: "FAL", numArm: "021325" },
+    { apellido: "TAMAYO ROSALES JULIO", dni: "61717408", grado: "SGTO 2 SAA", armamento: "FAL", numArm: "021631" },
+    { apellido: "CHUQUILLAURI TOLEDO SHUGAR", dni: "73656600", grado: "CABO SAA", armamento: "FAL", numArm: "021676" },
+    { apellido: "HUAMAN ROSALES JUSUE", dni: "71045744", grado: "CABO SAA", armamento: "FAL", numArm: "022187" },
+    { apellido: "SANTIAGO OJEDA ELOY", dni: "72182749", grado: "CABO SAA", armamento: "FAL", numArm: "022421" },
+    { apellido: "TINA PACAYA JUAN CARLOS", dni: "62986689", grado: "CABO SAA", armamento: "FAL", numArm: "022554" },
+    { apellido: "ACHATA CASTRO AARON SAUL", dni: "74226186", grado: "CABO SAA", armamento: "FAL", numArm: "022893" },
+    { apellido: "REBATTA AVALOS HERLINS DELVIT", dni: "61060543", grado: "CABO SAA", armamento: "FAL", numArm: "022897" },
+    { apellido: "CASTILLO CCANTO SMITH LUIS", dni: "77851493", grado: "CABO SAA", armamento: "FAL", numArm: "023231" },
+    { apellido: "VARGAS FLORES AXEL ANTONIO", dni: "70700986", grado: "CABO SAA", armamento: "FAL", numArm: "023334" },
+    { apellido: "LAPA SAAVEDRA JEAN CLAUDE", dni: "70649882", grado: "CABO SAA", armamento: "FAL", numArm: "023406" }
   ];
+
   function cambiarColumnas(n) {
     const grid = document.getElementById('qrGrid');
-    if (n === 5) grid.classList.add('col5');
-    else grid.classList.remove('col5');
+    if (n === 5) {
+      grid.classList.add('col5');
+    } else {
+      grid.classList.remove('col5');
+    }
   }
-  function generarIntendencia() {
+
+  function generarComunicaciones() {
     const grid = document.getElementById('qrGrid');
     grid.innerHTML = '';
-    const ordenado = [...intendencia].sort((a, b) => a.apellido.localeCompare(b.apellido));
+    
+    const ordenado = [...comunicaciones].sort((a, b) => a.apellido.localeCompare(b.apellido));
+    
     ordenado.forEach((s, index) => {
       const qrData = s.dni.toString().trim();
+      
       const card = document.createElement('div');
       card.className = 'qr-card';
-      card.innerHTML = `<h3>${s.apellido}</h3><div class="dni">${s.dni}</div><div id="qr-${index}" class="qr-image"></div>`;
+      card.innerHTML = `
+        <h3>${s.apellido}</h3>
+        <div class="dni">${s.dni}</div>
+        <div id="qr-${index}" class="qr-image"></div>
+      `;
       grid.appendChild(card);
+      
       new QRCode(document.getElementById(`qr-${index}`), {
         text: qrData,
         width: 95,
@@ -223,6 +266,7 @@
         correctLevel: QRCode.CorrectLevel.L
       });
     });
+    
     document.getElementById('btnPrint').classList.add('show');
   }
 </script>
