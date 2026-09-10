@@ -199,7 +199,8 @@
   <div class="controls">
     <button class="btn-generate" onclick="generarComunicaciones()">🎯 Generar QR</button>
     <button class="btn-print" id="btnPrint" onclick="window.print()">🖨️ Imprimir</button>
-    <button class="btn-generate" onclick="window.location.href='scanner-profesional.html?grupo=Comunicaciones'" style="background: linear-gradient(135deg, #6c757d 0%, #545b62 100%);">📱 Ir a Scanner</button>
+    <button class="btn-generate" onclick="window.location.href='scanner-entrada-v2.html'" style="background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);">📥 Entrada</button>
+    <button class="btn-generate" onclick="window.location.href='scanner-salida-v2.html'" style="background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);">📤 Salida</button>
     <button class="btn-generate" onclick="window.location.href='index.html'" style="background: linear-gradient(135deg, #17a2b8 0%, #117a8b 100%);">🏠 Volver al Inicio</button>
   </div>
 
@@ -245,7 +246,7 @@
     const ordenado = [...comunicaciones].sort((a, b) => a.apellido.localeCompare(b.apellido));
     
     ordenado.forEach((s, index) => {
-      const qrData = s.dni;
+      const qrData = s.dni.toString().trim();
       
       const card = document.createElement('div');
       card.className = 'qr-card';
